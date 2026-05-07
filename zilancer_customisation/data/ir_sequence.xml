@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <record id="seq_meeting_id" model="ir.sequence">
+        <field name="name">Meeting ID</field>
+        <field name="code">calendar.event</field>
+        <field name="prefix">M</field>
+        <field name="padding">3</field>
+    </record>
+
+    <record id="ir_cron_create_sales_dashboards" model="ir.cron">
+        <field name="name">Sales Dashboard: Create for Sales Users</field>
+        <field name="model_id" ref="model_sales_person_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">model._create_dashboard_for_sales_users()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+    
+    <!-- Scheduled Action (Cron Job) for updating all dashboards -->
+    <record id="ir_cron_update_sales_dashboards" model="ir.cron">
+        <field name="name">Sales Dashboard: Update All</field>
+        <field name="model_id" ref="model_sales_person_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">model._update_all_dashboards()</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Sequence for General Dispatch Note -->
+    <record id="seq_stock_picking_general_dispatch" model="ir.sequence">
+        <field name="name">Stock Picking General Dispatch Sequence</field>
+        <field name="code">stock.picking.general_dispatch</field>
+        <field name="prefix">PG-GDN-%(year)s%(month)s%(day)s-</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+        <field name="use_date_range">False</field>
+    </record>
+
+    <!-- Sequence for Dispatch Advise / Gatepass -->
+    <record id="seq_stock_picking_dispatch_advise" model="ir.sequence">
+        <field name="name">Stock Picking Dispatch Advise Sequence</field>
+        <field name="code">stock.picking.dispatch_advise</field>
+        <field name="prefix">PG-DAG-%(year)s%(month)s%(day)s-</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+        <field name="use_date_range">False</field>
+    </record>
+
+</odoo>

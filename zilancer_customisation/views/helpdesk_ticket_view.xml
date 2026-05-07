@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_helpdesk_ticket_form" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.form.inherit</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='closed_date']" position="after">
+                    <field name="packaging_material_available"/>
+                    <field name="expected_arrival_date"/>
+                </xpath>
+                <xpath expr="//field[@name='team_id']" position="before">
+                    <field name="business_unit"/>
+                </xpath>
+                <xpath expr="//field[@name='channel_id']" position="after">
+                    <field name="planned_closure_date"/>
+                    <field name="parent_ticket_id" options="{'no_create': True}"/>
+                    <field name="original_complain_date"/>
+                </xpath>
+                <notebook position="inside">
+                    <page string="Child Tickets">
+                        <field name="child_ticket_ids" widget="one2many_list"/>
+                    </page>
+                    <page string="Complain Snapshot">
+                        <field name="snapshot_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="remarks"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    <page string="Nature of Complain">
+                        <field name="nature_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="remarks"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    <page string="Petrogulf Review">
+                        <field name="review_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="remarks"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    <page string="Proposed Solution">
+                        <field name="solution_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="remarks"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    <page string="Learning from Case">
+                        <field name="learning_line_ids">
+                            <list editable="bottom">
+                                <field name="sequence"/>
+                                <field name="remarks"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
+        <!-- <record id="helpdesk_ticket_view_pivot_inherits" model="ir.ui.view">
+            <field name="name">helpdesk.ticket.pivot</field>
+            <field name="model">helpdesk.ticket</field>
+            <field name="inherit_id" ref="helpdesk_mgmt.helpdesk_ticket_views_pivot"/>
+            <field name="arch" type="xml">
+                <xpath expr="//pivot" position="attributes">
+                    <attribute name="measures">id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='assigned_date']" position="after">
+                    <field name="aging_bucket"/>
+                </xpath>
+            </field>
+        </record> -->
+    </data>
+</odoo>

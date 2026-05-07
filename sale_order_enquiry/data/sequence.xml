@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- <record id="sequence_order_enq" model="ir.sequence">
+            <field name="name">Order Inquiry Sequence</field>
+            <field name="code">order.enq.sequence</field>
+            <field name="prefix">OE</field>
+            <field name="padding">5</field>
+        </record> -->
+        <record id="seq_order_enq" model="ir.sequence">
+            <field name="name">Order Inquiry Sequence</field>
+            <field name="code">order.enq.sequence</field>
+            <field name="prefix">INQ-%(month)s-%(year)s-</field>
+            <field name="padding">7</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+
+    </data>
+</odoo>

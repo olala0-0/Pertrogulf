@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="name">Sales Quotation</field>
+        <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_sale')])]"/>
+    </record> -->
+
+    <!-- <record id="sale_pdf_quote_builder.action_report_saleorder_raw" model="ir.actions.report">
+        <field name="name">Sales Order</field>
+    </record> -->
+
+    <record id="stock.action_report_delivery" model="ir.actions.report">
+        <field name="name">Delivery Note</field>
+    </record>
+
+    <record id="stock.action_report_picking" model="ir.actions.report">
+        <field name="multi" eval="True"/>
+    </record>
+
+    <record id="paperformat_label_sheet_quotation_tax" model="report.paperformat">
+        <field name="name">Quotation - Tax</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">350</field>
+        <field name="page_width">500</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">55</field>
+        <field name="margin_bottom">35</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="header_spacing">50</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="paperformat_label_sheet_powerx" model="report.paperformat">
+        <field name="name">Quotation - Tax</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">350</field>
+        <field name="page_width">500</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="disable_shrinking" eval="True"/>
+        <field name="header_spacing">15</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_notax_green" model="ir.actions.report">
+        <field name="name">Quotation Marine</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_notax_green</field>
+        <field name="report_file">zilancer_customisation.report_notax_green</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation_Tax - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_marine')])]"/> -->
+    </record>
+
+    <record id="action_report_aviation" model="ir.actions.report">
+        <field name="name">Quotation - Petrogulf Aviation</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_aviation</field>
+        <field name="report_file">zilancer_customisation.report_aviation</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'Petrogulf_Aviation - %s' % (object.name)) or 'Petrogulf_Aviation - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_aviation')])]"/> -->
+    </record>
+
+    <record id="action_report_notax_green_a4" model="ir.actions.report">
+        <field name="name">Quotation - Portrait</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_notax_green_a4</field>
+        <field name="report_file">zilancer_customisation.report_notax_green_a4</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'Quotation_Tax - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_postrait')])]"/> -->
+    </record>
+
+    <record id="action_report_tax_green" model="ir.actions.report">
+        <field name="name">PI Power X</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_tax_green</field>
+        <field name="report_file">zilancer_customisation.report_tax_green</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PI-PowerX - %s' % (object.name)) or 'PI-PowerX - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_powerx"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_powerx')])]"/> -->
+    </record>
+
+    <record id="action_report_auto_proforma" model="ir.actions.report">
+        <field name="name">PI - Automotive</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_auto_proforma</field>
+        <field name="report_file">zilancer_customisation.report_auto_proforma</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PRO-FORMA - %s' % (object.name)) or 'PRO-FORMA - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_automotive')])]"/> -->
+    </record>
+
+    <record id="action_report_automative_quote_lines" model="ir.actions.report">
+        <field name="name">Quotation - Toll Blending</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_toll_blanding</field>
+        <field name="report_file">zilancer_customisation.report_toll_blanding</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'TOLL-BLENDING - %s' % (object.name)) or 'TOLL-BLENDING - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_automotive')])]"/> -->
+    </record>
+
+    <!-- <record id="action_report_tax_blue" model="ir.actions.report">
+        <field name="name">PG Auto - Tax - Blue Color</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_tax_blue</field>
+        <field name="report_file">zilancer_customisation.report_tax_blue</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PG_Auto_Tax_Blue - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_no_tax_quote" model="ir.actions.report">
+        <field name="name">Without Tax Quote</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_no_tax_quote</field>
+        <field name="report_file">zilancer_customisation.report_no_tax_quote</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'Without_Tax_Quote - %s' % (object.name)) or 'Order - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record> -->
+
+    <template id="inherit_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//div[1]" position="replace">
+            <!-- HEADER -->
+            <t t-if="xmlid == 'zilancer_customisation.report_auto_proforma'">
+                <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+                    <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+                       <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+                    </svg>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <!-- <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div> -->
+                            <!-- <div t-field="company.company_details"/> -->
+                            <!-- Company address from Sale Order -->
+                            <t t-if="docs">
+                                <t t-if="doc_model == 'calendar.event'">
+                                    <div t-field="company.company_details"/>
+                                </t>
+                                <t t-else="">
+                                    <div t-if="docs.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                        <!--<span><t t-esc="docs.company_id.name"/></span>-->
+                                        <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
+                                        <div t-if="docs.company_id.street"><t t-esc="docs.company_id.street"/></div>
+                                        <div t-if="docs.company_id.street2"><t t-esc="docs.company_id.street2"/></div>
+                                        <div>
+                                            <t t-if="docs.company_id.city"><t t-esc="docs.company_id.city"/></t>
+                                            <t t-if="docs.company_id.state_id">, <t t-esc="docs.company_id.state_id.name"/></t>
+                                            <t t-if="docs.company_id.zip"> - <t t-esc="docs.company_id.zip"/></t>
+                                        </div>
+                                        <div t-if="docs.company_id.country_id"><t t-esc="docs.company_id.country_id.name"/></div>
+                                    </div>
+                                </t>
+                                
+                                <!--<div t-field="company.company_details"/>-->
+                            </t>
+                            
+                            <t t-else="">
+                                <div t-field="company.company_details"/>
+                                <!-- <div t-if="o.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                    <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
+                                    <div t-if="o.company_id.street"><t t-esc="o.company_id.street"/></div>
+                                    <div t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/></div>
+                                    <div>
+                                        <t t-if="o.company_id.city"><t t-esc="o.company_id.city"/></t>
+                                        <t t-if="o.company_id.state_id">, <t t-esc="o.company_id.state_id.name"/></t>
+                                        <t t-if="o.company_id.zip"> - <t t-esc="o.company_id.zip"/></t>
+                                    </div>
+                                    <div t-if="o.company_id.country_id"><t t-esc="o.company_id.country_id.name"/></div>
+                                </div> -->
+                            </t>
+                        </div>
+                        <div name="company_address" class="w-50 text-end" style="display:none;">
+                            <ul class="list-unstyled" name="company_address_list">
+                                <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                    <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span></li>
+                                <li t-else="">
+                                    <span t-field="company.company_details">
+                                        <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                            <strong>Company details block</strong>
+                                            <div>Contains the company details.</div>
+                                        </div>
+                                    </span>
+                                </li>
+                                <li t-if="not forced_vat"/>
+                                <li t-else="">
+                                    <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                    <span t-esc="forced_vat">US12345671</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <t t-elif="xmlid == 'zilancer_customisation.report_aviation'">
+                <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+                    <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+                       <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+                    </svg>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <!-- <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div> -->
+                            <!-- <div t-field="company.company_details"/> -->
+                            <!-- Company address from Sale Order -->
+                            <t t-if="docs">
+                                <t t-if="doc_model == 'calendar.event'">
+                                    <div t-field="company.company_details"/>
+                                </t>
+                                <t t-else="">
+                                    <div t-if="docs.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                        <!--<span><t t-esc="docs.company_id.name"/></span>-->
+                                        <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
+                                        <div t-if="docs.company_id.street"><t t-esc="docs.company_id.street"/></div>
+                                        <div t-if="docs.company_id.street2"><t t-esc="docs.company_id.street2"/></div>
+                                        <div>
+                                            <t t-if="docs.company_id.city"><t t-esc="docs.company_id.city"/></t>
+                                            <t t-if="docs.company_id.state_id">, <t t-esc="docs.company_id.state_id.name"/></t>
+                                            <t t-if="docs.company_id.zip"> - <t t-esc="docs.company_id.zip"/></t>
+                                        </div>
+                                        <div t-if="docs.company_id.country_id"><t t-esc="docs.company_id.country_id.name"/></div>
+                                    </div>
+                                </t>
+                                
+                                <!--<div t-field="company.company_details"/>-->
+                            </t>
+                            
+                            <t t-else="">
+                                <!-- <div t-if="o.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                    <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
+                                    <div t-if="o.company_id.street"><t t-esc="o.company_id.street"/></div>
+                                    <div t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/></div>
+                                    <div>
+                                        <t t-if="o.company_id.city"><t t-esc="o.company_id.city"/></t>
+                                        <t t-if="o.company_id.state_id">, <t t-esc="o.company_id.state_id.name"/></t>
+                                        <t t-if="o.company_id.zip"> - <t t-esc="o.company_id.zip"/></t>
+                                    </div>
+                                    <div t-if="o.company_id.country_id"><t t-esc="o.company_id.country_id.name"/></div>
+                                </div> -->
+                                <div t-field="company.company_details"/>
+                            </t>
+                        </div>
+                        <div name="company_address" class="w-50 text-end">
+                            <t t-if="docs">
+                                <!-- <img src="/zilancer_customisation/static/src/img/lanxess.jpg" alt="Lanxess Logo" class="o_company_logo mb-2" style="max-height: 80px; max-width: 200px;"/> -->
+                                <img t-if="docs.company_id.aviation_logo" class="o_company_logo mb-2" t-att-src="image_data_uri(docs.company_id.aviation_logo)" alt="Aviation Logo"/>
+                            </t>
+                            <t t-else="">
+                                <img t-if="o.company_id.aviation_logo" class="o_company_logo mb-2" t-att-src="image_data_uri(o.company_id.aviation_logo)" alt="Aviation Logo"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <t t-else="">
+                <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+                    <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+                       <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+                    </svg>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        </div>
+
+                        <div name="company_address" class="w-50 text-end">
+                            <!-- <ul class="list-unstyled" name="company_address_list">
+                                <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                    <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                        <strong>Company address block</strong>
+                                        <div>Contains the company address.</div>
+                                    </div>
+                                </span></li>
+                                <li t-else="">
+                                    <span t-field="company.company_details">
+                                        <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                            <strong>Company details block</strong>
+                                            <div>Contains the company details.</div>
+                                        </div>
+                                    </span>
+                                </li>
+                                <li t-if="not forced_vat"/>
+                                <li t-else="">
+                                    <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                    <span t-esc="forced_vat">US12345671</span>
+                                </li>
+                            </ul> -->
+                            <!-- Company address from Sale Order -->
+                            <t t-if="docs">
+                                <t t-if="doc_model == 'calendar.event'">
+                                    <div t-field="company.company_details"/>
+                                </t>
+                                <t t-else="">
+                                    <div t-if="docs.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                        <!--<span><t t-esc="docs.company_id.name"/></span>-->
+                                        <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
+                                        <div t-if="docs.company_id.street"><t t-esc="docs.company_id.street"/></div>
+                                        <div t-if="docs.company_id.street2"><t t-esc="docs.company_id.street2"/></div>
+                                        <div>
+                                            <t t-if="docs.company_id.city"><t t-esc="docs.company_id.city"/></t>
+                                            <t t-if="docs.company_id.state_id">, <t t-esc="docs.company_id.state_id.name"/></t>
+                                            <t t-if="docs.company_id.zip"> - <t t-esc="docs.company_id.zip"/></t>
+                                        </div>
+                                        <div t-if="docs.company_id.country_id"><t t-esc="docs.company_id.country_id.name"/></div>
+                                    </div>
+                                </t>
+                                
+                                <!--<div t-field="company.company_details"/>-->
+                            </t>
+                            
+                            <t t-else="">
+                                <!-- <div t-if="o.company_id" class="o_company_tagline fw-bold">
+                                    <div><t t-esc="o.company_id.name"/></div>
+                                    <div t-if="o.company_id.street"><t t-esc="o.company_id.street"/></div>
+                                    <div t-if="o.company_id.street2"><t t-esc="o.company_id.street2"/></div>
+                                    <div>
+                                        <t t-if="o.company_id.city"><t t-esc="o.company_id.city"/></t>
+                                        <t t-if="o.company_id.state_id">, <t t-esc="o.company_id.state_id.name"/></t>
+                                        <t t-if="o.company_id.zip"> - <t t-esc="o.company_id.zip"/></t>
+                                    </div>
+                                    <div t-if="o.company_id.country_id"><t t-esc="o.company_id.country_id.name"/></div>
+                                </div> -->
+                                <div t-field="company.company_details"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- <xpath expr="//div[@ t-attf-class='footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}']" position="after"> -->
+        <!-- <xpath expr="//div[contains(@t-attf-class, 'footer')]" position="replace">
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+                <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+                </svg>
+                <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
+                    <div class="border-top pt-2" t-field="company.report_footer"/>
+                    <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+                    <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+                </div>
+            </div>
+        </xpath> -->
+
+    </template>
+
+
+</odoo>

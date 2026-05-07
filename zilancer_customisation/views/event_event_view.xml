@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_event_form_form_inherits" model="ir.ui.view">
+        <field name="name">event.event.form</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="responsible_team_id"/>
+                <field name="business_unit"/>
+                <field name="relevance_category"/>
+                <field name="port_master_id"/>
+                <field name="country_region_id"/>
+            </xpath>
+            <!-- <xpath expr="//div[@name='button_box']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+            <xpath expr="//field[@name='badge_format']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='badge_image']" position="replace">
+            </xpath>
+            <!-- <xpath expr="//label[@name='seats_limited']" position="replace">
+            </xpath> -->
+            <xpath expr="//field[@name='kanban_state']" position="before">
+                <!-- <field name="image_1920" widget="image" class="oe_avatar" options='{"zoom": true, "preview_image": "avatar_128"}'/> -->
+                <field name="image_1920" widget="image"
+                   style="height: 200px; width: 200px;float: right;"
+                   options='{"zoom": true}'/>
+
+            </xpath>
+            <xpath expr="//field[@name='address_id']" position="replace">
+                <field name="venue"/>
+                <field name="opportunity_volume"/>
+                <field name="opportunity_revenue"/>
+                <field name="remarks"/>
+                <!-- <field name="total_amount"/> -->
+                <field name="formatted_total_amount" readonly="True"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Event Summary">
+                    <field name="event_summary_ids" widget="one2many_list">
+                        <list editable="bottom">
+                            <field name="category"/>
+                            <field name="remarks"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <!-- <xpath expr="//page[@name='questions']" position="replace">
+            </xpath> -->
+            <xpath expr="//page[@name='event_communication']" position="replace">
+            </xpath>
+            <xpath expr="//page[@name='tickets']" position="replace">
+                <page string="Actual Expenses" name="tickets">
+                    <field name="event_ticket_ids" context="{'default_event_name': name,'list_view_ref': 'event.event_event_ticket_view_tree_from_event',                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event','kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>
+                </page>
+                <page string="Available Options" name="avaliable_options">
+                    <field name="avaliable_event_ticket_ids" context="{'default_event_name': name,'list_view_ref': 'event.event_event_ticket_view_tree_from_event',                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event','kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>
+                </page>
+            </xpath>
+            <!-- <xpath expr="//header" position="replace">
+            </xpath> -->
+        </field>
+    </record>
+
+    <record id="view_event_registration_form_inherits" model="ir.ui.view">
+        <field name="name">event.registration.form</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Attendee Details">
+                    <group>
+                        <group string="Attendee Details">
+                            <field name="comp_name"/>
+                            <field name="contact_name"/>
+                            <field name="designation"/>
+                            <field name="email"/>
+                            <field name="phone_no"/>
+                            <field name="website"/>
+                            <field name="category"/>
+                            <field name="subcategory"/>
+                        </group>
+                        <group string="Classification">
+                            <field name="hq_location"/>
+                            <field name="industry_segment"/>
+                            <field name="vessel_fleet_size"/>
+                            <field name="major_lubricant_grade_1"/>
+                            <field name="qty_1"/>
+                            <field name="major_lubricant_grade_2"/>
+                            <field name="qty_2"/>
+                            <field name="major_lubricant_grade_3"/>
+                            <field name="qty_3"/>
+                            <field name="annual_consumption"/>
+                            <field name="remarks"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_registration_tree_inherits" model="ir.ui.view">
+        <field name="name">event.registration.list</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <field name="comp_name"/>
+                <!-- <field name="contact_name"/> -->
+                <field name="designation"/>
+                <!-- <field name="email"/> -->
+                <!-- <field name="phone_no"/> -->
+                <field name="website"/>
+                <field name="category"/>
+                <field name="subcategory"/>
+                <field name="hq_location" optional="hide"/>
+                <field name="industry_segment" optional="hide"/>
+                <field name="vessel_fleet_size" optional="hide"/>
+                <field name="major_lubricant_grade_1" optional="hide"/>
+                <field name="qty_1" optional="hide"/>
+                <field name="major_lubricant_grade_2" optional="hide"/>
+                <field name="qty_2" optional="hide"/>
+                <field name="major_lubricant_grade_3" optional="hide"/>
+                <field name="qty_3" optional="hide"/>
+                <field name="annual_consumption" optional="hide"/>
+                <field name="remarks" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_tree_from_event_inherits" model="ir.ui.view">
+        <field name="name">event.event.list</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='start_sale_datetime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='end_sale_datetime']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath> -->
+            <xpath expr="//field[@name='start_sale_datetime']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='end_sale_datetime']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='seats_max']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='seats_taken']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" string="Description"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_tree_from_events_inherits" model="ir.ui.view">
+        <field name="name">event.event.list</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event_product.event_event_ticket_view_tree_from_event"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price']" position="replace">
+                <field name="currency" readonly="True"/>
+                <field name="price" sum="Total Price"/>
+            </xpath>
+            <xpath expr="//field[@name='product_id']" position="replace">
+                <field string="Expense Head" name="product_id" context="{'default_type': 'service','default_service_tracking': 'event',}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_kanban_inherits" model="ir.ui.view">
+        <field name="name">event.event.kanban</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="replace">
+                <kanban class="o_kanban_example">
+                    <field name="name"/>
+                    <field name="date_begin"/>
+                    <field name="date_end"/>
+                    <field name="address_id"/>
+                    <field name="registration_count"/>
+                    <field name="opportunity_volume"/>
+                    <field name="opportunity_revenue"/>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_card" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
+                                <div style="background-color: #0D597F; color: white; padding: 8px; font-weight: bold; border-radius: 4px;">
+                                    <field name="name"/>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <span class="fa fa-map-marker" style="margin-right: 8px; color: #444;"></span>
+                                    <field name="address_id" options="{'no_open': True}" context="{'show_address': 0}"/>
+                                </div>
+                                <div style="font-size: 13px;">
+                                    <span class="fa fa-calendar" style="margin-right: 8px; color: #444;"></span>
+                                    <field name="date_begin" widget="date"/> - <field name="date_end" widget="date"/>
+                                </div>
+                                <div>
+                                    <span class="fa fa-users" style="margin-right: 8px; color: #444;"></span>
+                                    <field name="registration_count"/> Attendees
+                                </div>
+                                <div>
+                                    <span class="fa fa-money" style="margin-right: 8px; color: #444;"></span>
+                                    <field name="opportunity_volume"/>
+                                </div>
+                                <div>
+                                    <span class="fa fa-usd" style="margin-right: 8px; color: #444;"></span>
+                                    <field name="opportunity_revenue"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </xpath>
+        </field>
+    </record>
+</odoo>

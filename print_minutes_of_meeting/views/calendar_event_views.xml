@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_email_template_form_inherit" model="ir.ui.view">
+        <field name="name">mail.template.form.inherit</field>
+        <field name="model">mail.template</field>
+        <field name="inherit_id" ref="mail.email_template_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='model_id']" position="after">
+                <field name="is_reminder"/>
+                <field name="reminder_before" invisible="not is_reminder"/>
+                <field name="reminder_unit" invisible="not is_reminder"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inheriting Calendar view form -->
+    <record id="view_calendar_event_form" model="ir.ui.view">
+        <field name="name">calendar.event.view.form.inherit.print.minutes.of.meeting</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook"
+                   position="inside">
+                <page string="Meeting Information">
+                    <group>
+                        <group>
+                            <field name="responsible_user_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="note_taker_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="absent_member_ids" widget="many2many_tags"/>
+                    </group>
+                    <label for="agenda_ids" string="Agenda"/>
+                    <field name="agenda_ids">
+                        <list string="Agenda" editable="bottom">
+                            <field name="topic"/>
+                            <field name="description"/>
+                            <field name="is_discussed"/>
+                        </list>
+                    </field>
+                    <br/>
+                    <label for="actions_ids" string="Actions/ Decisions"/>
+                    <field name="actions_ids">
+                        <list string="Actions / Decisions" editable="bottom">
+                            <field name="sequence"/>
+                            <field name="agenda_item_id" domain="[('id', 'in', parent.agenda_ids)]" optional="show"/>
+                            <field name="action" optional="show"/>
+                            <field name="description" width="390px" optional="show"/>
+                            <field name="responsible_partner_id" domain="[('id', 'in', parent.partner_ids)]" optional="show"/>
+                            <field name="assigned_partner_ids" widget="many2many_tags" domain="[('id', 'in', parent.partner_ids)]" optional="show"/>
+                            <field name="deadline" optional="show"/>
+                            <field name="status" optional="show"/>
+                            <field name="remarks" string="Key Bottlenecks" width="390px" optional="show"/>
+                            <field name="attachment_name" column_invisible="True"/>
+                            <field name="attachment_data" filename="attachment_name" widget="binary_preview" optional="show"/>
+                            <field name="extension_1" optional="show"/>
+                            <field name="extension_2" optional="show"/>
+                            <field name="extension_3" optional="show"/>
+                            <field name="previous_meeting_id" optional="show"/>
+                            <field name="previous_meeting_date" readonly="True" optional="show"/>
+                            <!-- <field name="action"/> -->
+                            <!-- <field name="description"/> -->
+                        </list>
+                    </field>
+                    <br/>
+                    <br/>
+                    <group string="Conclusion Notes">
+                        <field name="notes" placeholder="Conclusion notes"/>
+                    </group>
+                    <field name="is_user" invisible="True"/>
+                    <button name="action_send_mail" string="Send Meeting Minutes to Attendees"
+                            type="object" icon="fa-paper-plane" invisible="not is_user"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_dmeeting_actions_tree" model="ir.ui.view">
+        <field name="name">meeting.actions.list</field>
+        <field name="model">meeting.actions</field>
+        <field name="arch" type="xml">
+            <list string="Meeting Actions" sample="True" multi_edit="True" editable="bottom">
+                <field name="calendar_event_id" string="Meeting"/>
+                <field name="agenda_item_id" domain="[('calendar_event_id', '=', calendar_event_id)]"/>
+                 <!-- domain="[('calendar_event_id', '=', calendar_event_id)]" -->
+                <field name="action"/>
+                <field name="description" width="390px"/>
+                <!-- <field name="responsible_partner_id"/> -->
+                <field name="responsible_partner_id"/>
+                <field name="assigned_partner_ids" widget="many2many_tags"/>
+                <field name="deadline"/>
+                <field name="status"/>
+                <field name="remarks" string="Key Bottlenecks" width="390px"/>
+                <field name="attachment_name" column_invisible="True"/>
+                <field name="attachment_data" filename="attachment_name" widget="binary_preview"/>
+                <field name="extension_1"/>
+                <field name="extension_2"/>
+                <field name="extension_3"/>
+                <field name="previous_meeting_id"/>
+                <field name="previous_meeting_date" readonly="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_meeting_actions_search" model="ir.ui.view">
+        <field name="name">meeting.actions.search</field>
+        <field name="model">meeting.actions</field>
+        <field name="arch" type="xml">
+            <search string="Search Meeting Actions">
+                <field name="calendar_event_id"/>
+                <field name="agenda_item_id"/>
+                <field name="responsible_partner_id"/>
+                <field name="assigned_partner_ids"/>
+                <field name="status"/>
+                <field name="deadline"/>
+                <field name="previous_meeting_id"/>
+                <separator/>
+                <group>
+                    <filter name="group_by_meeting" string="Meeting" domain="[]" context="{'group_by': 'calendar_event_id'}"/>
+                    <filter name="group_by_agenda_item_id" string="Agenda" domain="[]" context="{'group_by': 'agenda_item_id'}"/>
+                    <filter name="group_by_status" string="Status" domain="[]" context="{'group_by': 'status'}"/>
+                    <filter name="group_by_previous_meeting" string="Previous Meeting" domain="[]" context="{'group_by': 'previous_meeting_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_meeting_actions" model="ir.actions.act_window">
+        <field name="name">Meeting Actions</field>
+        <field name="res_model">meeting.actions</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_meeting_actions" name="Meeting Actions" parent="calendar.mail_menu_calendar" action="action_meeting_actions" sequence="99"/>
+
+</odoo>

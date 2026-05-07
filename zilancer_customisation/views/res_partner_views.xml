@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_res_partner_form_inherists" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.business_sbu</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!-- Locate VAT field and add new fields below -->
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="business_unit" invisible="True"/>
+                    <!-- invisible="company_type != 'company'" -->
+                    <field name="sbu_name" invisible="True"/>
+                </xpath>
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="whatsapp_number" widget="phone" options="{'enable_sms': false}"/>
+                    <field name="region_code_id" domain="[('country_region_id', '=', country_id)]"/>
+                    <field name="company_id"/>
+                </xpath>
+                <xpath expr="//span[@name='address_name']" position="before">
+                    <field name="sort_name" invisible="company_type != 'company'"/>
+                    <field name="parent_sort_name" invisible="True"/>
+                </xpath>
+                <xpath expr="//div[hasclass('o_address_format')]" position="replace">
+                    <div class="o_address_format">
+                        <field name="street" placeholder="Street..." class="o_address_street"
+                            readonly="type == 'contact' and parent_id"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"
+                            readonly="type == 'contact' and parent_id"/>
+                        <div name="partner_address_country" class="d-flex justify-content-between">
+                            <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                readonly="type == 'contact' and parent_id" required="False"/>
+                        </div>
+                        <field name="city" placeholder="City" class="o_address_city"
+                            readonly="type == 'contact' and parent_id"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                            readonly="type == 'contact' and parent_id" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}" required="False"/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"
+                            readonly="type == 'contact' and parent_id"/>
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Social Media">
+                        <group>
+                            <group>
+                                <field name="facebook"/>
+                                <field name="instagram"/>
+                                <field name="linkedin"/>
+                                <field name="twitter"/>
+                                <field name="tiktok"/>
+                                <field name="youtube"/>
+                                <field name="pinterest"/>
+                                <field name="snapchat"/>
+                                <field name="whatsapp"/>
+                                <field name="reddit"/>
+                            </group>
+                            <group>
+                                <field name="wechat"/>
+                                <field name="telegram"/>
+                                <field name="twitch"/>
+                                <field name="discord"/>
+                                <field name="tumblr"/>
+                                <field name="vimeo"/>
+                                <field name="sina_weibo"/>
+                                <field name="nextdoor"/>
+                                <field name="quora"/>
+                                <field name="yelp"/>
+                            </group>
+                        </group>
+                    </page>
+                    <!-- <page string="Contracts">
+                        <field name="contract_ids" widget="one2many" readonly="False">
+                            <list editable="bottom" create="true" delete="true">
+                                <field name="contract_type_id"/>
+                                <field name="contract_status_id"/>
+                                <field name="contract_start_date"/>
+                                <field name="contract_end_date"/>
+                                <field name="alert_before"/>
+                            </list>
+                        </field>
+                    </page> -->
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_res_partner_kanban_view_inherists" model="ir.ui.view">
+            <field name="name">res.partner.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//main" position="replace">
+                    <!-- <main class="ps-2 ps-md-0">
+                        <div class="mb-1">
+                            <field t-if="record.parent_id.raw_value" class="text-muted" name="name"/>
+                            <field t-if="!record.parent_id.raw_value" class="text-muted" name="sort_name"/>
+                            <field t-elif="!record.parent_id.raw_value and record.function.raw_value" class="text-muted" name="function"/>
+                            <div t-elif="record.parent_id.raw_value and record.function.raw_value" class="text-muted">
+                                <field name="function"/> at <field name="parent_id"/>
+                            </div>
+                        </div>
+                        <div t-if="record.city.raw_value or record.country_id.raw_value">
+                            <field name="city"/>
+                            <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                            <field name="country_id"/>
+                        </div>
+                        <field name="email" class="text-truncate"/>
+                        <footer><div/></footer>
+                    </main> -->
+                    <main class="ps-2 ps-md-0">
+                        <div class="mb-1">
+                            <!-- Sort Name and Name -->
+                            <!-- <field name="sort_name" class="fw-bold text-primary"/>
+                            <field name="name" class="text-muted"/> -->
+                            <field t-if="record.parent_id.raw_value" class="text-muted" name="display_name"/>
+                            <field t-if="!record.parent_id.raw_value" class="text-muted" name="display_name"/>
+                            
+                        </div>
+
+                        <div class="mb-1">
+                            <!-- Designation -->
+                            <field name="function" class="text-muted"/>
+                        </div>
+
+                        <!-- Contact Info with icons -->
+                        <div class="mt-1">
+                            
+                            <!-- Phone -->
+                            <t t-if="record.phone.raw_value">
+                                <i class="fa fa-phone me-1 text-success"/> 
+                                <field name="phone"/>
+                            </t>
+                            <br/>
+
+                            <!-- Email -->
+                            <t t-if="record.email.raw_value">
+                                <i class="fa fa-envelope me-1 text-info"/>
+                                <field name="email"/>
+                            </t>
+                            <br/>
+
+                            <!-- WhatsApp -->
+                            <!-- <t t-if="record.mobile.raw_value">
+                                <i class="fa fa-whatsapp me-1 text-success"/>
+                                <field name="mobile"/>
+                            </t> -->
+                        </div>
+
+                        <!-- Optional: City & Country -->
+                        <div class="mt-1">
+                            <field name="city"/>
+                            <span t-if="record.city.raw_value and record.country_id.raw_value">, </span>
+                            <field name="country_id"/>
+                        </div>
+
+                        <!-- Footer (Empty or add action buttons if needed) -->
+                        <footer><div/></footer>
+                    </main>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- <record id="crm_lead_partner_kanban_view_inherit" model="ir.ui.view">
+            <field name="name">res.partner.kanban.saleorder.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="sale.crm_lead_partner_kanban_view"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//a[@name='action_view_sale_order']" position="replace">
+                    <a t-if="record.sale_order_count?.value"
+                        class="btn btn-sm btn-link smaller"
+                        groups="sales_team.group_sale_salesman"
+                        name="action_view_sale_order"
+                        role="button"
+                        type="object">
+                        <field name="sale_order_count"/>
+                    </a>
+                </xpath>
+            </field>
+        </record> -->
+
+        <record id="view_res_partner_filter_inherit" model="ir.ui.view">
+            <field name="name">res.partner.saleorder.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_id']" position="after">
+                    <field name="region_code_id"/>
+                </xpath>
+                <xpath expr="//filter[@name='group_company']" position="replace">
+                    <filter name="group_company" string="Company" context="{'group_by': 'company_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="contacts.action_contacts" model="ir.actions.act_window">
+            <field name="domain" eval="[('user_ids', '=', False)]"/>
+        </record>
+
+        <record id="link_tracker_view_form_inherit" model="ir.ui.view">
+            <field name="name">link.tracker.view.form.inherit</field>
+            <field name="model">link.tracker</field>
+            <field name="inherit_id" ref="link_tracker.link_tracker_view_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Replace the whole group -->
+                <group name="link" string="Link">
+                    <group name="link" string="Link">
+                        <field name="url" string="Target Link"/>
+                        <field name="title"/>
+                        <field name="label"/>
+                        <field name="short_url_host" string="Tracked URL"/>
+                    </group>
+                </group>
+
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_documents" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@t-if='doc.user_id.name']" position="replace">
+            <div t-if="doc.user_id.name" class="col">
+                <strong>Quoted by</strong>
+                <div t-field="doc.user_id">Mitchell Admin</div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='expiration_date']" position="replace">
+            <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
+                class="col"
+                name="expiration_date">
+                <strong>Quote Valid Till Date</strong>
+                <div t-field="doc.validity_date">2023-12-31</div>
+            </div>
+        </xpath>
+        
+        <xpath expr="//table[hasclass('o_has_total_table')]" position="replace">
+            <table class="o_has_total_table table o_main_table table-borderless" style="width:100%;">
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group;width:100%;">
+                    <tr>
+                        <th style="width:10%;" name="th_inquired" class="text-start">Inquired Item</th>
+                        <th style="width:25%;" name="th_description" class="text-start">Proposed Item</th>
+                        <th style="width:10%;" name="th_items" class="text-start">Item Category</th>
+                        <th style="width:10%;" name="th_quantity" class="text-end text-nowrap">Qty(In Ltr.)</th>
+                        <th style="width:10%;" name="th_quantity" class="text-end text-nowrap">Pack Size</th>
+                        <th style="width:10%;" name="th_quantity" class="text-end text-nowrap">No of Units</th>
+                        <th style="width:10%;" name="th_priceunit" class="text-end text-nowrap">Unit Price</th>
+                        <!-- <th name="th_discount" t-if="display_discount" class="text-end">
+                            <span>Disc.%</span>
+                        </th> -->
+                        <!-- <th name="th_taxes" class="text-end">Taxes</th> -->
+                        <th style="width:10%;" name="th_subtotal" class="text-end">
+                            <span>Amount</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+
+                    <t t-set="current_subtotal" t-value="0"/>
+
+                    <t t-foreach="lines_to_report" t-as="line">
+
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+
+                        <tr
+                            t-att-class="'fw-bold o_line_section' if (
+                                line.display_type == 'line_section'
+                                or line.product_type == 'combo'
+                            )
+                            else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                            else ''"
+                        >
+                            <t t-if="not line.display_type and line.product_type != 'combo'">
+                                <td style="width:10%;" name="td_inquired" class="text-end text-nowrap">
+                                    <span t-field="line.customer_ref_id.name">3</span>
+                                </td>
+                                <!-- <td style="width:25%;" name="td_name"><span t-field="line.name">Bacon Burger</span><t t-if="line.product_id.pds_link">(<a><span t-field="line.product_id.pds_link"></span></a>)</t></td> -->
+                                <td style="width:25%;" name="td_name">
+                                    <t t-if="line.product_id.pds_link">
+                                        <a t-att-href="line.product_id.pds_link" target="new">
+                                            <span t-field="line.name"/>
+                                        </a>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-field="line.name"/>
+                                    </t>
+                                </td>
+                                <!-- <td name="td_customer_brand" class="text-end text-nowrap">
+                                    <span t-field="line.customer_ref_id.customer_brand">3</span>
+                                </td> -->
+                                <td style="width:10%;" name="td_cust_ref_pro_category" class="text-end text-nowrap">
+                                    <span t-field="line.customer_ref_id.cust_ref_pro_category">3</span>
+                                </td>
+                                <td style="width:10%;" name="td_unit_qty" class="text-end text-nowrap">
+                                    <span t-field="line.unit_qty">3</span>
+                                    <span t-field="line.product_uom">units</span>
+                                </td>
+                                <td style="width:10%;" name="td_unit_qty" class="text-end text-nowrap">
+                                    <span t-field="line.pack_size_id.name">3</span>
+                                </td>
+                                <td style="width:10%;" name="td_quantity" class="text-end text-nowrap">
+                                    <span t-field="line.product_uom_qty">3</span>
+                                    <!-- <span t-if="line.product_packaging_id">
+                                        (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
+                                    </span> -->
+                                </td>
+                                <td style="width:10%;" name="td_priceunit" class="text-end text-nowrap">
+                                    <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'>3</span>
+                                </td>
+                                <!-- <td t-if="display_discount" class="text-end">
+                                    <span t-field="line.discount">-</span>
+                                </td> -->
+                                <!-- <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/> -->
+                                <!-- <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                    <span t-out="taxes">Tax 15%</span>
+                                </td> -->
+                                <td style="width:10%;" t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+                                    <span t-field="line.price_subtotal">27.00</span>
+                                </td>
+                            </t>
+                            <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
+                                <td name="td_section_line" colspan="99">
+                                    <span t-field="line.name">A section title</span>
+                                </td>
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </t>
+                            <t t-elif="line.display_type == 'line_note'">
+                                <td name="td_note_line" colspan="99">
+                                    <span t-field="line.name">A note, whose content usually applies to the section or product above.</span>
+                                </td>
+                            </t>
+                        </tr>
+
+                        <t
+                            t-if="current_section and (
+                                line_last
+                                or lines_to_report[line_index+1].display_type == 'line_section'
+                                or lines_to_report[line_index+1].product_type == 'combo'
+                                or (
+                                    line.combo_item_id
+                                    and not lines_to_report[line_index+1].combo_item_id
+                                )
+                            ) and not line.is_downpayment"
+                        >
+                            <t t-set="current_section" t-value="None"/>
+                            <tr class="is-subtotal text-end">
+                                <td name="td_section_subtotal" colspan="99">
+                                    <strong class="mr16">Subtotal</strong>
+                                    <span
+                                        t-out="current_subtotal"
+                                        t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                    >31.05</span>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </xpath>
+        <xpath expr="//div[@name='so_total_summary']" position="replace">
+            <div class="clearfix" name="so_total_summary">
+                <div id="total" class="row mt-n3" name="total">
+                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                        <table class="o_total_table table table-borderless">
+                            <!-- Tax totals -->
+                            <!-- <t t-call="sale.document_tax_totals"> -->
+                            <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                            <t t-set="currency" t-value="doc.currency_id"/>
+                            <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
+                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                <tr class="o_subtotal">
+                                    <td>
+                                        <span>Amount Before Tax</span>
+                                        <!-- t-out="subtotal['name']" -->
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-att-class="oe_subtotal_footer_separator"
+                                              t-out="subtotal['base_amount_currency']"
+                                              t-options='{"widget": "monetary", "display_currency": currency}'
+                                        >27.00</span>
+                                    </td>
+                                </tr>
+
+                                <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
+                                    <tr class="o_taxes">
+                                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
+                                            <td>
+                                                <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap"
+                                                      t-out="tax_group['tax_amount_currency']"
+                                                      t-options='{"widget": "monetary", "display_currency": currency}'
+                                                >1.05</span>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td>
+                                                <span t-out="tax_group['group_name']">Tax 15%</span>
+                                                <span> on </span>
+                                                <span class="text-nowrap"
+                                                      t-out="tax_group['display_base_amount_currency']"
+                                                      t-options='{"widget": "monetary", "display_currency": currency}'
+                                                >27.00</span>
+                                            </td>
+                                            <td class="text-end o_price_total">
+                                                <span class="text-nowrap"
+                                                      t-out="tax_group['tax_amount_currency']"
+                                                      t-options='{"widget": "monetary", "display_currency": currency}'
+                                                >4.05</span>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </t>
+
+                            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals">
+                                <td>Rounding</td>
+                                <td class="text-end">
+                                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
+                                          t-options='{"widget": "monetary", "display_currency": currency}'
+                                    >0</span>
+                                </td>
+                            </tr>
+                            
+                            <tr class="o_total">
+                                <td><strong>Total</strong></td>
+                                <td class="text-end">
+                                    <strong t-out="tax_totals['total_amount_currency']"
+                                            t-options='{"widget": "monetary", "display_currency": currency}'
+                                    >31.05</strong>
+                                </td>
+                            </tr>
+                            <!-- </t> -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
