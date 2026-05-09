@@ -42,7 +42,6 @@ class MailTemplate(models.Model):
     ], string='Time Unit', default='minutes', help='Unit of time for the reminder')
 
     def get_delta(self):
-        """Convert the reminder time value and unit to a timedelta"""
         self.ensure_one()
         value = int(self.reminder_before)  # Convert float to int
         if self.reminder_unit == 'minutes':
