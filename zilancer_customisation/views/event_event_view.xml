@@ -20,7 +20,6 @@
                 <field name="image_1920" widget="image"
                        style="height: 200px; width: 200px;float: right;"
                        options='{"zoom": true}'/>
-
             </xpath>
             <xpath expr="//field[@name='address_id']" position="replace">
                 <field name="venue"/>
@@ -49,7 +48,7 @@
                     <field name="avaliable_event_ticket_ids" context="{'default_event_name': name,'list_view_ref': 'event.event_event_ticket_view_tree_from_event',                                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event','kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>
                 </page>
             </xpath>
-            </field>
+        </field>
     </record>
 
     <record id="view_event_registration_form_inherits" model="ir.ui.view">
