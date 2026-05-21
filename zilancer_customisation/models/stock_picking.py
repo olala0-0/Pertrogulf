@@ -60,12 +60,14 @@ class StockPicking(models.Model):
     receiver_name = fields.Char(string='Receiver Name')
     receiver_sign = fields.Char(string='Receiver Sign (Print Only)')
 
-    @api.model
-    def create(self, vals):
-        # Generate document number only if document_type is set
-        if vals.get('document_type') and not vals.get('document_number'):
-            vals['document_number'] = self._generate_document_number_simple(vals['document_type'])
-        return super(StockPicking, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Handle structural conversion for multi-record creation loops in modern Odoo
+        for vals in vals_list:
+            # Generate document number only if document_type is set
+            if vals.get('document_type') and not vals.get('document_number'):
+                vals['document_number'] = self._generate_document_number_simple(vals['document_type'])
+        return super(StockPicking, self).create(vals_list)
     
     def write(self, vals):
         # If document_type is changed and picking is not done/draft, regenerate document number
