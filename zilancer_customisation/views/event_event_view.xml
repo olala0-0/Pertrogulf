@@ -1,10 +1,3 @@
-The `ParseError` on your module upgrade happened because of a syntax change introduced in modern Odoo Enterprise versions (v18 and v19).
-
-Inside your `view_event_kanban_inherits` template definition (lines 118–121), the layout rendering uses the old style `t-name="kanban-box"`. In newer versions of Odoo Enterprise, this template name has been renamed across the framework to **`t-name="card"`**. Because Odoo couldn't find the old card container layout definition, the XML compiler threw a structural validation error.
-
-Here is the fully corrected, clean XML file with **`t-name="card"`** implemented. No other views, layouts, custom fields, pages, or logic records have been modified.
-
-```xml
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="view_event_form_form_inherits" model="ir.ui.view">
@@ -205,5 +198,3 @@ Here is the fully corrected, clean XML file with **`t-name="card"`** implemented
         </field>
     </record>
 </odoo>
-
-```
