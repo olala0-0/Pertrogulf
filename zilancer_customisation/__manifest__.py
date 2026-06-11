@@ -9,7 +9,7 @@
     'company': 'Zilancer',
     'maintainer': 'Zilancer',
     'website': 'https://www.zilancer.com',
-    'depends': ['mail', 'contacts', 'sale', 'sale_stock', 'project', 'helpdesk_mgmt', 'print_minutes_of_meeting', 'link_tracker', 'event'],
+    'depends': ['mail', 'contacts', 'sale', 'sale_stock', 'project', 'helpdesk_mgmt', 'print_minutes_of_meeting', 'link_tracker', 'event', 'sale_order_enquiry'],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',

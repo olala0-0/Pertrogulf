@@ -1,5 +1,9 @@
 from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.addons.sale_order_enquiry.business_unit_data import (
+    BUSINESS_UNIT_SELECTION,
+    get_business_unit_prefix,
+)
 from datetime import datetime
 
 
@@ -110,15 +114,9 @@ class OrderEnquiry(models.Model):
     # amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     # tax_totals = fields.Binary(compute='_compute_tax_totals', exportable=False)
     business_unit = fields.Selection(
-        [
-            ("pg_marine", "PG-Marine"),
-            ("pg_auto", "PG-Auto"),
-            ("pg_powerx", "PG-PowerX"),
-            ("pg_aviation", "PG-Aviation"),
-            ("pg_tblnd", "PG-Toll Blending"),
-        ],
+        BUSINESS_UNIT_SELECTION,
         string="Business Unit",
-        default=lambda self: self.env.company.business_unit
+        # default=lambda self: self.env.company.business_unit
     )
     # default=lambda self: self.env.company.business_unit
     # master_brand = fields.Char(string="Master Brand")
@@ -279,15 +277,7 @@ class OrderEnquiry(models.Model):
                 if not bu:
                     raise UserError("Business Unit is required to generate the sequence.")
 
-                # Get prefix by business unit
-                prefix_map = {
-                    "pg_marine": "PG-MARINE",
-                    "pg_auto": "PG-AUTO",
-                    "pg_powerx": "PG-POWERX",
-                    "pg_aviation": "PG-AVIATION",
-                    "pg_tblnd": "PG-TBLND",
-                }
-                prefix = prefix_map.get(bu, "PG")
+                prefix = get_business_unit_prefix(bu) or "PG"
 
                 # Month & Year
                 now = datetime.now()
@@ -539,14 +529,7 @@ class OrderEnquiry(models.Model):
                     or fallback_default
                 )
 
-            # Mapping to prefix format
-            bu_prefix = {
-                "pg_marine": "PG-MARINE",
-                "pg_auto": "PG-AUTO",
-                "pg_powerx": "PG-POWERX",
-                "pg_aviation": "PG-AVIATION",
-                "pg_tblnd": "PG-TBLND",
-            }.get(business_unit)
+            bu_prefix = get_business_unit_prefix(business_unit)
 
             if not bu_prefix:
                 fallback_code = (

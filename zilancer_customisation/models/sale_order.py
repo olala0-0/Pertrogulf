@@ -1,5 +1,9 @@
 from odoo import models, fields, Command, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.sale_order_enquiry.business_unit_data import (
+    BUSINESS_UNIT_SELECTION,
+    get_business_unit_prefix,
+)
 from datetime import datetime
 from datetime import timedelta
 from collections import defaultdict
@@ -177,15 +181,9 @@ class SaleOrder(models.Model):
     )
     delivery_type_id = fields.Many2one("delivery.type", string="Delivery Type")
     business_unit = fields.Selection(
-        [
-            ("pg_marine", "PG-Marine"),
-            ("pg_auto", "PG-Auto"),
-            ("pg_powerx", "PG-PowerX"),
-            ("pg_aviation", "PG-Aviation"),
-            ("pg_tblnd", "PG-Toll Blending"),
-        ],
+        BUSINESS_UNIT_SELECTION,
         string="Business Unit",
-        default=lambda self: self.env.company.business_unit
+        # default=lambda self: self.env.company.business_unit
     )
     # default=lambda self: self.env.company.business_unit
     master_brand = fields.Char(string="Master Brand")
@@ -527,14 +525,7 @@ class SaleOrder(models.Model):
                 if not bu:
                     raise UserError("Business Unit is required to generate the sequence.")
 
-                # Mapping to prefix format
-                bu_prefix = {
-                    "pg_marine": "PG-MARINE",
-                    "pg_auto": "PG-AUTO",
-                    "pg_powerx": "PG-POWERX",
-                    "pg_aviation": "PG-AVIATION",
-                    "pg_tblnd": "PG-TBLND",
-                }.get(bu)
+                bu_prefix = get_business_unit_prefix(bu)
 
                 if not bu_prefix:
                     raise UserError(f"Invalid business unit: {bu}")

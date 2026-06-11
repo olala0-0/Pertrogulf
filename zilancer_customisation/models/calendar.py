@@ -1,5 +1,9 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.sale_order_enquiry.business_unit_data import (
+    BUSINESS_UNIT_SELECTION,
+    get_business_unit_prefix,
+)
 from datetime import datetime
 
 
@@ -10,13 +14,11 @@ class CalendarEvent(models.Model):
         'conclusion.point', 'event_id', string="Conclusion Points"
     )
     meeting_id = fields.Char(string="Meeting ID", readonly=True, copy=False, default="New")
-    business_unit = fields.Selection([
-        ('pg_marine', 'PG-Marine'),
-        ('pg_auto', 'PG-Auto'),
-        ('pg_powerx', 'PG-PowerX'),
-        ('pg_aviation', 'PG-Aviation'),
-        ('pg_tblnd', 'PG-Toll Blending')
-    ], string="Business Unit", required=True)
+    business_unit = fields.Selection(
+        BUSINESS_UNIT_SELECTION,
+        string="Business Unit",
+        required=True,
+    )
 
     # @api.model_create_multi
     # def create(self, vals_list):
@@ -31,13 +33,7 @@ class CalendarEvent(models.Model):
             bu = vals.get('business_unit')
             if not bu:
                 raise UserError("Business Unit is required to generate the sequence.")
-            bu_prefix = {
-                'pg_marine': 'PG-MARINE',
-                'pg_auto': 'PG-AUTO',
-                'pg_powerx': 'PG-POWERX',
-                'pg_aviation': 'PG-AVIATION',
-                'pg_tblnd': 'PG-TBLND',
-            }.get(vals['business_unit'], 'PG')
+            bu_prefix = get_business_unit_prefix(vals['business_unit']) or 'PG'
 
             now = fields.Date.today()
             date_code = now.strftime('%b').upper() + now.strftime('%y')  # APR25
