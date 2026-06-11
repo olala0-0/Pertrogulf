@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- <record id="view_decoration_location_tree" model="ir.ui.view">
+            <field name="name">decoration.location.list</field>
+            <field name="model">decoration.location</field>
+            <field name="arch" type="xml">
+                <list string="Decoration Location">
+                    <field name="name"/>
+                    <field name="is_tba"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_decoration_location_form" model="ir.ui.view">
+            <field name="name">decoration.location.form</field>
+            <field name="model">decoration.location</field>
+            <field name="arch" type="xml">
+                <form string="Decoration Location">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="is_tba"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record> -->
+
+        <record id="action_customer_reference_master" model="ir.actions.act_window">
+            <field name="name">Customer Reference Master</field>
+            <field name="res_model">customer.reference.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_brand_master" model="ir.actions.act_window">
+            <field name="name">Brand Master</field>
+            <field name="res_model">brand.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_port_master" model="ir.actions.act_window">
+            <field name="name">Port Master</field>
+            <field name="res_model">port.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_pack_size_master" model="ir.actions.act_window">
+            <field name="name">Pack Sizes</field>
+            <field name="res_model">pack.size.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_unit_count_master" model="ir.actions.act_window">
+            <field name="name">No of Units</field>
+            <field name="res_model">unit.count.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_sale_reason" model="ir.actions.act_window">
+            <field name="name">Reason</field>
+            <field name="res_model">sale.reason</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_source_inquiry" model="ir.actions.act_window">
+            <field name="name">Source of Inquiry</field>
+            <field name="res_model">sale.reason</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_delivery_by" model="ir.actions.act_window">
+            <field name="name">Delivery By</field>
+            <field name="res_model">delivery.by</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_delivery_type" model="ir.actions.act_window">
+            <field name="name">Delivery Type</field>
+            <field name="res_model">delivery.type</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="view_process_master_trees" model="ir.ui.view">
+            <field name="name">process.master.list</field>
+            <field name="model">process.master</field>
+            <field name="arch" type="xml">
+                <list string="Process Master">
+                    <field name="name"/>
+                    <field name="team_id"/>
+                    <field name="stage_no"/>
+                    <field name="stage"/>
+                    <field name="progress"/>
+                    <field name="business_unit"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_process_master_form" model="ir.ui.view">
+            <field name="name">process.master.form</field>
+            <field name="model">process.master</field>
+            <field name="arch" type="xml">
+                <form string="Process Master">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="team_id"/>
+                                <field name="stage_no"/>
+                                <field name="stage"/>
+                                <field name="progress"/>
+                                <field name="business_unit"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View for Process Master -->
+        <!-- <record id="view_process_master_kanban" model="ir.ui.view">
+            <field name="name">process.master.kanban</field>
+            <field name="model">process.master</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="business_unit" class="o_kanban_small_column">
+                    <field name="name"/>
+                    <field name="team_id"/>
+                    <field name="team"/>
+                    <field name="stage_no"/>
+                    <field name="stage"/>
+                    <field name="progress"/>
+                    <field name="business_unit"/>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_field_char o_field_name">
+                                            <strong class="text-primary">
+                                                Process #<field name="name"/>
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_manage_pane dropdown">
+                                        <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <i class="fa fa-ellipsis-v" aria-label="Manage"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                            <div class="dropdown-divider"/>
+                                            <div class="o_kanban_colorpicker" data-field="color"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_card_content">
+                                    <div class="container-fluid p-0">
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-3 text-right">
+                                                <i class="fa fa-users text-muted"/>
+                                            </div>
+                                            <div class="col-9">
+                                                <strong><field name="team_id"/></strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-3 text-right">
+                                                <i class="fa fa-list-ol text-muted"/>
+                                            </div>
+                                            <div class="col-9">
+                                                <span class="text-muted">Stage </span>
+                                                <span class="badge badge-info badge-pill">
+                                                    <field name="stage_no"/>
+                                                </span>
+                                                <span class="ml-2"><field name="stage"/></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-2">
+                                            <div class="col-3 text-right">
+                                                <i class="fa fa-chart-line text-muted"/>
+                                            </div>
+                                            <div class="col-9">
+                                                <span class="text-muted">Progress: </span>
+                                                <span class="badge badge-warning">
+                                                    <field name="progress"/>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-3 text-right">
+                                                <i class="fa fa-building text-muted"/>
+                                            </div>
+                                            <div class="col-9">
+                                                <t t-if="record.business_unit and record.business_unit.raw_value == 'automotive'">
+                                                    <span class="badge badge-primary">
+                                                        <i class="fa fa-car"/> Automotive Industrial
+                                                    </span>
+                                                </t>
+                                                <t t-elif="record.business_unit and record.business_unit.raw_value == 'adnoc'">
+                                                    <span class="badge badge-success">
+                                                        <i class="fa fa-industry"/> ADNOC
+                                                    </span>
+                                                </t>
+                                                <t t-else="">
+                                                    <span class="badge badge-secondary">
+                                                        <field name="business_unit"/>
+                                                    </span>
+                                                </t>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_card_footer mt-2 pt-2 border-top">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="text-muted small">
+                                            <i class="fa fa-clock-o"/> 
+                                            Last Updated
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <t t-if="record.create_uid">
+                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.create_uid.raw_value)" 
+                                                     t-att-title="record.create_uid.value" 
+                                                     t-att-alt="record.create_uid.value" 
+                                                     width="24" height="24" 
+                                                     class="oe_kanban_avatar rounded-circle"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record> -->
+
+
+        <record id="view_process_master_kanban" model="ir.ui.view">
+            <field name="name">process.master.kanban</field>
+            <field name="model">process.master</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="team_id">
+                    <field name="name"/>
+                    <field name="team_id"/>
+                    <field name="stage_no"/>
+                    <field name="stage"/>
+                    <field name="progress"/>
+                    <field name="business_unit"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click" style="margin-bottom: 10px;">
+                                
+                                <!-- Header -->
+                                <div class="oe_kanban_content" style="padding: 10px;">
+                                    <div style="font-weight: bold; font-size: 14px; color: #2E86AB; margin-bottom: 8px;">
+                                        Process #<field name="name"/>
+                                    </div>
+                                    
+                                    <!-- Team -->
+                                    <div style="margin-bottom: 6px;">
+                                        <span style="color: #666;">Team: </span>
+                                        <strong><field name="team_id"/></strong>
+                                    </div>
+                                    
+                                    <!-- Stage -->
+                                    <div style="margin-bottom: 6px;">
+                                        <span style="color: #666;">Stage No: </span>
+                                        <span style="background: #17a2b8; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
+                                            <field name="stage_no"/>
+                                        </span>
+                                        <!-- <span style="margin-left: 5px;"><field name="stage"/></span> -->
+                                    </div>
+
+                                    <div style="margin-bottom: 8px;">
+                                        <span style="color: #666;">Stage: </span>
+                                        <span>
+                                            <field name="stage"/>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Progress -->
+                                    <div style="margin-bottom: 8px;">
+                                        <span style="color: #666;">Progress: </span>
+                                        <span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 3px; font-size: 11px;">
+                                            <field name="progress"/>
+                                        </span>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div style="border-top: 1px solid #eee; padding: 8px 10px; background: #f8f9fa;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <t t-if="record.business_unit and record.business_unit.raw_value == 'automotive'">
+                                                <span style="background: #007bff; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                                                    Automotive
+                                                </span>
+                                            </t>
+                                            <t t-elif="record.business_unit and record.business_unit.raw_value == 'adnoc'">
+                                                <span style="background: #6f42c1; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                                                    ADNOC
+                                                </span>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 10px;">
+                                                    <field name="business_unit"/>
+                                                </span>
+                                            </t>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <t t-if="record.create_uid and record.create_uid.raw_value">
+                                                <img t-att-src="kanban_image('res.users', 'avatar_128', record.create_uid.raw_value)" 
+                                                     width="20" height="20" 
+                                                     class="oe_kanban_avatar" 
+                                                     style="border-radius: 50%;"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_process_master" model="ir.actions.act_window">
+            <field name="name">Process Master</field>
+            <field name="res_model">process.master</field>
+            <field name="view_mode">kanban,list,form</field>
+        </record>
+
+        <record id="view_process_master_tree" model="ir.ui.view">
+            <field name="name">process.user.master.list</field>
+            <field name="model">process.user.master</field>
+            <field name="arch" type="xml">
+                <list string="Process User Master">
+                    <field name="user_business_unit"/>
+                    <field name="team_id"/>
+                    <field name="user_ids" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_process_master_forms" model="ir.ui.view">
+            <field name="name">process.user.master.form</field>
+            <field name="model">process.user.master</field>
+            <field name="arch" type="xml">
+                <form string="Process User Master">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="user_business_unit"/>
+                                <field name="portal_master_ids" invisible="True"/>
+                                <field name="team_id" domain="[('id', 'in', portal_master_ids)]"/>
+                                <field name="user_ids" widget="many2many_tags"/>
+                                <field name="business_unit" invisible="True"/>
+                            </group>
+                            <group>
+                                <!-- <field name="stage"/>
+                                <field name="progress"/>
+                                <field name="business_unit"/> -->
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_process_user_master" model="ir.actions.act_window">
+            <field name="name">Process User Master</field>
+            <field name="res_model">process.user.master</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_team_team" model="ir.actions.act_window">
+            <field name="name">Teams</field>
+            <field name="res_model">team.team</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="view_vesal_master_tree" model="ir.ui.view">
+            <field name="name">vessel.no.list</field>
+            <field name="model">vessel.no</field>
+            <field name="arch" type="xml">
+                <list string="Vessal Master">
+                    <field name="name"/>
+                    <field name="imo_number"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_vesal_master" model="ir.actions.act_window">
+            <field name="name">Vessal Master</field>
+            <field name="res_model">vessel.no</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Menu Items under Sales Configuration -->
+        <menuitem id="inq_mastern_root" name="Inquiry Settings" parent="sale.menu_sale_config" sequence="20"/>
+        <menuitem id="menu_inq_mastern_root" name="Customer Reference Master" parent="inq_mastern_root" action="action_customer_reference_master" sequence="1"/>
+        <menuitem id="menu_brand_master" name="Brand Master" parent="inq_mastern_root" action="action_brand_master" sequence="2"/>
+        <menuitem id="menu_port_master" name="Port Master" parent="inq_mastern_root" action="action_port_master" sequence="3"/>
+        <menuitem id="menu_pack_size_master" name="Pack Sizes" parent="inq_mastern_root" action="action_pack_size_master" sequence="4"/>
+        <menuitem id="menu_unit_count_master" name="No of Units" parent="inq_mastern_root" action="action_unit_count_master" sequence="5"/>
+        <menuitem id="menu_sale_reason" name="Reasons" parent="inq_mastern_root" action="action_sale_reason" sequence="6"/>
+        <menuitem id="menu_source_inquiry" name="Source of Inquiry" parent="inq_mastern_root" action="action_source_inquiry" sequence="7"/>
+        <menuitem id="menu_source_delivery_by" name="Delivery By" parent="inq_mastern_root" action="action_delivery_by" sequence="8"/>
+        <menuitem id="menu_source_delivery_type" name="Delivery Type" parent="inq_mastern_root" action="action_delivery_type" sequence="9"/>
+        <menuitem id="menu_process_master" name="Process Master" parent="inq_mastern_root" action="action_process_master" sequence="10"/>
+        <menuitem id="menu_process_user_master" name="Process User Master" parent="inq_mastern_root" action="action_process_user_master" sequence="11"/>
+        <menuitem id="menu_team_team" name="Teams" parent="inq_mastern_root" action="action_team_team" sequence="12"/>
+        <menuitem id="menu_action_vesal_master" name="Vessal Master" parent="inq_mastern_root" action="action_vesal_master" sequence="13"/>
+    </data>
+</odoo>

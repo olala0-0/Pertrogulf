@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_template_form_customs" model="ir.ui.view">
+        <field name="name">product.template.form.custom</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_policy']" position="replace">
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_customs" model="ir.ui.view">
+        <field name="name">product.template.form.custom</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='inventory']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="pds_link"/>
+                <field name="pack_size_id"/>
+                <field name="moq_pkg_type"/>
+                <field name="kgs_per_pkg_type"/>
+            </xpath>
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-flex">
+                    <field name="is_expences" readonly="False"/>
+                    <label for="is_expences"/>
+                </span>
+            </xpath>
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="sap_fg_code"/>
+                <field name="hs_code"/>
+                <field name="client_product_code"/>
+                <field name="sap_fg_description"/>
+                <field name="client_fg_description"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale.product_template_action" model="ir.actions.act_window">
+        <field name="domain">['|', '|', ('company_id', '!=', False), ('name', 'ilike', 'Delivery%'), ('name', 'ilike', 'Discount%')]</field>
+    </record>
+
+</odoo>

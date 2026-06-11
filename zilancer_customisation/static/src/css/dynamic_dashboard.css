@@ -1,0 +1,24 @@
+.o_sales_person_dashboard .oe_kanban_card {
+    min-height: 200px;
+}
+
+.o_sales_person_dashboard .oe_kanban_card .oe_kanban_bottom_left button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.o_kanban_dashboard .oe_kanban_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Card content hover effects */
+.o_kanban_dashboard .oe_kanban_card a[type="object"] > div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Management pane hover effects */
+.o_kanban_dashboard .o_kanban_manage_pane a:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

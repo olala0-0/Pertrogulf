@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_sale_line_wizard_form" model="ir.ui.view">
+        <field name="name">view_sale_line_wizard_form</field>
+        <field name="model">sale.line.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="2">
+                        <group>
+                            <field name="type"/>
+                            <field name="sale_order_id" nolabel="True" invisible="multi_order" domain="[('id', 'in', sale_domain_ids)]"/>
+                            <field name="sale_order_ids" widget="many2many_tags" nolabel="True" domain="[('id', 'in', sale_domain_ids)]" invisible="not multi_order"/>
+                            <field name="sale_domain_ids" widget="many2many_tags" nolabel="True" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="multi_order"/>
+                            <field name="clear_add"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="button_create_order_line" type="object"  string="Create Lines"
+                        class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+        <record model="ir.actions.act_window" id="action_sale_line_wizard">
+            <field name="name">Add Sale Line Wizard</field>
+            <field name="res_model">sale.line.wizard</field>
+            <field name="view_mode">list,form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_sale_line_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_add_product_wizard_form" model="ir.ui.view">
+            <field name="name">view_add_product_wizard_form</field>
+            <field name="model">product.add.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group col="3">
+                            <group>
+                                <field name="order_type"/>
+                                <field name="sale_order_id" nolabel="True" invisible="order_type != 'single_sale'" domain="[('id', 'in', sale_domain_ids)]"/>
+                                <field name="sale_order_ids" widget="many2many_tags" nolabel="True" domain="[('id', 'in', sale_domain_ids)]"
+                                       invisible="order_type in 'single_sale'" />
+                                <field name="sale_domain_ids" invisible="True" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="product_id" readonly="True" options="{'no_quick_create': True, 'no_create_edit': True, 'no_open': True, 'no_create': True}" />
+                                <field name="price_unit"/>
+                                <field name="company_id" invisible="True"/>
+                                <field name="currency_id" invisible="True"/>
+                            </group>
+                            <group>
+                                <label for="product_uom_qty" string="Quantity"/>
+                                <div class="d-flex">
+                                    <field name="product_uom_qty"/>
+                                    <span>&amp;nbsp;&amp;nbsp;</span>
+                                    <field name="product_uom"/>
+                                </div>
+                                <field name="tax_id" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="button_add_product" type="object"  string="+Add Product"
+                            class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_add_product_wizard">
+            <field name="name">Add Product Wizard</field>
+            <field name="res_model">product.add.wizard</field>
+            <field name="view_mode">list,form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_add_product_wizard_form"/>
+            <field name="target">new</field>
+        </record>
+
+
+</odoo>

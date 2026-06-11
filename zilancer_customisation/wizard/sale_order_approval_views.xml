@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Approval Wizard View -->
+        <record id="view_sale_order_approval_wizard" model="ir.ui.view">
+            <field name="name">sale.order.approval.wizard.form</field>
+            <field name="model">sale.order.approval.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Approve Sale Order">
+                    <group>
+                        <field name="sale_order_id" invisible="True"/>
+                        <field name="remarks"/>
+                    </group>
+                    <footer>
+                        <button string="Confirm" name="action_confirm_approval" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

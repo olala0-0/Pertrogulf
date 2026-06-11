@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Dashboard Tree View -->
+    <record id="view_sales_person_dashboard_tree" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.list</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <list string="Sales Dashboards" decoration-info="lead_count > 0" decoration-success="order_count > 0">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="lead_count"/>
+                <field name="opportunity_count"/>
+                <field name="quotation_count"/>
+                <field name="order_count"/>
+                <field name="delivered_count"/>
+                <field name="total_revenue"/>
+                <!-- <field name="quotation_to_order_rate" widget="percentage"/> -->
+                <field name="date_from"/>
+                <field name="date_to"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Dashboard Graph View -->
+    <record id="view_sales_person_dashboard_graph" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.graph</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Performance Analysis" type="bar" stacked="True">
+                <field name="user_id"/>
+                <field name="lead_count"/>
+                <field name="opportunity_count"/>
+                <field name="quotation_count"/>
+                <field name="order_count"/>
+                <!-- <field name="total_revenue" type="measure"/> -->
+                <!-- <field name="quotation_to_order_rate" type="measure"/> -->
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Dashboard Pivot View -->
+    <record id="view_sales_person_dashboard_pivot" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.pivot</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Performance Analysis" display_quantity="true">
+                <field name="user_id" type="row"/>
+                <field name="lead_count" type="measure"/>
+                <field name="opportunity_count" type="measure"/>
+                <field name="quotation_count" type="measure"/>
+                <field name="order_count" type="measure"/>
+                <field name="total_revenue" type="measure"/>
+                <!-- <field name="quotation_to_order_rate" type="measure"/> -->
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Dashboard Form View -->
+    <record id="view_sales_person_dashboard_form" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.form</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Sales Person Dashboard">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_leads" type="object" class="oe_stat_button" icon="fa-star">
+                            <field name="lead_count" widget="statinfo" string="Leads"/>
+                        </button>
+                        <button name="action_view_opportunities" type="object" class="oe_stat_button" icon="fa-star-half-o">
+                            <field name="opportunity_count" widget="statinfo" string="Opportunities"/>
+                        </button>
+                        <button name="action_view_inquiries" type="object" class="oe_stat_button" icon="fa-question-circle">
+                            <field name="inquiry_count" widget="statinfo" string="Inquiries"/>
+                        </button>
+                        <button name="action_view_quotations" type="object" class="oe_stat_button" icon="fa-pencil-square-o">
+                            <field name="quotation_count" widget="statinfo" string="Quotations"/>
+                        </button>
+                        <button name="action_view_orders" type="object" class="oe_stat_button" icon="fa-usd">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button name="action_view_deliveries" type="object" class="oe_stat_button" icon="fa-truck">
+                            <field name="delivered_count" widget="statinfo" string="Deliveries"/>
+                        </button>
+                    </div>
+                    <field name="color" widget="color_picker" invisible="True"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="active"/>
+                            <field name="currency_id" invisible="True"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Performance Summary">
+                            <group>
+                                <group string="Activity">
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <field name="lead_count"/>
+                                            <label for="lead_count" string="Leads"/>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <field name="opportunity_count"/>
+                                            <label for="opportunity_count" string="Opportunities"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <field name="quotation_count"/>
+                                            <label for="quotation_count" string="Quotations"/>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <field name="order_count"/>
+                                            <label for="order_count" string="Orders"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-6">
+                                            <field name="inquiry_count"/>
+                                            <label for="inquiry_count" string="Inquiries"/>
+                                        </div>
+                                        <div class="col-xs-6">
+                                        </div>
+                                    </div>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Kanban View -->
+    <!-- <record id="view_sales_person_dashboard_kanban" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.kanban</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="lead_count"/>
+                <field name="opportunity_count"/>
+                <field name="inquiry_count"/>
+                <field name="quotation_count"/>
+                <field name="order_count"/>
+                <field name="delivered_count"/>
+                <field name="color"/>
+                <field name="total_revenue"/>
+                <field name="quotation_to_order_rate"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <field name="name"/>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="user_id"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-xs-6 o_kanban_primary_left">
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <a name="action_view_leads" type="object">
+                                                    <span class="o_value"><field name="lead_count"/></span>
+                                                    <span class="o_label">Leads</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <a name="action_view_opportunities" type="object">
+                                                    <span class="o_value"><field name="opportunity_count"/></span>
+                                                    <span class="o_label">Opportunities</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <a name="action_view_inquiries" type="object">
+                                                    <span class="o_value"><field name="inquiry_count"/></span>
+                                                    <span class="o_label">Inquiries</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="row mt8">
+                                            <div class="col-xs-6">
+                                                <a name="action_view_quotations" type="object">
+                                                    <span class="o_value"><field name="quotation_count"/></span>
+                                                    <span class="o_label">Quotations</span>
+                                                </a>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <a name="action_view_orders" type="object">
+                                                    <span class="o_value"><field name="order_count"/></span>
+                                                    <span class="o_label">Orders</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_manage_pane" style="display: none;">
+                                <div class="o_kanban_card_manage_title">
+                                    <span>More Info</span>
+                                </div>
+                                <div>
+                                    <a name="action_view_leads" type="object">Leads</a>
+                                </div>
+                                <div>
+                                    <a name="action_view_opportunities" type="object">Opportunities</a>
+                                </div>
+                                <div>
+                                    <a name="action_view_inquiries" type="object">Inquiries</a>
+                                </div>
+                                <div>
+                                    <a name="action_view_quotations" type="object">Quotations</a>
+                                </div>
+                                <div>
+                                    <a name="action_view_orders" type="object">Orders</a>
+                                </div>
+                                <div>
+                                    <a name="action_view_deliveries" type="object">Deliveries</a>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record> -->
+
+    <record id="view_sales_person_dashboard_kanban" model="ir.ui.view">
+    <field name="name">sales.person.dashboard.kanban</field>
+    <field name="model">sales.person.dashboard</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_dashboard sales_person_dashboard" sample="True">
+            <field name="id"/>
+            <field name="name"/>
+            <field name="user_id"/>
+            <field name="lead_count"/>
+            <field name="opportunity_count"/>
+            <field name="inquiry_count"/>
+            <field name="quotation_count"/>
+            <field name="order_count"/>
+            <field name="delivered_count"/>
+            <field name="color"/>
+            <field name="total_revenue"/>
+            <!-- <field name="quotation_to_order_rate"/> -->
+            <templates>
+                <t t-name="kanban-box">
+                    <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_global_click" 
+                         style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); position: relative; overflow: hidden;">
+                        <!-- Top color bar indicator -->
+                        <div t-attf-style="height: 6px; background-color: #{kanban_color(record.color.raw_value, 'backgroundColor')}; width: 100%;"></div>
+                        
+                        <div class="o_kanban_card_header" style="padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+                            <div class="o_kanban_card_header_title" style="display: flex; align-items: center;">
+                                <div class="o_primary" style="font-size: 18px; font-weight: 600; color: #212529;">
+                                    <field name="name"/>
+                                </div>
+                                <!-- <div class="o_secondary" style="margin-left: auto; background-color: #f8f9fa; border-radius: 20px; padding: 4px 12px; font-size: 13px; color: #6c757d;">
+                                    <field name="user_id"/>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                        <div class="container o_kanban_card_content" style="padding: 16px 8px;">
+                            
+                            <!-- Stats Counter Rows -->
+                            <div class="row" style="margin-bottom: 12px;">
+                                <div class="col-xs-4" style="text-align: center;background-color: #e9f5fe; border-radius: 8px;">
+                                    <a name="action_view_leads" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #e9f5fe; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #0d6efd;">
+                                                <field name="lead_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Leads</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-4" style="text-align: center;background-color: #fff4e5; border-radius: 8px;">
+                                    <a name="action_view_opportunities" type="object" style="text-decoration: none;">
+                                        <div>
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #fd7e14;">
+                                                <field name="opportunity_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Opportunities</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-4" style="text-align: center;background-color: #f8f9fa; border-radius: 8px;">
+                                    <a name="action_view_inquiries" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #f8f9fa; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #6c757d;">
+                                                <field name="inquiry_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Inquiries</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6" style="text-align: center;background-color: #e8f5e9; border-radius: 8px;">
+                                    <a name="action_view_quotations" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #e8f5e9; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #28a745;">
+                                                <field name="quotation_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Quotations</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6" style="text-align: center;background-color: #e3f2fd; border-radius: 8px;">
+                                    <a name="action_view_orders" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #e3f2fd; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #0d6efd;">
+                                                <field name="order_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Orders</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-xs-6" style="text-align: center;background-color: #e8f5e9; border-radius: 8px;">
+                                    <a name="action_view_quotations" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #e8f5e9; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #28a745;">
+                                                <field name="quotation_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Quotations</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-6" style="text-align: center;background-color: #e3f2fd; border-radius: 8px;">
+                                    <a name="action_view_orders" type="object" style="text-decoration: none;">
+                                        <div style="background-color: #e3f2fd; border-radius: 8px;">
+                                            <span class="o_value" style="display: block; font-size: 20px; font-weight: 600; color: #0d6efd;">
+                                                <field name="order_count"/>
+                                            </span>
+                                            <span class="o_label" style="display: block; font-size: 12px; color: #6c757d;">Orders</span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div> -->
+                        </div>
+                        
+                        <!-- Progress bar showing conversion rate -->
+                        <!-- <div style="height: 5px; width: 100%; background-color: #e9ecef; margin-top: 5px;">
+                            <div t-att-style="'height: 100%; width: ' + Math.min(record.quotation_to_order_rate.raw_value || 0, 100) + '%; background-color: #28a745;'"></div>
+                        </div> -->
+                        
+                        <!-- Manage Dropdown Menu -->
+                        <div class="o_dropdown_kanban dropdown" 
+                             style="position: absolute; top: 10px; right: 10px;">
+                            <a class="dropdown-toggle o-no-caret btn" 
+                               data-toggle="dropdown" 
+                               style="background-color: rgba(255,255,255,0.9); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fa fa-ellipsis-v" style="color: #6c757d;"/>
+                            </a>
+                            <div class="dropdown-menu" role="menu" 
+                                 style="border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: none; padding: 8px 0;">
+                                <div class="o_kanban_card_manage_title" 
+                                     style="padding: 8px 16px; font-weight: 600; color: #495057; border-bottom: 1px solid #f0f0f0;">
+                                    <span>More Info</span>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_leads" type="object">Leads</a>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_opportunities" type="object">Opportunities</a>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_inquiries" type="object">Inquiries</a>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_quotations" type="object">Quotations</a>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_orders" type="object">Orders</a>
+                                </div>
+                                <div style="padding: 4px 16px;">
+                                    <a name="action_view_deliveries" type="object">Deliveries</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+    <!-- Dashboard Search View -->
+    <record id="view_sales_person_dashboard_search" model="ir.ui.view">
+        <field name="name">sales.person.dashboard.search</field>
+        <field name="model">sales.person.dashboard</field>
+        <field name="arch" type="xml">
+            <search string="Search Dashboards">
+                <field name="name"/>
+                <field name="user_id"/>
+                <filter string="My Dashboard" name="my_dashboard" domain="[('user_id', '=', uid)]"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <group>
+                    <filter string="Sales Person" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Dashboard Action Window -->
+    <record id="action_sales_person_dashboard" model="ir.actions.act_window">
+        <field name="name">Sales Performance</field>
+        <field name="res_model">sales.person.dashboard</field>
+        <field name="view_mode">kanban,list,graph,pivot,form</field>
+        <field name="context">{'search_default_my_dashboard': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No dashboard found. Let's create one!
+            </p>
+            <p>
+                Create your personalized sales dashboard to track your performance.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_sales_person_dashboard" 
+              name="Sales Performance" 
+              parent="sale.menu_sale_report" 
+              action="action_sales_person_dashboard" 
+              sequence="5"/>
+
+
+
+
+    <!-- Define the report -->
+    <!-- <record id="sales_performance_report" model="ir.ui.view">
+        <field name="name">sales.performance.report</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <graph type="bar" stacked="0">
+                <field name="name" type="row"/>
+                <field name="sales_metric" type="col"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record> -->
+
+    <!-- Define the action -->
+    <record id="action_sales_performance_report" model="ir.actions.act_window">
+        <field name="name">Sales Performance by Sales Person</field>
+        <field name="res_model">sales.performance</field>
+        <field name="view_mode">graph</field>
+        <field name="domain">[('salesperson', '=', 'Dharmesh')]</field>
+    </record>
+
+    <!-- Add a menu item -->
+    <menuitem id="menu_sales_performance_report"
+              name="Sales Performance"
+              parent="sale.menu_sale_report"
+              action="action_sales_performance_report"
+              sequence="30"/>
+    
+    <!-- Define the model -->
+    <!-- <record id="model_sales_performance" model="ir.model">
+        <field name="name">Sales Performance</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <field name="salesperson"/>
+            <field name="sales_metric"/>
+            <field name="value"/>
+        </field>
+    </record> -->
+
+
+    <!-- Tree View -->
+    <record id="view_sales_performance_tree" model="ir.ui.view">
+        <field name="name">sales.performance.list</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <list string="Sales Performance">
+                <field name="salesperson"/>
+                <field name="sales_metric"/>
+                <field name="value"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_sales_performance_form" model="ir.ui.view">
+        <field name="name">sales.performance.form</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <form string="Sales Performance">
+                <sheet>
+                    <group>
+                        <field name="salesperson"/>
+                        <field name="sales_metric"/>
+                        <field name="value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_sales_performance_search" model="ir.ui.view">
+        <field name="name">sales.performance.search</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <search string="Sales Performance">
+                <field name="salesperson"/>
+                <field name="sales_metric"/>
+                <group>
+                    <filter string="Sales Person" name="group_by_salesperson" domain="[]" context="{'group_by': 'salesperson'}"/>
+                    <filter string="Sales Metric" name="group_by_metric" domain="[]" context="{'group_by': 'sales_metric'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_sales_performance_pivot" model="ir.ui.view">
+        <field name="name">sales.performance.pivot</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Performance" display_quantity="true">
+                <field name="salesperson" type="row"/>
+                <field name="sales_metric" type="col"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Graph View -->
+    <record id="view_sales_performance_graph" model="ir.ui.view">
+        <field name="name">sales.performance.graph</field>
+        <field name="model">sales.performance</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Performance" type="bar" stacked="0">
+                <field name="salesperson" type="row"/>
+                <field name="sales_metric" type="col"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_sales_performance_view" model="ir.actions.act_window">
+        <field name="name">Sales Performance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sales.performance</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="context">{'search_default_group_by_salesperson': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create sales performance records to see the graph
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_sales_performance"
+              name="Sales Performance"
+              parent="sale.menu_sale_report"
+              action="action_sales_performance_view"
+              sequence="20"/>
+
+    <!-- Web Route Button -->
+    <record id="view_sales_person_performance_form" model="ir.ui.view">
+        <field name="name">res.users.sales.performance.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_sales_performance_view)d" 
+                        type="action" 
+                        context="{'search_default_salesperson': name}"
+                        class="oe_stat_button" 
+                        icon="fa-chart-bar">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Sales Performance</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+    
+</odoo>

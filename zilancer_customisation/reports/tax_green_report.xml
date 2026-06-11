@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="external_layout_bubble_inherit" inherit_id="web.external_layout_bubble">
+    <xpath expr="//div[contains(@t-attf-class, 'header')]" position="replace">
+
+
+        <!-- Custom HEADER -->
+        <t t-set="active_company" t-value="docs and docs._name == 'sale.order' and docs.company_id or company"/>
+
+        <div t-attf-class="header o_company_#{active_company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+            <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}"
+                 width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+               <circle cx="550" cy="550" r="550"
+                       t-att-fill="active_company.primary_color"
+                       fill-opacity=".1"/>
+            </svg>
+
+            <div class="d-flex justify-content-between">
+                <div>
+                    <img t-if="active_company.logo"
+                         class="o_company_logo mb-2"
+                         t-att-src="image_data_uri(active_company.logo)"
+                         alt="Logo"/>
+                    <div t-if="active_company.report_header"
+                         t-field="active_company.report_header"
+                         class="o_company_tagline fw-bold">Company tagline</div>
+                </div>
+
+                <div name="company_address" class="w-50 text-end">
+                    <ul class="list-unstyled" name="company_address_list">
+                        <li t-if="active_company">
+                            <div>
+                                <strong t-esc="active_company.name"/>
+                            </div>
+                            <div t-if="active_company.street">
+                                <span t-esc="active_company.street"/>
+                            </div>
+                            <div t-if="active_company.street2">
+                                <span t-esc="active_company.street2"/>
+                            </div>
+                            <div>
+                                <span t-esc="active_company.city"/>
+                                <t t-if="active_company.state_id">
+                                    , <span t-esc="active_company.state_id.name"/>
+                                </t>
+                                <t t-if="active_company.zip">
+                                    <span t-esc="active_company.zip"/>
+                                </t>
+                            </div>
+                            <div t-if="active_company.country_id">
+                                <span t-esc="active_company.country_id.name"/>
+                            </div>
+                            <div t-if="active_company.phone">
+                                <t>Phone: </t><span t-esc="active_company.phone"/>
+                            </div>
+                            <!-- <div t-if="active_company.email">
+                                <t>Email: </t><span t-esc="active_company.email"/>
+                            </div>
+                            <div t-if="active_company.website">
+                                <t>Website: </t><span t-esc="active_company.website"/>
+                            </div> -->
+                        </li>
+                        <li t-else="">
+                            <span t-field="active_company.company_details">
+                                <div class="d-flex flex-column align-items-center justify-content-center border-1 rounded p-4 h-100 w-100 bg-light opacity-75 text-muted text-center">
+                                    <strong>Company details block</strong>
+                                    <div>Contains the company details.</div>
+                                </div>
+                            </span>
+                        </li>
+                        <li t-if="not forced_vat"/>
+                        <li t-else="">
+                            <t t-esc="active_company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                            <span t-esc="forced_vat">US12345671</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+
+
+<template id="external_layout_bubbles">
+    <div t-attf-class="header o_company_#{company.id}_layout {{report_type == 'pdf' and 'pt-5'}}">
+        <svg t-attf-class="o_shape_bubble_1 z-n1 {{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}}" width="1100" height="1100" xmlns="http://www.w3.org/2000/svg">
+           <circle cx="550" cy="550" r="550" t-att-fill="company.primary_color" fill-opacity=".1"/>
+        </svg>
+        <div class="d-flex justify-content-between">
+            <div>
+                <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <div t-if="company.report_header" t-field="company.report_header" class="o_company_tagline fw-bold">Company tagline</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div t-attf-class="article o_report_layout_bubble o_table_boxed-rounded o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background != 'Blank' else ''}}"
+         t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else
+                       '/base/static/img/demo_logo_report.png' if company.layout_background == 'Demo logo' else ''}});"
+         t-att-data-oe-model="o and o._name"
+         t-att-data-oe-id="o and o.id"
+         t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <div t-att-class="not information_block and 'd-flex justify-content-between align-items-end'">
+            <t t-call="web.address_layout">
+                <t t-set="custom_layout_address" t-value="true"/>
+            </t>
+            <h2 t-attf-class="{{not information_block and 'mb-4'}} text-end" t-out="layout_document_title"/>
+        </div>
+        <t t-out="0"/>
+    </div>
+
+    <!-- Footer -->
+    <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
+        <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed top-0 start-0'}}" width="500" height="228" viewBox="0 0 500 228" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M500 228H0V6.52743C26.3323 2.23278 53.3561 0 80.9008 0C256.522 0 410.969 90.7656 500 228Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
+        </svg>
+        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center">
+            <div class="border-top pt-2" t-field="company.report_footer"/>
+            <span t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted" t-out="str(o.name) + ', '">(document name)</span>
+            <span t-if="report_type == 'pdf'" class="text-muted">Page <span class="page"/> / <span class="topage"/></span>
+        </div>
+    </div>
+</template>
+
+<!-- Public api: layout to t-call from reports -->
+
+<template id="external_layouts">
+    <t t-if="not o" t-set="o" t-value="doc"/>
+
+    <t t-if="not company">
+        <!-- Multicompany -->
+        <t t-if="company_id">
+            <t t-set="company" t-value="company_id"/>
+        </t>
+        <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-else="else">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+    </t>
+
+    <!-- <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.sudo().key}}"><t t-out="0"/></t> -->
+    <t t-call="zilancer_customisation.external_layout_bubbles"><t t-out="0"/></t>
+
+</template>
+
+<template id="report_tax_green_document">
+    <t t-call="web.external_layout">
+        <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+        <div class="page" style="font-family: Arial, sans-serif; font-size: 14px;">
+            <!-- TITLE -->
+            <div style="text-align:center; font-weight:bold; font-size:18px; margin-top:10px; text-transform:uppercase;">
+                Proforma Invoice
+            </div>
+            <!-- HEADER SECTION -->
+            <table style="width:100%; border-collapse: collapse; border:1px solid #000;">
+                <tr>
+                    <!-- Left: Logo & Company Info -->
+                    <td style="width:55%; padding:6px; vertical-align:top;">
+                        <t t-if="doc.company_id.logo">
+                            <img t-att-src="image_data_uri(doc.company_id.logo)" 
+                                 alt="Logo" 
+                                 style="max-width:120px; max-height:80px; display:inline-block; vertical-align:top;"/>
+                        </t>
+                        <div style="display:inline-block; vertical-align:top; margin-left:10px; font-size:14px;">
+                            <strong t-esc="doc.company_id.name"/><br/>
+                            <span t-esc="doc.company_id.street"/><br/>
+                            <t t-if="doc.company_id.street2"><span t-esc="doc.company_id.street2"/><br/></t>
+                            <span t-esc="doc.company_id.city"/>
+                            <t t-if="doc.company_id.state_id">, <span t-esc="doc.company_id.state_id.name"/></t><br/>
+                            <t t-if="doc.company_id.country_id"><span t-esc="doc.company_id.country_id.name"/></t><br/>
+                            <t t-if="doc.company_id.vat">TRN: <span t-esc="doc.company_id.vat"/></t>
+                        </div>
+                    </td>
+
+                    <!-- Right: Document Details (no border-left) -->
+                    <td style="width:45%; padding:6px; vertical-align:top;">
+                        <!-- Right: Document Details (label: value layout) -->
+                        <div style="padding:6px; font-size:14px;">
+                            <div style="margin-bottom:4px;">
+                                <strong>Voucher No:</strong> <span t-esc="doc.name"/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Dated:</strong> <span t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Quote Valid Till Date:</strong> <span t-field="doc.validity_date" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Mode/Terms of Payment:</strong> <span t-esc="doc.payment_term_id.name or ''"/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Buyer's Ref/Order No:</strong> <span t-esc="doc.client_order_ref or ''"/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Dispatch Through:</strong> <span t-field="doc.dispatch_through"/>
+                            </div>
+                            <div style="margin-bottom:4px;">
+                                <strong>Destination:</strong> <span t-esc="doc.destination or ''"/>
+                            </div>
+                            <!-- <div>
+                                <strong>Terms of Delivery:</strong>
+                                <t t-if="doc.incoterm">
+                                    <span t-field="doc.incoterm"/>
+                                </t>
+                            </div> -->
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- INVOICE TO SECTION -->
+            <table style="width:100%; border:1px solid #000; border-top:none; border-collapse:collapse;">
+                <tr>
+                    <td style="width:55%; padding:6px; vertical-align:top;">
+                        <strong>Invoice to</strong>
+                        <br/>
+                        <span t-esc="doc.partner_id.name"/>
+                        <br/>
+                        <span t-esc="doc.partner_id.street"/>
+                        <br/>
+                        <t t-if="doc.partner_id.street2">
+                            <span t-esc="doc.partner_id.street2"/>
+                            <br/>
+                        </t>
+                        <span t-esc="doc.partner_id.city"/>
+                        <br/>
+                        <t t-if="doc.partner_id.state_id">Emirate: 
+                            <span t-esc="doc.partner_id.state_id.name"/>
+                        </t>
+                        <br/>
+                        <t t-if="doc.partner_id.country_id">Country: 
+                            <span t-esc="doc.partner_id.country_id.name"/>
+                        </t>
+                        <br/>
+                        <t t-if="doc.partner_id.vat">TRN: 
+                            <span t-esc="doc.partner_id.vat"/>
+                        </t>
+                    </td>
+                    <td style="width:45%; border-left:1px solid #000; padding:6px; vertical-align:top;">
+                        <strong>Terms of Delivery</strong>
+                        <br/>
+                        <t t-if="doc.incoterm">
+                            <span t-field="doc.incoterm"/>
+                        </t>
+          
+                    </td>
+                </tr>
+            </table>
+            <!-- PRODUCT TABLE -->
+            <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;" border="1">
+                <thead style="background:#f5f5f5;">
+                    <tr>
+                        <th style="text-align:center; width:5%; padding:8px; line-height:1.8;">Sl No.</th>
+                        <th style="text-align:left; width:35%; padding:8px; line-height:1.8;">Description of Goods</th>
+                        <th style="text-align:center; width:15%; padding:8px; line-height:1.8;">Part No.</th>
+                        <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Quantity</th>
+                        <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Rate</th>
+                        <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Per</th>
+                        <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Discount</th>
+                        <th style="text-align:center; width:15%; padding:8px; line-height:1.8;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="counter" t-value="0"/>
+                    <t t-foreach="doc.order_line" t-as="line">
+                        <t t-set="counter" t-value="counter + 1"/>
+                        <tr>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-esc="counter"/>
+                            </td>
+                            <td style="padding:8px; line-height:1.8;">
+                                <span t-field="line.name"/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-esc="line.product_id.default_code or ''"/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-field="line.product_uom_qty"/>
+                                <span t-field="line.product_uom.name"/>
+                            </td>
+                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                                <span t-field="line.price_unit"/>
+                            </td>
+                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                                <span t-field="line.pack_size_id"/>
+                            </td>
+                            <!-- Discount will add-->
+                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                                <span t-field="line.discount"/>
+                            </td>
+                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                                <span t-field="line.price_subtotal"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr style="border-top:1px solid #000;">
+                        <td colspan="5" style="padding:8px; line-height:1.8;"></td>
+                        <td style="text-align:center; font-weight:bold; padding:8px; line-height:1.8;">
+                            <!-- <span t-out="sum(l.product_uom_qty for l in doc.order_line)"/> -->
+                        </td>
+                        <td style="text-align:right; font-weight:bold; padding:8px; line-height:1.8;">Total</td>
+                        <td style="text-align:right; font-weight:bold; padding:8px; line-height:1.8;">
+                            <span t-field="doc.amount_total"/>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <!-- AMOUNT IN WORDS -->
+            <div style="margin-top:10px; font-weight:bold;">
+        Amount Chargeable (in words): 
+                <t t-out="doc.currency_id.amount_to_text(doc.amount_total)"/>
+            </div>
+            <!-- BANK DETAILS + AUTHORISED SIGNATORY (no table) -->
+            <div style="width:50%; float:right; font-size:14px; margin-top:50px;">
+
+                <!-- Bank Details (no border) -->
+                <div style="padding:10px; line-height:1.5; margin-bottom:10px;">
+                    <!-- <strong>Company's Bank Details</strong><br/>
+                    Bank Name : Abu Dhabi Commercial Bank (USD)<br/>
+                    A/c No. : 1183 5183 9200 01<br/>
+                    IBAN : AE320 0300 1183 5183 9200 01<br/>
+                    Branch &amp; SWIFT Code : Sharjah &amp; ADCBAEAAXXX -->
+                    <span t-field="doc.note" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if doc.company_id.terms_type != 'html' else ''}" name="order_note"/>
+                </div>
+
+                <!-- Authorised Signatory (with border) -->
+                <div style="padding:10px; text-align:center; min-height:80px; border:1px solid #000;">
+                    for <strong t-esc="doc.company_id.name"/><br/><br/><br/>
+                    <strong>Authorised Signatory</strong>
+                </div>
+
+            </div>
+
+            <!-- Clear float to avoid overlapping with other content -->
+            <div style="clear:both;"></div>
+
+
+            <!-- FOOTER -->
+            <div style="text-align:center; font-size:14px; margin-top:40px;">
+                This is a Computer Generated Document
+            </div>
+        </div>
+    </t>
+</template>
+
+
+
+<template id="report_tax_green_raw">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="zilancer_customisation.report_tax_green_document" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_tax_green">
+    <t t-call="zilancer_customisation.report_tax_green_raw"/>
+</template>
+
+
+
+<!-- Custom Report Template for Sales Performance -->
+<template id="report_sales_performance">
+    <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2 t-if="salesperson">Sales Performance for <t t-esc="salesperson"/></h2>
+                <h2 t-else="">Sales Performance by Sales Person</h2>
+                
+                <t t-set="colors" t-value="{'leads': '#1f77b4', 'opportunities': '#ff7f0e', 'sales_inquiries': '#2ca02c', 'sales_quotations': '#17becf', 'sales_orders': '#9467bd', 'delivered': '#8c564b'}"/>
+                <t t-set="labels" t-value="{'leads': 'Leads', 'opportunities': 'Opportunities', 'sales_inquiries': 'Sales Inquiries', 'sales_quotations': 'Sales Quotations', 'sales_orders': 'Sales Orders', 'delivered': 'Delivered'}"/>
+                
+                <style>
+                    .sales-chart {
+                        width: 100%;
+                        height: 400px;
+                        margin: 20px 0;
+                    }
+                    .sales-chart-container {
+                        position: relative;
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-around;
+                        align-items: flex-end;
+                        height: 300px;
+                        padding-bottom: 40px;
+                    }
+                    .sales-chart-column {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin: 0 10px;
+                    }
+                    .sales-chart-bar {
+                        width: 30px;
+                        margin: 0 2px;
+                        border-radius: 2px 2px 0 0;
+                    }
+                    .sales-chart-label {
+                        transform: rotate(-45deg);
+                        margin-top: 10px;
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+                    .sales-chart-value {
+                        margin-bottom: 5px;
+                        font-weight: bold;
+                    }
+                    .sales-chart-legend {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        margin-top: 20px;
+                    }
+                    .sales-chart-legend-item {
+                        display: flex;
+                        align-items: center;
+                        margin: 0 10px 5px 0;
+                    }
+                    .sales-chart-legend-color {
+                        width: 15px;
+                        height: 15px;
+                        margin-right: 5px;
+                        border-radius: 2px;
+                    }
+                </style>
+                
+                <div class="sales-chart">
+                    <div class="sales-chart-container">
+                        <t t-foreach="salespeople" t-as="person">
+                            <div class="sales-chart-column">
+                                <t t-foreach="metrics" t-as="metric">
+                                    <t t-set="value" t-value="data.get((person, metric), 0)"/>
+                                    <t t-set="height" t-value="value / max_value * 250 if max_value else 0"/>
+                                    <div class="sales-chart-value" t-esc="value"/>
+                                    <div class="sales-chart-bar" t-attf-style="height: #{height}px; background-color: #{colors[metric]};"/>
+                                </t>
+                                <div class="sales-chart-label" t-esc="person"/>
+                            </div>
+                        </t>
+                    </div>
+                    
+                    <div class="sales-chart-legend">
+                        <t t-foreach="metrics" t-as="metric">
+                            <div class="sales-chart-legend-item">
+                                <div class="sales-chart-legend-color" t-attf-style="background-color: #{colors[metric]};"/>
+                                <span t-esc="labels[metric]"/>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</template>
+
+<!-- Report action -->
+<record id="action_report_sales_performance" model="ir.actions.report">
+    <field name="name">Sales Performance</field>
+    <field name="model">sales.performance</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">sales_performance.report_sales_performance</field>
+    <field name="report_file">sales_performance.report_sales_performance</field>
+    <field name="binding_model_id" ref="model_sales_performance"/>
+    <field name="binding_type">report</field>
+</record>
+
+<template id="sales_performance_report_page">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center mb-4">
+                        <t t-if="salesperson">Sales Performance for <t t-esc="salesperson"/></t>
+                        <t t-else="">Sales Performance by Sales Person</t>
+                    </h2>
+                    
+                    <t t-call="sales_performance.sales_person_filter_form"/>
+                    
+                    <t t-call="sales_performance.sales_performance_graph_widget"/>
+                    
+                    <div class="mt-4">
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Sales Person</th>
+                                    <th t-foreach="metrics" t-as="metric"><t t-esc="labels[metric]"/></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="salespeople" t-as="person">
+                                    <td><t t-esc="person"/></td>
+                                    <td t-foreach="metrics" t-as="metric">
+                                        <t t-esc="data.get((person, metric), 0)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

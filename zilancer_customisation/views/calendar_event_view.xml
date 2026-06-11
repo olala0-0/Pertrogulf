@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_calendar_event_form_inherits" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='start_date']" position="before">
+                <field name="meeting_id" readonly="True"/>
+                <field name="business_unit" readonly="False"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form_inheritss_list" model="ir.ui.view">
+        <field name="name">meeting.actions.list</field>
+        <field name="model">meeting.actions</field>
+        <field name="inherit_id" ref="print_minutes_of_meeting.view_dmeeting_actions_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='calendar_event_id']" position="before">
+                <field name="meeting_id"/>
+                <field name="meeting_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form_inheritss" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="print_minutes_of_meeting.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='actions_ids']" position="after">
+                <br/>
+                <!-- <label for="conclusion_point_ids" string="Conclusion Points"/> -->
+                <field name="conclusion_point_ids">
+                    <list string="Conclusion Points" editable="bottom">
+                        <field name="name"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_tree_inherit" model="ir.ui.view">
+        <field name="name">calendar.event.form.inherit</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="meeting_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

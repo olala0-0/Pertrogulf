@@ -1,0 +1,809 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_order_enq_form" model="ir.ui.view">
+        <field name="name">view_order_enq_form</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="button_confirm" type="object" string="Convert to Quote" class="btn-primary"
+                            invisible="state in ('convert_quote', 'cancel')" />
+                    <button name="button_cancel" type="object" string="Cancel" class="btn-secondary"
+                                 invisible="state in ('convert_quote', 'cancel')" />
+                    <button name="button_multi_orders" type="object" string="Recreate Sales" class="btn-primary"
+                             invisible="not multi_order" />
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button icon="fa-eye" type="object" string="View Sales" class="oe_stat_button" name="view_sale_order"
+                                 invisible="not sale_order_id" >
+                                <field name="sale_count" widget="statinfo" string="View sales"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Converted to Quote" bg_color="bg-success" invisible="state != 'convert_quote'" />
+                    <widget name="web_ribbon" title="Inquiry" bg_color="bg-info" invisible="state != 'inquiry'" />
+                    <widget name="web_ribbon" title="Cancel" bg_color="bg-danger" invisible="state != 'cancel'" />
+                    <widget name="web_ribbon" title="Multi" bg_color="bg-success" invisible="sale_count &lt;= 1" />
+                    <div class="oe_title">
+                        <lable for="name"/>
+                        <h2>
+                            <field name="name"/>
+                        </h2>
+                    </div>
+                    <group col="2">
+                        <group>
+                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')" />
+                            <field name="company_id" readonly="True"/>
+                            <field name="user_id" readonly="True"/>
+                            <field name="state" invisible="True"/>
+                            <field name="business_unit" readonly="True" force_save="True"/>
+                            <field name="country_port_id" string="Country of Supply"/>
+                            <field name="sales_user_id" required="True"/>
+                            <field name="reason_id" string="Reason for not inquiry"/>
+                            <!-- <field name="pricing"/> -->
+                            <field name="total_quantity" string="Total Quantity"/>
+                        </group>
+                        <group>
+                            <field name="customer_user_id" invisible="True"/>
+                            <field name="email"/>
+                            <field name="date_order"/>
+                            <field name="sale_order_id" nolabel="True"  invisible="not sale_order_id or multi_order" readonly="True" />
+                            <field name="note"/>
+                            <field name="inquiry_rec_from"/>
+                            <field name="new_existing" force_save="True"/>
+                            <field name="Source_of_inquiry_id"/>
+                            <!-- <field name="out_of_service_area"/> -->
+                            <field name="vessel_eta_message"/>
+                            <field name="post_tally_date" invisible="True"/>
+                            <field name="mode_payments"/>
+                            <field name="total_qty_units" string="Total Qty in Units"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Additional Details - Marine" invisible="company_id != 4">
+                            <group>
+                                <group>
+                                    <!-- <field name="vessel_no_id" required="company_id == 4"/> -->
+                                    <field name="vessel_no" required="company_id == 4"/>
+                                    <field name="vessel_eta"/>
+                                    <!-- <field name="imo_no_id" required="company_id == 4"/> -->
+                                    <field name="imo_number" required="company_id == 4"/>
+                                    <field name="delivery_by_id"/>
+                                    <field name="port_master_id" required="company_id == 4"/>
+                                    <field name="country_id"/>
+                                    <field name="port_note"/>
+                                    <field name="delivery_type_id"/>
+                                    <field name="operational_status"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="order_line" string="Order Line">
+                            <!-- <button type="object" string="Add Lines"  name="button_add_line_from_sales" invisible="state in ('convert_quote', 'cancel')" /> -->
+                            <field name="order_line_ids" readonly="state in ('convert_quote', 'cancel')" mode="list"
+                                   widget="section_and_note_one2many" nolabel="True">
+                                <list editable="bottom">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="customer_ref_id"/>
+                                    <field name="customer_brand"/>
+                                    <field name="cust_ref_pro_category"/>
+                                    <field name="product_id" widget="product_configurator" string="Offered Item"/>
+                                    <field name="name" widget="section_and_note_text" column_invisible="True"/>
+                                    <field name="product_uom_qty" string="Qty in Units"/>
+                                    <field name="pack_size_id"/>
+                                    <field name="unit_qty" string="Quantity"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="company_id" optional="hide"/>
+                                    <field name="sale_order_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <!-- <field name="price_tax" column_invisible="True"/>
+                                    <field name="price_total" column_invisible="True"/> -->
+                                </list>
+                            </field>
+
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <!-- <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="True" colspan="2" readonly="True"/>
+                                </group>
+                                <div class="clearfix"/> -->
+                            </group>
+                        </page>
+                        <page string="Additional Details - Auto">
+                            <group>
+                                <group>
+                                    <field name="sales_order_received"/>
+                                    <field name="sales_order_date"/>
+                                    <field name="po_received"/>
+                                    <field name="po_number"/>
+                                    <field name="purchase_order_date"/>
+                                    <field name="brand_master_id"/>
+                                    <field name="brand_type"/>
+                                </group>
+                                <group>
+                                    <field name="production_started"/>
+                                    <field name="expected_closure_date"/>
+                                    <field name="production_date"/>
+                                    <field name="expected_date_of_completion"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_order_enq_product_line_form" model="ir.ui.view">
+        <field name="name">view_order_enq_product_line_form</field>
+        <field name="model">order.enq.lines</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="2">
+                        <field name="sale_order_id" invisible="True"/>
+                        <field name="currency_id" invisible="True"/>
+                        <!-- <field name="price_tax" invisible="True"/> -->
+                        <!-- <field name="price_total" invisible="True"/> -->
+                        <field name="sequence" invisible="True"/>
+                        <field name="display_type" invisible="True"/>
+                        <group>
+                            <field name="product_id" string="Offered Item"/>
+                            <field name="name"/>
+                            <!-- <field name="price_unit"/> -->
+                            <!-- <field name="product_uom"/> -->
+                        </group>
+                        <group>
+                            <field name="product_uom_qty"/>
+                            <!-- <field name="tax_id" widget="many2many_tags"/>
+                            <field name="price_subtotal" widget="monetary"/> -->
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    
+    <record id="view_order_enq_kanban_improved" model="ir.ui.view">
+        <field name="name">order.enq.kanban.improved</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" 
+                    class="o_kanban_small_column" 
+                    sample="True"
+                    records_draggable="0">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <field name="date_order"/>
+                <field name="sales_user_id"/>
+                <field name="sale_count"/>
+                <field name="total_quantity"/>
+                <field name="business_unit"/>
+                <field name="color" invisible="True"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click" 
+                             t-attf-style="border-left: 5px solid #{
+                                record.state.raw_value == 'convert_quote' ? '#28a745' : 
+                                record.state.raw_value == 'inquiry' ? '#17a2b8' : 
+                                record.state.raw_value == 'cancel' ? '#dc3545' : '#6c757d'}; 
+                                padding: 12px;">
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'convert_quote'">
+                                <span class="bg-success">Converted to Quote</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'inquiry'">
+                                <span class="bg-info">Inquiry</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'cancel'">
+                                <span class="bg-danger">Cancelled</span>
+                            </div>
+                            
+                            <div class="mb-3 pb-2" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                <h5 class="mb-1">
+                                    <field name="name"/>
+                                </h5>
+                                <div>
+                                    <span class="text-muted">Customer: </span>
+                                    <strong><field name="partner_id"/></strong>
+                                </div>
+                            </div>
+                            
+                            <table class="o_kanban_record_body w-100 mb-3">
+                                <tr>
+                                    <td class="text-end pe-3" style="width: 40%; vertical-align: top;">
+                                        <span class="text-muted">Date:</span>
+                                    </td>
+                                    <td style="width: 60%; vertical-align: top;">
+                                        <field name="date_order" widget="date"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Sales Person:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="sales_user_id"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr t-if="record.business_unit.raw_value">
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Business Unit:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="business_unit"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Quantity:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="total_quantity"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div class="d-flex justify-content-end" style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
+                                <t t-if="record.sale_count.raw_value > 0">
+                                    <span class="badge rounded-pill bg-primary me-1">
+                                        <i class="fa fa-file-text-o me-1" role="img" aria-label="Sales" title="Sales"></i>
+                                        <t t-out="record.sale_count.value"/> Sale<t t-if="record.sale_count.raw_value > 1">s</t>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_order_enq_tree_view" model="ir.ui.view">
+        <field name="name">Sales Inquiry Tree View</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <list class="o_sale_order" decoration-muted="state == 'cancel'" default_order="create_date desc">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="vessel_no" optional="show"/>
+                <!-- <field name="imo_no_id" optional="show"/> -->
+                <field name="imo_number" optional="show"/>
+                <field name="partner_id"/>
+                <field name="user_id" optional="show"/>
+                <field name="create_uid" optional="show" string="CS Name"/>
+                <field name="date_order" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="company_id" optional="show"/>
+                <field name="state" string="Status"/>
+                <field name="user_id" optional="show" string="Sales Manager"/>
+                <field name="sale_order_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="display_type" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_order_enquirey">
+        <field name="name">Sales Inquiry</field>
+        <field name="res_model">order.enq</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_id" ref="view_order_enq_tree_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create  Sales Inquiry
+            </p>
+        </field>
+    </record>
+
+    <record id="view_order_enq_tree_view_toll" model="ir.ui.view">
+        <field name="name">Sales Inquiry Tree View</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <list class="o_sale_order" decoration-muted="state == 'cancel'" default_order="create_date desc">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="vessel_no" optional="show"/>
+                <!-- <field name="imo_no_id" optional="show"/> -->
+                <field name="imo_number" optional="show"/>
+                <field name="partner_id"/>
+                <field name="user_id" optional="show"/>
+                <field name="create_uid" optional="show" string="CS Name"/>
+                <field name="date_order" optional="show"/>
+                <field name="create_date" optional="show"/>
+                <field name="company_id" optional="show"/>
+                <field name="state" string="Status"/>
+                <field name="user_id" optional="show" string="Sales Manager"/>
+                <field name="sale_order_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="display_type" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_order_enq_form_toll" model="ir.ui.view">
+        <field name="name">view_order_enq_form</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="button_confirm" type="object" string="Convert to Quote" class="btn-primary"
+                            invisible="state in ('convert_quote', 'cancel')" />
+                    <button name="button_cancel" type="object" string="Cancel" class="btn-secondary"
+                                 invisible="state in ('convert_quote', 'cancel')" />
+                    <button name="button_multi_orders" type="object" string="Recreate Sales" class="btn-primary"
+                             invisible="not multi_order" />
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button icon="fa-eye" type="object" string="View Sales" class="oe_stat_button" name="view_sale_order"
+                                 invisible="not sale_order_id" >
+                                <field name="sale_count" widget="statinfo" string="View sales"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Converted to Quote" bg_color="bg-success" invisible="state != 'convert_quote'" />
+                    <widget name="web_ribbon" title="Inquiry" bg_color="bg-info" invisible="state != 'inquiry'" />
+                    <widget name="web_ribbon" title="Cancel" bg_color="bg-danger" invisible="state != 'cancel'" />
+                    <widget name="web_ribbon" title="Multi" bg_color="bg-success" invisible="sale_count &lt;= 1" />
+                    <div class="oe_title">
+                        <lable for="name"/>
+                        <h2>
+                            <field name="name"/>
+                        </h2>
+                    </div>
+                    <group col="2">
+                        <group>
+                            <field name="toll_sale_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')" />
+                            <field name="company_id" readonly="True"/>
+                            <field name="user_id" readonly="True"/>
+                            <field name="state" invisible="True"/>
+                            <field name="business_unit" readonly="True" force_save="True"/>
+                            <field name="country_port_id" string="Country of Supply"/>
+                            <field name="sales_user_id" required="True"/>
+                            <field name="reason_id" string="Reason for not inquiry"/>
+                            <!-- <field name="pricing"/> -->
+                            <field name="total_quantity" string="Total Quantity"/>
+                            <field name="vessel_no"/>
+                        </group>
+                        <group>
+                            <field name="customer_user_id" invisible="True"/>
+                            <field name="email"/>
+                            <field name="date_order"/>
+                            <field name="sale_order_id" nolabel="True"  invisible="not sale_order_id or multi_order" readonly="True" />
+                            <field name="note"/>
+                            <field name="inquiry_rec_from"/>
+                            <field name="new_existing" force_save="True"/>
+                            <field name="Source_of_inquiry_id"/>
+                            <!-- <field name="out_of_service_area"/> -->
+                            <field name="vessel_eta_message"/>
+                            <field name="post_tally_date" invisible="True"/>
+                            <field name="mode_payments"/>
+                            <field name="total_qty_units" string="Total Qty in Units"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Additional Details - Marine" invisible="company_id != 4">
+                            <group>
+                                <group>
+                                    <!-- <field name="vessel_no_id" required="company_id == 4"/> -->
+                                    <field name="vessel_no" required="company_id == 4"/>
+                                    <field name="vessel_eta"/>
+                                    <!-- <field name="imo_no_id" required="company_id == 4"/> -->
+                                    <field name="imo_number" required="company_id == 4"/>
+                                    <field name="delivery_by_id"/>
+                                    <field name="port_master_id" required="company_id == 4"/>
+                                    <field name="country_id"/>
+                                    <field name="port_note"/>
+                                    <field name="delivery_type_id"/>
+                                    <field name="operational_status"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="order_line" string="Order Line">
+                            <!-- <button type="object" string="Add Lines"  name="button_add_line_from_sales" invisible="state in ('convert_quote', 'cancel')" /> -->
+                            <field name="order_line_ids" readonly="state in ('convert_quote', 'cancel')" mode="list"
+                                   widget="section_and_note_one2many" nolabel="True">
+                                <list editable="bottom">
+                                    <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="display_type" column_invisible="True"/>
+                                    <field name="customer_ref_id"/>
+                                    <field name="customer_brand"/>
+                                    <field name="cust_ref_pro_category"/>
+                                    <field name="product_id" widget="product_configurator" string="Offered Item"/>
+                                    <field name="name" widget="section_and_note_text" column_invisible="True"/>
+                                    <field name="product_uom_qty" string="Qty in Units"/>
+                                    <field name="pack_size_id"/>
+                                    <field name="unit_qty" string="Quantity"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="company_id" optional="hide"/>
+                                    <field name="sale_order_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <!-- <field name="price_tax" column_invisible="True"/>
+                                    <field name="price_total" column_invisible="True"/> -->
+                                </list>
+                            </field>
+
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <!-- <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="tax_totals" widget="account-tax-totals-field" nolabel="True" colspan="2" readonly="True"/>
+                                </group>
+                                <div class="clearfix"/> -->
+                            </group>
+                        </page>
+                        <page string="Additional Details - Auto">
+                            <group>
+                                <group>
+                                    <field name="sales_order_received"/>
+                                    <field name="sales_order_date"/>
+                                    <field name="po_received"/>
+                                    <field name="po_number"/>
+                                    <field name="purchase_order_date"/>
+                                    <field name="brand_master_id"/>
+                                    <field name="brand_type"/>
+                                </group>
+                                <group>
+                                    <field name="production_started"/>
+                                    <field name="expected_closure_date"/>
+                                    <field name="production_date"/>
+                                    <field name="expected_date_of_completion"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_order_enq_kanban_improved_toll" model="ir.ui.view">
+        <field name="name">order.enq.kanban.improved</field>
+        <field name="model">order.enq</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" 
+                    class="o_kanban_small_column" 
+                    sample="True"
+                    records_draggable="0">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <field name="date_order"/>
+                <field name="sales_user_id"/>
+                <field name="sale_count"/>
+                <field name="total_quantity"/>
+                <field name="business_unit"/>
+                <field name="color" invisible="True"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click" 
+                             t-attf-style="border-left: 5px solid #{
+                                record.state.raw_value == 'convert_quote' ? '#28a745' : 
+                                record.state.raw_value == 'inquiry' ? '#17a2b8' : 
+                                record.state.raw_value == 'cancel' ? '#dc3545' : '#6c757d'}; 
+                                padding: 12px;">
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'convert_quote'">
+                                <span class="bg-success">Converted to Quote</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'inquiry'">
+                                <span class="bg-info">Inquiry</span>
+                            </div>
+                            <div class="ribbon ribbon-top-right" t-if="record.state.raw_value == 'cancel'">
+                                <span class="bg-danger">Cancelled</span>
+                            </div>
+                            
+                            <div class="mb-3 pb-2" style="border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                <h5 class="mb-1">
+                                    <field name="name"/>
+                                </h5>
+                                <div>
+                                    <span class="text-muted">Customer: </span>
+                                    <strong><field name="partner_id"/></strong>
+                                </div>
+                            </div>
+                            
+                            <table class="o_kanban_record_body w-100 mb-3">
+                                <tr>
+                                    <td class="text-end pe-3" style="width: 40%; vertical-align: top;">
+                                        <span class="text-muted">Date:</span>
+                                    </td>
+                                    <td style="width: 60%; vertical-align: top;">
+                                        <field name="date_order" widget="date"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Sales Person:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="sales_user_id"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr t-if="record.business_unit.raw_value">
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Business Unit:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="business_unit"/>
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td class="text-end pe-3" style="vertical-align: top;">
+                                        <span class="text-muted">Quantity:</span>
+                                    </td>
+                                    <td style="vertical-align: top;">
+                                        <field name="total_quantity"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <div class="d-flex justify-content-end" style="border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
+                                <t t-if="record.sale_count.raw_value > 0">
+                                    <span class="badge rounded-pill bg-primary me-1">
+                                        <i class="fa fa-file-text-o me-1" role="img" aria-label="Sales" title="Sales"></i>
+                                        <t t-out="record.sale_count.value"/> Sale<t t-if="record.sale_count.raw_value > 1">s</t>
+                                    </span>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_order_enquirey_toll">
+        <field name="name">Toll Blend Inquiry</field>
+        <field name="res_model">order.enq</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <!-- <field name="view_id" ref="view_order_enq_tree_view_toll"/> -->
+        <!-- <field name="search_view_id" ref="view_account_analytic_line_filter_inherit_account"/> -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create  Toll Blend Inquiry
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_toll_list">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_order_enq_tree_view_toll"/>
+        <field name="act_window_id" ref="action_order_enquirey_toll"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_toll_form">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_order_enq_form_toll"/>
+        <field name="act_window_id" ref="action_order_enquirey_toll"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_toll_kanban">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_order_enq_kanban_improved_toll"/>
+        <field name="act_window_id" ref="action_order_enquirey_toll"/>
+    </record>
+
+    <record id="saleorder_form_inherit" model="ir.ui.view">
+        <field name="name">Sale order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page/field[@name='order_line']" position="before">
+                <button name="button_add_line_from_sales" style="margin-top: -1%;margin-left: 42%;" type="object"  string="Add Lines"
+                        class="btn-primary"
+                        invisible="state not in ('draft', 'sent'), not order_enquirey_id"/>
+            </xpath>
+            <!-- <xpath expr="//group[1]" position="attributes">
+                <attribute name="col">3</attribute>
+            </xpath> -->
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_id']" position="replace">
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_template_id']" position="replace">
+            </xpath>
+            <xpath expr="//field[@name='partner_shipping_id']" position="before">
+                <field name="order_enquirey_id" readonly="True" invisible="not order_enquirey_id"/>
+                <field name="reason_id" string="Reason for not quoting"/>
+                <field name="new_existing" readonly="True"/>
+                <field name="Source_of_inquiry_id"/>
+                <field name="post_tally_date" invisible="True"/>
+                <field name="other_ref" invisible="True"/>
+                <field name="dispatch_through" invisible="False"/>
+                <field name="destination" invisible="False"/>
+            </xpath>
+            <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='name']" position="after">
+                <field name="customer_ref_id"/>
+                <field name="customer_brand"/>
+                <field name="cust_ref_pro_category"/>
+                <field name="product_template_id"
+                    string="Offered Item"
+                    readonly="id and not product_updatable"
+                    required="not display_type and not is_downpayment"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,
+                        'uom':product_uom_id,
+                        'company_id': parent.company_id,
+                        'default_list_price': price_unit,
+                        'default_uom_id': product_uom_id,
+                    }"
+                    options="{
+                        'no_open': True,
+                    }"
+                    optional="show"
+                    domain="[('sale_ok', '=', True)]"
+                    widget="sol_product_many2one"
+                    placeholder="Type to find a product..."/>
+                <field
+                    name="product_id"
+                    string="Offered Item"
+                    readonly="not product_updatable"
+                    required="not display_type and not is_downpayment"
+                    force_save="True"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,
+                        'uom':product_uom_id,
+                        'company_id': parent.company_id,
+                        'default_lst_price': price_unit,
+                        'default_uom_id': product_uom_id,
+                    }"
+                    options="{
+                        'no_open': True,
+                    }"
+                    optional="hide"
+                    domain="[('sale_ok', '=', True)]"
+                    widget="sol_product_many2one"/>
+                <!-- <field name="customer_brand"/> -->
+                <!-- <field name="cust_ref_pro_category"/> -->
+            </xpath>
+            <!-- string="Offered Item" -->
+            <!-- <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom'][2]" position="replace">
+            </xpath> -->
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="replace">
+                <field
+                    name="product_uom_qty"
+                    decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'quantity': product_uom_qty,
+                        'pricelist': parent.pricelist_id,
+                        'uom': product_uom_id,
+                        'company_id': parent.company_id
+                    }"
+                    readonly="is_downpayment" string="Qty in Units"/>
+                <field name="pack_size_id"/>
+                <field name="unit_qty" string="Quantity"/>
+                <field
+                    name="product_uom_id"
+                    force_save="True"
+                    string="UoM"
+                    readonly="product_uom_readonly"
+                    required="not display_type and not is_downpayment"
+                    context="{'company_id': parent.company_id}"
+                    groups="uom.group_uom"
+                    options='{"no_open": True}'
+                    width="60px"
+                    optional="show"/>
+                
+            </xpath>
+
+            
+        </field>
+    </record>
+
+    <record id="product_tmpl_tree_inherit" model="ir.ui.view">
+        <field name="name">Product Template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <button name="button_add_sales_line" type="object"
+                        class="fa fa-list"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="product_template_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">Product Template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']" position="after">
+                <button name="button_add_sales_line" type="object"
+                        class="fa fa-list"/>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="view_inq_res_partner_form_inherists" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.business_sbu</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="inquiry_count" invisible="False"/>
+                <field name="sale_order_count" invisible="False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_tree_form_inherists" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.business_sbu</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="inquiry_count"/>
+                <field name="sale_order_count"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_inq" model="ir.ui.view">
+        <field name="name">product.template.form.inq</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="used_in_inquiry_or_order" invisible="False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view_view_inq" model="ir.ui.view">
+        <field name="name">product.template.list.inq</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="used_in_inquiry_or_order" column_invisible="False"/>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_order_enq"
+              name="Sales Inquiry"
+              action="action_order_enquirey"
+              parent="sale.sale_order_menu" sequence="1"/>
+
+
+    <menuitem id="menu_order_enq_toll"
+              name="Toll Blend Inquiry"
+              action="action_order_enquirey_toll"
+              parent="sale.sale_order_menu" sequence="2" groups="sale_order_enquiry.group_toll_blending"/>
+
+
+</odoo>

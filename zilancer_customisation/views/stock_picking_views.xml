@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_picking_form_inherits" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Remarks">
+                        <group>
+                            <group>
+                                <field name="vessel_no" required="False"/>
+                                <field name="invoice_no" required="False"/>
+                                <field name="invoice_date" required="False"/>
+                                <field name="expected_arrival_days"/>
+                                <field name="other_expected_days" invisible="expected_arrival_days != 'others'"/>
+                                <field name="eta_date" readonly="True"/>
+                            </group>
+                            <group>
+                                <field name="eta1"/>
+                                <field name="remark1"/>
+                                <field name="eta2"/>
+                                <field name="remark2"/>
+                                <field name="eta3"/>
+                                <field name="remark3"/>
+                                <field name="actual"/>
+                                <field name="final_remark"/>
+                                <field name="custom_no"/>
+                            </group>
+                        </group>
+                    </page>
+                    <!-- <page string="Document Information">
+                        <group>
+                            <group string="Document Information">
+                                <field name="document_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="document_number" readonly="True" force_save="True"/>
+                            </group>
+                            <group string="Additional Information">
+                                <field name="customer_lpo_no"/>
+                                <field name="container_no"/>
+                                <field name="seal_no"/>
+                                <field name="vehicle_no"/>
+                            </group>
+                        </group>
+                    </page> -->
+                    <page string="Driver Details" invisible="company_id != 9">
+                        <group string="Driver Details">
+                            <group>
+                                <field name="driver_name"/>
+                                <field name="driver_id"/>
+                                <field name="driver_emirates_id" filename="driver_emirates_id_filename"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Document Details" invisible="company_id != 9">
+                        <group string="Driver Details">
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="loaded_by_id" options="{'no_open': True, 'no_create': True}"/>
+                            </group>
+                            <group>
+                                <field name="approved_by"/>
+                                <field name="receiver_name"/>
+                                <field name="receiver_sign" invisible="receiver_sign == False" />
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <!-- Add package and pack fields to the Operations page list view -->
+                <xpath expr="//page[@name='operations']//field[@name='move_ids']/list/field[@name='product_uom']" position="after">
+                    <field name="package" string="Package"/>
+                    <field name="pack" string="Pack"/>
+                    <field name="batch_no"/>
+                    <field name="mfg_date"/>
+                    <field name="sample_type" column_invisible="parent.document_type != 'general_dispatch'" optional="show"/>
+                    <field name="exp_date" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
+                    <field name="sap_fg_code" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
+                    <field name="remarks"/>
+                </xpath>
+                <xpath expr="//field[@name='location_id']" position="after">
+                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="company_id != 9"/>
+                    <field name="document_number" readonly="True" force_save="True" invisible="company_id != 9"/>
+                </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="customer_lpo_no" invisible="company_id != 9"/>
+                    <field name="container_no" invisible="company_id != 9"/>
+                    <field name="seal_no" invisible="company_id != 9"/>
+                    <field name="vehicle_no" invisible="company_id != 9"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

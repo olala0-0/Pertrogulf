@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Email template for minutes of meeting report -->
+    <data noupdate="0">
+        <record id="email_template_minutes_of_meeting" model="mail.template">
+            <field name="name">Minutes of Meeting</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="email_from">{{ (object.responsible_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="subject">Minutes of Meeting - "{{ object.name }}"</field>
+            <field name="description">Sent to attendees with minutes of meeting
+            </field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hi &#160;Team,
+                        <br/>
+                        <br/>
+                        Please find the attached minutes of meeting of the
+                        <t t-if="object.name">
+                            "<span t-out="object.name or ''">
+                            </span>"
+                        </t>
+                        <br/>
+                        <br/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- 1. Meeting Reminder Template (15 min before meeting) -->
+        <record id="email_template_meeting_reminder" model="mail.template">
+            <field name="name">Meeting Reminder</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="subject">Reminder: {{ object.name }} - Starting Soon</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ ', '.join([attendee.email for attendee in object.attendee_ids if attendee.email]) }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello,
+                        <br/><br/>
+                        This is a reminder for the upcoming meeting: <strong t-out="object.name or ''"></strong>
+                        <br/>
+                        <strong>Date:</strong> <t t-out="format_datetime(object.start, tz=object.partner_ids[0].tz if object.partner_ids else 'UTC', dt_format='EEEE, d MMMM yyyy')"/>
+                        <br/>
+                        <strong>Time:</strong> <t t-out="format_datetime(object.start, tz=object.partner_ids[0].tz if object.partner_ids else 'UTC', dt_format='HH:mm')"/> - <t t-out="format_datetime(object.stop, tz=object.partner_ids[0].tz if object.partner_ids else 'UTC', dt_format='HH:mm')"/>
+                        <br/>
+                        <strong>Location:</strong> <t t-out="object.location or 'N/A'"/>
+                        <br/><br/>
+                        <strong>Agenda:</strong>
+                        <br/>
+                        <t t-out="object.description or 'No agenda specified'"/>
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="object.user_id.signature or ''"/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <!-- Reminder Configuration -->
+            <field name="is_reminder" eval="True"/>
+            <field name="reminder_before">15</field>
+            <field name="reminder_unit">minutes</field>
+        </record>
+
+        <!-- 2. Assigned Tasks Template -->
+        <record id="email_template_assigned_tasks" model="mail.template">
+            <field name="name">Meeting Tasks Assignment</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="subject">Tasks Assigned to You: {{ object.name }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ ctx.get('partner').id if ctx.get('partner') else '' }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello <t t-out="ctx.get('partner').name if ctx.get('partner') else ''"/>,
+                        <br/><br/>
+                        You have been assigned tasks from the meeting: <strong t-out="object.name or ''"></strong>
+                        <br/>
+                        <strong>Date:</strong> <t t-out="format_datetime(object.start, tz=ctx.get('partner').tz if ctx.get('partner') else 'UTC', dt_format='EEEE, d MMMM yyyy')"/>
+                        <br/>
+                        <strong>Time:</strong> <t t-out="format_datetime(object.start, tz=ctx.get('partner').tz if ctx.get('partner') else 'UTC', dt_format='HH:mm')"/> - <t t-out="format_datetime(object.stop, tz=ctx.get('partner').tz if ctx.get('partner') else 'UTC', dt_format='HH:mm')"/>
+                        <br/><br/>
+                        <strong>Your assigned tasks are:</strong>
+                        <br/><br/>
+                        <table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+                            <tr style="background-color: #f2f2f2;">
+                                <th>Action</th>
+                                <th>Description</th>
+                                <th>Agenda Item</th>
+                                <th>Responsible</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                            </tr>
+                            <t t-foreach="ctx.get('actions', [])" t-as="action">
+                                <tr>
+                                    <td><t t-out="action.action or 'N/A'"/></td>
+                                    <td><t t-out="action.description or 'N/A'"/></td>
+                                    <td><t t-out="action.agenda_item_id.topic if action.agenda_item_id else 'N/A'"/></td>
+                                    <td><t t-out="action.responsible_partner_id.name if action.responsible_partner_id else 'N/A'"/></td>
+                                    <td><t t-out="format_date(action.deadline) if action.deadline else 'N/A'"/></td>
+                                    <td><t t-out="dict(action._fields['status'].selection).get(action.status)"/></td>
+                                </tr>
+                            </t>
+                        </table>
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="object.user_id.signature or ''"/>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+            <!-- Not a reminder template - this is sent immediately upon task assignment -->
+            <field name="is_reminder" eval="False"/>
+        </record>
+
+        <!-- 3. Task Deadline Reminder Template (3 days before deadline) -->
+        <!-- Task Deadline Reminder Template -->
+        <record id="email_template_task_deadline_reminder" model="mail.template">
+            <field name="name">Task Deadline Reminder</field>
+            <field name="model_id" ref="model_meeting_actions"/>
+            <field name="subject">Task Deadline Approaching: {{ object.action }}</field>
+            <field name="email_from">{{ (object.calendar_event_id.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ ', '.join([partner.email for partner in object.assigned_partner_ids if partner.email]) }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello,
+                        <br/><br/>
+                        This is a reminder about an upcoming task deadline:
+                        <br/><br/>
+                        <strong>Task:</strong> <t t-out="object.action or ''"/>
+                        <br/>
+                        <strong>Description:</strong> <t t-out="object.description or 'N/A'"/>
+                        <br/>
+                        <strong>Meeting:</strong> <t t-out="object.calendar_event_id.name or ''"/>
+                        <br/>
+                        <strong>Deadline:</strong> <t t-out="format_date(object.deadline) or ''"/>
+                        <br/>
+                        <strong>Current Status:</strong> <t t-out="dict(object._fields['status'].selection).get(object.status) or ''"/>
+                        <br/><br/>
+                        Please ensure this task is completed by the deadline.
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="object.calendar_event_id.user_id.signature or ''"/>
+                    </p>
+                </div>
+            </field>
+            <!-- <field name="lang">{{ object.partner_id.lang }}</field> -->
+            <field name="auto_delete" eval="True"/>
+            <!-- Reminder Configuration -->
+            <field name="is_reminder" eval="True"/>
+            <field name="reminder_before">3</field>
+            <field name="reminder_unit">days</field>
+        </record>
+
+        <!-- Task Status Change Template -->
+        <record id="email_template_status_change" model="mail.template">
+            <field name="name">Task Status Change Notification</field>
+            <field name="model_id" ref="print_minutes_of_meeting.model_meeting_actions"/>
+            <field name="subject">Task Status Updated: {{ object.action }}</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ object.calendar_event_id.user_id.partner_id.email }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello,
+                        <br/><br/>
+                        The status of a meeting task has been updated:
+                        <br/><br/>
+                        <strong>Task:</strong> <t t-out="object.action or ''"/>
+                        <br/>
+                        <strong>Description:</strong> <t t-out="object.description or 'N/A'"/>
+                        <br/>
+                        <strong>Meeting:</strong> <t t-out="object.calendar_event_id.name or ''"/>
+                        <br/>
+                        <strong>Status changed from:</strong> <t t-out="dict(object._fields['status'].selection).get(ctx.get('old_status')) or ''"/>
+                        <br/>
+                        <strong>Status changed to:</strong> <t t-out="dict(object._fields['status'].selection).get(object.status) or ''"/>
+                        <br/>
+                        <strong>Updated by:</strong> <t t-out="user.name or ''"/>
+                        <br/><br/>
+                        Best regards,
+                        <br/>
+                        <t t-out="user.signature or ''"/>
+                    </p>
+                </div>
+            </field>
+            <!-- <field name="lang">{{ object.partner_id.lang }}</field> -->
+            <field name="auto_delete" eval="True"/>
+            <!-- Not a reminder template - this is sent immediately upon status change -->
+            <field name="is_reminder" eval="False"/>
+        </record>
+
+
+        <record id="ir_cron_send_meeting_reminder_email" model="ir.cron">
+            <field name="name">Send meeting reminder email</field>
+            <field name="model_id" ref="calendar.model_calendar_event"/>
+            <field name="state">code</field>
+            <field name="code">model._send_meeting_reminder_email()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_send_deadline_reminder_email" model="ir.cron">
+            <field name="name">Send deadline reminder email</field>
+            <field name="model_id" ref="print_minutes_of_meeting.model_meeting_actions"/>
+            <field name="state">code</field>
+            <field name="code">model._send_deadline_reminder_email()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

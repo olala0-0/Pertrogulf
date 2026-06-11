@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_inherits" inherit_id="stock.report_delivery_document">
+        <xpath expr="//span[@t-field='o.name']" position="replace">
+            <t t-if="o.document_type">
+                <span t-field="o.document_number">WH/OUT/0001</span>
+            </t>
+            <t t-else="">
+                <span t-field="o.name">WH/OUT/0001</span>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="after">
+            <div class="col-12 row mb-4">
+                <strong>Contact Person:</strong> <span t-esc="o.partner_id.name"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@t-if='not o.signature']" position="before">
+            <div t-if="o.document_type == 'dispatch_advise'" class="row mt48" name="driver_id_section">
+                <div class="mb64 col-6">
+                    <div class="text-center">
+                        <strong>Driver Emirates ID</strong>
+                    </div>
+                    <div class="text-center mt-2">
+                        <t t-if="o.driver_emirates_id">
+                            <img t-att-src="image_data_uri(o.driver_emirates_id)" style="max-height: 5cm; max-width: 8cm; border: 1px solid #ddd;"/>
+                        </t>
+                        <t t-else="">
+                            <div style="height: 5cm; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center;">
+                                <span class="text-muted">No ID Uploaded</span>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="text-center">
+                        <strong>Receiver Sign</strong>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" class="row mt48" name="driver_id_section">
+                <div class="col-6">
+                </div>
+                <div class="col-6">
+                    <div class="text-center">
+                        <strong>Receiver Sign</strong>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <div class="mt-8 col-6">
+                <strong>Container No:</strong>
+                <span t-esc="o.container_no or '-'"/>
+            </div>
+
+            <div class="col-6">
+                <strong>Seal No:</strong>
+                <span t-esc="o.seal_no or '-'"/>
+            </div>
+
+            <div class="col-6">
+                <strong>Vehicle Number:</strong>
+                <span t-esc="o.vehicle_no or '-'"/>
+            </div>
+
+            <div class="col-6">
+                <strong>Driver Name:</strong>
+                <span t-esc="o.driver_name or '-'"/>
+            </div>
+
+            <div class="col-6 mt8">
+                <strong>Driver ID Number:</strong>
+                <span t-esc="o.driver_id or '-'"/>
+            </div>
+
+            <div class="col-6 mt8">
+                <strong>Prepared By:</strong>
+                <span t-esc="o.prepared_by or '-'"/>
+            </div>
+
+            <div class="col-6 mt8">
+                <strong>Loaded By:</strong>
+                <span t-esc="o.loaded_by or '-'"/>
+            </div>
+
+            <div class="col-6 mt8">
+                <strong>Approved By:</strong>
+                <span t-esc="o.approved_by or '-'"/>
+            </div>
+
+            <div class="col-6 mt8">
+                <strong>Receiver Name:</strong>
+                <span t-esc="o.receiver_name or '-'"/>
+            </div> -->
+
+
+            <!-- CLEAR FLOAT -->
+            <div style="clear:both;"></div>
+
+            <!-- INFORMATION FIELDS TWO-COLUMN -->
+            <div style="width:100%; margin-top:20px; overflow:hidden;">
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Container No:</b> <span t-esc="o.container_no or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Seal No:</b> <span t-esc="o.seal_no or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Vehicle Number:</b> <span t-esc="o.vehicle_no or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Driver Name:</b> <span t-esc="o.driver_name or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Driver ID Number:</b> <span t-esc="o.driver_id or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Prepared By:</b> <span t-esc="o.prepared_by or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Loaded By:-</b> <span t-field="o.loaded_by_id"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Approved By:</b> <span t-esc="o.approved_by or '-'"/>
+                </div>
+
+                <div style="width:50%; float:left; margin-top:10px;">
+                    <b>Receiver Name:</b> <span t-esc="o.receiver_name or '-'"/>
+                </div>
+
+            </div>
+
+            <!-- FINAL CLEAR -->
+            <div style="clear:both;"></div>
+
+        </xpath>
+        <!-- For the main moves table -->
+        <xpath expr="//table[@name='stock_move_table']//th[@name='th_sm_quantity']" position="replace">
+            <th name="th_sm_package"><strong>Package</strong></th>
+            <th name="th_sm_pack"><strong>Pack</strong></th>
+            <th name="th_sm_batch_no"><strong>Batch No</strong></th>
+            <th name="th_sm_mfg_date"><strong>Mfg Dt</strong></th>
+            <t t-if="o.document_type == 'general_dispatch'">
+                <th name="th_sm_sample_type"><strong>Sample Type</strong></th>
+            </t>
+            <t t-if="o.document_type == 'dispatch_advise'">
+                <th name="th_sm_exp_date"><strong>Exp Dt</strong></th>
+                <th name="th_sm_sap_fg_code"><strong>SAP FG code</strong></th>
+            </t>
+            <th name="th_sm_remark"><strong>Remarks</strong></th>
+        </xpath>
+        <xpath expr="//table[@name='stock_move_table']//td[3]" position="replace">
+            <td class="o_td_quantity text-end">
+                <span t-field="move.package" class="text-nowrap"></span>
+            </td>
+            <td class="o_td_quantity">
+                <span t-field="move.pack" class="text-nowrap"></span>
+            </td>
+            <td class="o_td_batch_no">
+                <span t-field="move.batch_no" class="text-nowrap"></span>
+            </td>
+            <td class="o_td_mfg_date">
+                <span t-field="move.mfg_date" class="text-nowrap"></span>
+            </td>
+            <t t-if="o.document_type == 'general_dispatch'">
+                <td class="o_td_sample_type">
+                    <span t-field="move.sample_type" class="text-nowrap"></span>
+                </td>
+            </t>
+            <t t-if="o.document_type == 'dispatch_advise'">
+                <td class="o_td_exp_date">
+                    <span t-field="move.exp_date" class="text-nowrap"></span>
+                </td>
+                <td class="o_td_sap_fg_code">
+                    <span t-field="move.sap_fg_code" class="text-nowrap"></span>
+                </td>
+            </t>
+            <td class="o_td_remark">
+                <span t-field="move.remarks" class="text-nowrap"></span>
+            </td>
+        </xpath>
+               
+    </template>
+
+</odoo>
