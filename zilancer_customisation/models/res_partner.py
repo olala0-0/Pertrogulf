@@ -144,11 +144,20 @@ class ResPartner(models.Model):
                 display_name = name
             partner.display_name = display_name
 
-    @api.model
-    def create(self, vals):
+    # @api.model
+    # def create(self, vals):
+    #     """Auto-populate website from parent company during creation"""
+    #     if vals.get('parent_id') and not vals.get('website'):
+    #         parent = self.browse(vals['parent_id'])
+    #         if parent.website:
+    #             vals['website'] = parent.website
+    #     return super(ResPartner, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
         """Auto-populate website from parent company during creation"""
-        if vals.get('parent_id') and not vals.get('website'):
-            parent = self.browse(vals['parent_id'])
-            if parent.website:
-                vals['website'] = parent.website
-        return super(ResPartner, self).create(vals)
+        for vals in vals_list:
+            if vals.get('parent_id') and not vals.get('website'):
+                parent = self.browse(vals['parent_id'])
+                if parent.website:
+                    vals['website'] = parent.website
+        return super(ResPartner, self).create(vals_list)
