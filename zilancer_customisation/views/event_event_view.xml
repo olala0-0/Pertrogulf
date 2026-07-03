@@ -148,7 +148,7 @@
         </field>
     </record>
 
-    <record id="view_event_kanban_inherits" model="ir.ui.view">
+    <!-- <record id="view_event_kanban_inherits" model="ir.ui.view">
         <field name="name">event.event.kanban.custom</field>
         <field name="model">event.event</field>
         <field name="priority">1</field>
@@ -193,5 +193,5 @@
                 </templates>
             </kanban>
         </field>
-    </record>
+    </record> -->
 </odoo>
