@@ -84,15 +84,15 @@
                     <attribute name="required">1</attribute>
                 </xpath>
                 <xpath expr="//page[@name='order_lines']" position="before">
-                    <page string="Additional Details - Marine" invisible="company_id != 4">
+                    <page string="Additional Details - Marine" invisible="company_id != 3">
                         <group>
                             <group>
-                                <field name="vessel_no" required="company_id == 4"/>
+                                <field name="vessel_no_id" required="company_id == 3"/>
                                 <field name="vessel_eta"/>
-                                <!-- <field name="imo_no_id" required="company_id == 4"/> -->
-                                <field name="imo_number" required="company_id == 4"/>
+                                <!-- <field name="imo_no_id" required="company_id == 3"/> -->
+                                <field name="imo_number" required="company_id == 3"/>
                                 <field name="delivery_by_id"/>
-                                <field name="port_master_id" required="company_id == 4"/>
+                                <field name="port_master_id" required="company_id == 3"/>
                                 <field name="country_port_id"/>
                                 <field name="port_note"/>
                                 <field name="delivery_type_id"/>
@@ -235,7 +235,7 @@
                           sample="True"
                           decoration-muted="state == 'cancel'">
                         <field name="name"/>
-                        <field name="vessel_no" optional="show"/>
+                        <field name="vessel_no_id" optional="show"/>
                         <!-- <field name="imo_no_id" optional="show"/> -->
                         <field name="imo_number" optional="show"/>
                         <field name="partner_id"/>
@@ -292,7 +292,7 @@
                     <field name="date_order" optional="show"/>
                     <field name="partner_id"/>
                     <field name="port_master_id" optional="show"/>
-                    <field name="vessel_no" optional="show"/>
+                    <field name="vessel_no_id" optional="show"/>
                     <field name="country_port_id" optional="show"/>
                     <field name="state" string="Status"/>
                     <field name="user_id" optional="show" string="Sales Manager"/>
@@ -432,7 +432,7 @@
                                   options="{'no_quick_create': True}"
                                   context="{'default_type':'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                                   readonly="state == 'cancel' or locked"/>
-                            <field name="vessel_no"/>
+                            <field name="vessel_no_id"/>
                             <field name="show_total"/>
                         </group>
                         <group name="order_details">
