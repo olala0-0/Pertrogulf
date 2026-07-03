@@ -152,6 +152,7 @@ class ResPartner(models.Model):
     #         if parent.website:
     #             vals['website'] = parent.website
     #     return super(ResPartner, self).create(vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         """Auto-populate website from parent company during creation"""

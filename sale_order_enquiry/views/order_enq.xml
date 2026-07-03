@@ -61,16 +61,16 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Additional Details - Marine" invisible="company_id != 4">
+                        <page string="Additional Details - Marine" invisible="company_id != 3">
                             <group>
                                 <group>
-                                    <!-- <field name="vessel_no_id" required="company_id == 4"/> -->
-                                    <field name="vessel_no" required="company_id == 4"/>
+                                    <field name="vessel_no_id" required="company_id == 3"/>
+                                    <!-- <field name="vessel_no" required="company_id == 3"/> -->
                                     <field name="vessel_eta"/>
-                                    <!-- <field name="imo_no_id" required="company_id == 4"/> -->
-                                    <field name="imo_number" required="company_id == 4"/>
+                                    <!-- <field name="imo_no_id" required="company_id == 3"/> -->
+                                    <field name="imo_number" required="company_id == 3"/>
                                     <field name="delivery_by_id"/>
-                                    <field name="port_master_id" required="company_id == 4"/>
+                                    <field name="port_master_id" required="company_id == 3"/>
                                     <field name="country_id"/>
                                     <field name="port_note"/>
                                     <field name="delivery_type_id"/>
@@ -279,7 +279,7 @@
             <list class="o_sale_order" decoration-muted="state == 'cancel'" default_order="create_date desc">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="vessel_no" optional="show"/>
+                <field name="vessel_no_id" optional="show"/>
                 <!-- <field name="imo_no_id" optional="show"/> -->
                 <field name="imo_number" optional="show"/>
                 <field name="partner_id"/>
@@ -317,7 +317,7 @@
             <list class="o_sale_order" decoration-muted="state == 'cancel'" default_order="create_date desc">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="vessel_no" optional="show"/>
+                <field name="vessel_no_id" optional="show"/>
                 <!-- <field name="imo_no_id" optional="show"/> -->
                 <field name="imo_number" optional="show"/>
                 <field name="partner_id"/>
@@ -378,7 +378,7 @@
                             <field name="reason_id" string="Reason for not inquiry"/>
                             <!-- <field name="pricing"/> -->
                             <field name="total_quantity" string="Total Quantity"/>
-                            <field name="vessel_no"/>
+                            <field name="vessel_no_id"/>
                         </group>
                         <group>
                             <field name="customer_user_id" invisible="True"/>
@@ -397,16 +397,16 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Additional Details - Marine" invisible="company_id != 4">
+                        <page string="Additional Details - Marine" invisible="company_id != 3">
                             <group>
                                 <group>
-                                    <!-- <field name="vessel_no_id" required="company_id == 4"/> -->
-                                    <field name="vessel_no" required="company_id == 4"/>
+                                    <!-- <field name="vessel_no_id" required="company_id == 3"/> -->
+                                    <field name="vessel_no_id" required="company_id == 3"/>
                                     <field name="vessel_eta"/>
-                                    <!-- <field name="imo_no_id" required="company_id == 4"/> -->
-                                    <field name="imo_number" required="company_id == 4"/>
+                                    <!-- <field name="imo_no_id" required="company_id == 3"/> -->
+                                    <field name="imo_number" required="company_id == 3"/>
                                     <field name="delivery_by_id"/>
-                                    <field name="port_master_id" required="company_id == 4"/>
+                                    <field name="port_master_id" required="company_id == 3"/>
                                     <field name="country_id"/>
                                     <field name="port_note"/>
                                     <field name="delivery_type_id"/>

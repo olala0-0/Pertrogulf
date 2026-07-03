@@ -149,51 +149,49 @@
     </record>
 
     <record id="view_event_kanban_inherits" model="ir.ui.view">
-        <field name="name">event.event.kanban</field>
+        <field name="name">event.event.kanban.custom</field>
         <field name="model">event.event</field>
-        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
-            <xpath expr="//kanban" position="replace">
-                <kanban class="o_kanban_example">
-                    <field name="name"/>
-                    <field name="date_begin"/>
-                    <field name="date_end"/>
-                    <field name="address_id"/>
-                    <field name="registration_count"/>
-                    <field name="opportunity_volume"/>
-                    <field name="opportunity_revenue"/>
+            <kanban class="o_kanban_example">
+                <field name="name"/>
+                <field name="date_begin"/>
+                <field name="date_end"/>
+                <field name="address_id"/>
+                <field name="registration_count"/>
+                <field name="opportunity_volume"/>
+                <field name="opportunity_revenue"/>
 
-                    <templates>
-                        <t t-name="card">
-                            <div class="oe_kanban_global_click o_kanban_card" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
-                                <div style="background-color: #0D597F; color: white; padding: 8px; font-weight: bold; border-radius: 4px;">
-                                    <field name="name"/>
-                                </div>
-                                <div style="margin-top: 10px;">
-                                    <span class="fa fa-map-marker" style="margin-right: 8px; color: #444;"></span>
-                                    <field name="address_id" options="{'no_open': True}" context="{'show_address': 0}"/>
-                                </div>
-                                <div style="font-size: 13px;">
-                                    <span class="fa fa-calendar" style="margin-right: 8px; color: #444;"></span>
-                                    <field name="date_begin" widget="date"/> - <field name="date_end" widget="date"/>
-                                </div>
-                                <div>
-                                    <span class="fa fa-users" style="margin-right: 8px; color: #444;"></span>
-                                    <field name="registration_count"/> Attendees
-                                </div>
-                                <div>
-                                    <span class="fa fa-money" style="margin-right: 8px; color: #444;"></span>
-                                    <field name="opportunity_volume"/>
-                                </div>
-                                <div>
-                                    <span class="fa fa-usd" style="margin-right: 8px; color: #444;"></span>
-                                    <field name="opportunity_revenue"/>
-                                </div>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_card" style="padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
+                            <div style="background-color: #0D597F; color: white; padding: 8px; font-weight: bold; border-radius: 4px;">
+                                <field name="name"/>
                             </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </xpath>
+                            <div style="margin-top: 10px;">
+                                <span class="fa fa-map-marker" style="margin-right: 8px; color: #444;"></span>
+                                <field name="address_id" options="{'no_open': True}" context="{'show_address': 0}"/>
+                            </div>
+                            <div style="font-size: 13px;">
+                                <span class="fa fa-calendar" style="margin-right: 8px; color: #444;"></span>
+                                <field name="date_begin" widget="date"/> - <field name="date_end" widget="date"/>
+                            </div>
+                            <div>
+                                <span class="fa fa-users" style="margin-right: 8px; color: #444;"></span>
+                                <field name="registration_count"/> Attendees
+                            </div>
+                            <div>
+                                <span class="fa fa-money" style="margin-right: 8px; color: #444;"></span>
+                                <field name="opportunity_volume"/>
+                            </div>
+                            <div>
+                                <span class="fa fa-usd" style="margin-right: 8px; color: #444;"></span>
+                                <field name="opportunity_revenue"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 </odoo>

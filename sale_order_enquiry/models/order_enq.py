@@ -688,7 +688,7 @@ class OrderEnquiry(models.Model):
             ("order_enquirey_id", self.id),
             ("date_order", getattr(self, "date_order", None)),
             # ('vessel_no_id', getattr(self, 'vessel_no_id', None)),
-            ("vessel_no", getattr(self, "vessel_no", None)),
+            # ("vessel_no", getattr(self, "vessel_no", None)),
             ("toll_sale_type", getattr(self, "toll_sale_type", None)),
             ("imo_number", getattr(self, "imo_number", None)),
             ("brand_type", getattr(self, "brand_type", None)),
@@ -709,6 +709,7 @@ class OrderEnquiry(models.Model):
             "reason_id",
             "Source_of_inquiry_id",
             "process_stage_id",
+            "vessel_no_id"
         ]
 
         for field_name in many2one_fields:
