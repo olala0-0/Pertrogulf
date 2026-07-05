@@ -1,0 +1,11 @@
+.numbers {
+	width: 150px;
+	background-color: #009688;
+	color: white;
+	font-size: 2em;
+	padding: 50px;
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+	margin-left: -35px;
+	clip-path: polygon(0px 0%, calc(72% - 10px) 0%, 91% 138px, 100% calc(100% - 10px), calc(98% - 10px) 100%, 10px 100%, 0% calc(100% - 10px), 0% 10px);
+}
