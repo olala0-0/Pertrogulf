@@ -281,7 +281,7 @@
                             </td>
                             <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.product_uom_qty"/>
-                                <span t-field="line.product_uom.name"/>
+                                <span t-field="line.product_uom_id.name"/>
                             </td>
                             <td style="text-align:right; padding:8px; line-height:1.8;">
                                 <span t-field="line.price_unit"/>

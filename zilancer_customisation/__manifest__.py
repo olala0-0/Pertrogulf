@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Zilancer Customisation",
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.5',
     "category": 'Contacts',
     'summary': """Zilancer Customisation""",
     'description': """Zilancer Customisation""",
@@ -9,7 +9,7 @@
     'company': 'Zilancer',
     'maintainer': 'Zilancer',
     'website': 'https://www.zilancer.com',
-    'depends': ['mail', 'contacts', 'sale', 'sale_stock', 'project', 'helpdesk_mgmt', 'print_minutes_of_meeting', 'link_tracker', 'event', 'sale_order_enquiry'],
+    'depends': ['mail', 'contacts', 'sale', 'sale_stock', 'sale_purchase_inter_company_rules', 'project', 'helpdesk_mgmt', 'print_minutes_of_meeting', 'link_tracker', 'event', 'sale_order_enquiry'],
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
@@ -42,6 +42,8 @@
     'assets': {
         'web.assets_backend': [
             'zilancer_customisation/static/src/css/dynamic_dashboard.css',
+            'zilancer_customisation/static/src/js/datetime_field_format.js',
+            'zilancer_customisation/static/src/js/datetime_field_format.xml',
         ],
     },
     'license': "LGPL-3",

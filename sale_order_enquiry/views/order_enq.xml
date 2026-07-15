@@ -116,7 +116,7 @@
                                 <div class="clearfix"/> -->
                             </group>
                         </page>
-                        <page string="Additional Details - Auto">
+                        <page string="Additional Details - Auto" invisible="1">
                             <group>
                                 <group>
                                     <field name="sales_order_received"/>
@@ -192,7 +192,7 @@
                 <field name="color" invisible="True"/>
                 
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click" 
                              t-attf-style="border-left: 5px solid #{
                                 record.state.raw_value == 'convert_quote' ? '#28a745' : 
@@ -303,11 +303,33 @@
         <field name="view_mode">list,kanban,form</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_id" ref="view_order_enq_tree_view"/>
+        <field name="mobile_view_mode">list</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create  Sales Inquiry
             </p>
         </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_list">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_order_enq_tree_view"/>
+        <field name="act_window_id" ref="action_order_enquirey"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_kanban">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_order_enq_kanban_improved"/>
+        <field name="act_window_id" ref="action_order_enquirey"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_order_enquirey_form">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_order_enq_form"/>
+        <field name="act_window_id" ref="action_order_enquirey"/>
     </record>
 
     <record id="view_order_enq_tree_view_toll" model="ir.ui.view">
@@ -452,7 +474,7 @@
                                 <div class="clearfix"/> -->
                             </group>
                         </page>
-                        <page string="Additional Details - Auto">
+                        <page string="Additional Details - Auto" invisible="1">
                             <group>
                                 <group>
                                     <field name="sales_order_received"/>
@@ -496,7 +518,7 @@
                 <field name="color" invisible="True"/>
                 
                 <templates>
-                    <t t-name="kanban-box">
+                    <t t-name="card">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click" 
                              t-attf-style="border-left: 5px solid #{
                                 record.state.raw_value == 'convert_quote' ? '#28a745' : 
@@ -581,6 +603,7 @@
         <field name="res_model">order.enq</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="type">ir.actions.act_window</field>
+        <field name="mobile_view_mode">list</field>
         <!-- <field name="view_id" ref="view_order_enq_tree_view_toll"/> -->
         <!-- <field name="search_view_id" ref="view_account_analytic_line_filter_inherit_account"/> -->
         <field name="help" type="html">

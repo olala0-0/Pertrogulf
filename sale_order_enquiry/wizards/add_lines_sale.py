@@ -51,9 +51,9 @@ class SalesLineAddWizard(models.TransientModel):
                 'display_type': line.display_type,
                 'name': line.name,
                 'price_unit': line.price_unit,
-                'product_uom': line.product_uom.id,
+                'product_uom_id': line.product_uom_id.id,
                 'product_uom_qty': line.product_uom_qty,
-                'tax_id': [(6, 0, line.tax_id.ids)],
+                'tax_ids': [(6, 0, line.tax_ids.ids)],
             }
             if active_model == 'sale.order':
                 order_line['order_id'] = model_id.id
@@ -139,8 +139,8 @@ class ProductAddWizard(models.TransientModel):
             'name': self.product_id.name,
             'product_uom_qty': self.product_uom_qty,
             'price_unit': self.price_unit,
-            'product_uom': self.product_uom.id,
-            'tax_id': [(6, 0, self.tax_id.ids)],
+            'product_uom_id': self.product_uom.id,
+            'tax_ids': [(6, 0, self.tax_id.ids)],
             'display_type': False,
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,

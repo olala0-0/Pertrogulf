@@ -78,7 +78,7 @@
                     <field name="total_quantity"/>
                     <field name="total_qty_units"/>
                     <field name="client_po_order_no"/>
-                    <field name="vat_selection"/>
+                    <field name="vat_selection" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="attributes">
                     <attribute name="required">1</attribute>
@@ -104,7 +104,7 @@
                     </page>
                 </xpath>
                 <notebook position="inside">
-                    <page string="Container Allocation">
+                    <page string="Container Allocation" invisible="1">
                         <field name="container_allocation_ids">
                             <list editable="bottom">
                                 <field name="container_id"/>
@@ -113,7 +113,7 @@
                             </list>
                         </field>
                     </page>
-                    <page string="Additional Details">
+                    <page string="Additional Details" invisible="1">
                         <group>
                             <group>
                                 <field name="sales_order_received"/>
@@ -132,8 +132,8 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Adnoc">
-                        <field name="adnoc_ids">
+                    <page string="Adnoc" invisible="1">
+                        <field name="adnoc_ids" >
                             <list editable="bottom">
                                 <field name="sequence"/>
                                 <field name="team_id" domain="[('business_unit', '=', 'adnoc')]"/>
@@ -146,7 +146,7 @@
                             </list>
                         </field>
                     </page>
-                    <page string="Automotive Industrial">
+                    <page string="Automotive Industrial" invisible="1">
                         <field name="automotive_ids">
                             <list editable="bottom">
                                 <field name="sequence"/>
@@ -170,6 +170,18 @@
                                 <field name="remarks"/>
                             </list>
                         </field>
+                    </page>
+                    <page string="Internal" name="internal">
+                        <group>
+                            <group>
+                                <field name="vessel_agent_name"/>
+                                <field name="contact_details"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="delivery_special_instructions" nolabel="1"
+                                   placeholder="Special instructions for the delivery..."/>
+                        </group>
                     </page>
                 </notebook>
                 <xpath expr="//field[@name='order_line']//list" position="inside">
@@ -256,19 +268,18 @@
             </field>
         </record>
 
-        <record id="view_sale_order_kanban_inherit" model="ir.ui.view">
+        <!-- <record id="view_sale_order_kanban_inherit" model="ir.ui.view">
             <field name="name">sale.order.kanban</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
             <field name="arch" type="xml">
                 <xpath expr="//t[@t-name='card']/div" position="after">
                     <div class="align-items-baseline mb-2">
-                        <!-- <span>Total Qty</span> -->
                         Total Qty: <field name="total_qty_units" class="ml8 fw-bolder ms-auto flex-shrink-0"/>
                     </div>
                 </xpath>
             </field>
-        </record>
+        </record> -->
 
         <record id="action_loaded_by_master" model="ir.actions.act_window">
             <field name="name">Loaded By</field>
@@ -662,6 +673,26 @@
                                         optional="hide"
                                         domain="[('sale_ok', '=', True)]"
                                         widget="sol_product_many2one"/>
+                                    <!-- <field name="product_template_id"
+                                        string="Offered Item"
+                                        readonly="id and not product_updatable"
+                                        required="not display_type and not is_downpayment"
+                                        context="{
+                                            'partner_id': parent.partner_id,
+                                            'quantity': product_uom_qty,
+                                            'pricelist': parent.pricelist_id,
+                                            'uom':product_uom_id,
+                                            'company_id': parent.company_id,
+                                            'default_list_price': price_unit,
+                                            'default_uom_id': product_uom_id,
+                                        }"
+                                        options="{
+                                            'no_open': True,
+                                        }"
+                                        optional="show"
+                                        domain="[('sale_ok', '=', True)]"
+                                        widget="sol_product_many2one"
+                                        placeholder="Type to find a product..."/> -->
                                     <field name="product_template_id"
                                         string="Offered Item"
                                         readonly="id and not product_updatable"
@@ -932,7 +963,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Team Updates">
+                        <page string="Team Updates" invisible="1">
                             <field name="automotive_ids">
                                 <list editable="bottom">
                                     <field name="sequence"/>
@@ -945,6 +976,18 @@
                                     <field name="remarks"/>
                                 </list>
                             </field>
+                        </page>
+                        <page string="Internal" name="internal" invisible="1">
+                            <group>
+                                <group>
+                                    <field name="vessel_agent_name"/>
+                                    <field name="contact_details"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="delivery_special_instructions" nolabel="1"
+                                       placeholder="Special instructions for the delivery..."/>
+                            </group>
                         </page>
                         <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" invisible="not require_signature and not signed_by and not signature and not signed_on">
                             <group>
@@ -961,33 +1004,23 @@
         </record>
 
         <record id="view_sale_order_kanban_toll" model="ir.ui.view">
-            <field name="name">sale.order.kanban</field>
+            <field name="name">sale.order.kanban.toll</field>
             <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sale_order_kanban"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="True" quick_create="false">
-                    <field name="currency_id"/>
-                    <progressbar field="activity_state"
-                        colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-                    <templates>
-                        <t t-name="card">
-                            <div class="d-flex align-items-baseline mb-2">
-                                <field name="partner_id" class="fw-bolder fs-5 me-2"/>
-                                <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
-                            </div>
-                            <footer class="align-items-end">
-                                <div class="d-flex flex-wrap gap-1 text-muted text-nowrap">
-                                    <field name="name"/>
-                                    <field name="date_order"/>
-                                    <field name="activity_ids" widget="kanban_activity"/>
-                                </div>
-                                <field name="state"
-                                    widget="label_selection"
-                                    options="{'classes': {'draft': 'info', 'cancel': 'default', 'sale': 'success'}}" class="ms-auto"/>
-                            </footer>
-                        </t>
-                    </templates>
-                </kanban>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="vessel_no_id"/>
+                    <field name="port_master_id"/>
+                </xpath>
             </field>
+        </record>
+
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="mobile_view_mode">list</field>
+        </record>
+
+        <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="mobile_view_mode">list</field>
         </record>
 
         <record id="action_quotations_with_toll" model="ir.actions.act_window">
@@ -996,6 +1029,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_id" ref="view_sale_order_tree_inherit_toll"/>
             <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="mobile_view_mode">list</field>
             <field name="search_view_id" ref="sale_order_view_search_inherit_quotation_toll"/>
             <field name="context">{'search_default_my_quotation': 1}</field>
             <field name="help" type="html">

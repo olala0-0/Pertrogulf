@@ -194,6 +194,11 @@ class SaleOrder(models.Model):
     brand_master_id = fields.Many2one("brand.master", string="Master Brand")
     port_master_id = fields.Many2one("port.master", string="Port Name")
     port_note = fields.Html("Notes")
+    vessel_agent_name = fields.Char(string="Vessel Agent Name")
+    contact_details = fields.Char(string="Contact Details")
+    delivery_special_instructions = fields.Html(
+        string="Special instructions for the delivery"
+    )
     operational_status = fields.Selection(
         [("present", "Present"), ("not_present", "Not Present")],
         string="Operational Status @ Port",
@@ -294,7 +299,7 @@ class SaleOrder(models.Model):
                     "sequence": qline.sequence,
                     "product_id": qline.product_id.id,
                     "product_uom_qty": qline.product_uom_qty,
-                    "product_uom": qline.product_uom.id,
+                    "product_uom_id": qline.product_uom.id,
                     "price_unit": qline.price_unit,
                     "discount": qline.discount,
                     "tax_ids": [(6, 0, qline.tax_id.ids)],
@@ -481,134 +486,113 @@ class SaleOrder(models.Model):
             rec.total_quotes = len(quote_ids) or 0
             rec.total_orders = len(order_ids) or 0
 
-    # @api.model
-    # def create(self, vals):
-    #     if vals.get('name', _('New')) == _('New'):
-    #         bu = vals.get('business_unit')
-    #         if not bu:
-    #             raise UserError("Business Unit is required to generate the sequence.")
+    @api.model
+    def _is_sale_order_new_name(self, name):
+        """Return True when the SO name still needs BU-based numbering."""
+        return not name or name in ("New", _("New"), "/")
 
-    #         # Mapping to prefix format
-    #         bu_prefix = {
-    #             'pg_marine': 'PG-MARINE',
-    #             'pg_auto': 'PG-AUTO',
-    #             'pg_powerx': 'PG-POWERX',
-    #             'pg_aviation': 'PG-AVIATION',
-    #         }.get(bu)
+    @api.model
+    def _get_business_unit_for_vals(self, vals):
+        """Resolve business unit from vals or the target company."""
+        business_unit = vals.get("business_unit")
+        if business_unit:
+            return business_unit
+        company = self.env["res.company"].browse(
+            vals.get("company_id") or self.env.company.id
+        )
+        return company.business_unit
 
-    #         now = datetime.now()
-    #         month = now.strftime('%b').upper()  # APR
-    #         year = now.strftime('%Y')           # 2025
-    #         sequence_code = f'{bu_prefix}-SQ-{month}-{year}'
+    @api.model
+    def _generate_business_unit_sequence_name(self, business_unit, sequence_type="SQ"):
+        """Generate the next document number for a business unit."""
+        if not business_unit:
+            raise UserError(_("Business Unit is required to generate the sequence."))
 
-    #         # Ensure sequence exists for this key (dynamic per BU-Month-Year)
-    #         seq = self.env['ir.sequence'].sudo().search([('code', '=', sequence_code)], limit=1)
-    #         if not seq:
-    #             seq = self.env['ir.sequence'].sudo().create({
-    #                 'name': sequence_code,
-    #                 'code': sequence_code,
-    #                 'prefix': f'{bu_prefix}-SQ-{month}-{year}-',
-    #                 'padding': 7,
-    #                 'number_next': 1,
-    #                 'number_increment': 1,
-    #             })
+        bu_prefix = get_business_unit_prefix(business_unit)
+        if not bu_prefix:
+            raise UserError(_("Invalid business unit: %s") % business_unit)
 
-    #         vals['name'] = self.env['ir.sequence'].next_by_code(sequence_code)
+        now = datetime.now()
+        month = now.strftime("%b").upper()
+        year = now.strftime("%Y")
+        sequence_code = f"{bu_prefix}-{sequence_type}-{month}-{year}"
 
-    #     return super(SaleOrder, self).create(vals)
+        seq = (
+            self.env["ir.sequence"]
+            .sudo()
+            .search([("code", "=", sequence_code)], limit=1)
+        )
+        if not seq:
+            try:
+                seq = self.env["ir.sequence"].sudo().create(
+                    {
+                        "name": sequence_code,
+                        "code": sequence_code,
+                        "prefix": f"{bu_prefix}-{sequence_type}-{month}-{year}-",
+                        "padding": 4,
+                        "number_next": 1,
+                        "number_increment": 1,
+                        "active": True,
+                        "implementation": "standard",
+                    }
+                )
+            except Exception as e:
+                raise UserError(
+                    _("Failed to create sequence %(code)s: %(error)s")
+                    % {"code": sequence_code, "error": str(e)}
+                ) from e
+
+        try:
+            next_name = seq._next() if seq else False
+            if not next_name:
+                next_name = self.env["ir.sequence"].sudo().next_by_code(sequence_code)
+            if not next_name:
+                next_name = self._generate_manual_business_unit_sequence_name(
+                    bu_prefix, sequence_type, month, year
+                )
+            return next_name
+        except Exception as e:
+            raise UserError(
+                _("Failed to generate sequence for code %(code)s: %(error)s")
+                % {"code": sequence_code, "error": str(e)}
+            ) from e
+
+    @api.model
+    def _generate_manual_business_unit_sequence_name(
+        self, bu_prefix, sequence_type, month, year
+    ):
+        """Fallback numbering when ir.sequence is unavailable."""
+        last_order = (
+            self.env["sale.order"]
+            .sudo()
+            .search(
+                [("name", "like", f"{bu_prefix}-{sequence_type}-{month}-{year}-%")],
+                order="id desc",
+                limit=1,
+            )
+        )
+        if last_order and last_order.name:
+            try:
+                next_num = int(last_order.name.split("-")[-1]) + 1
+            except (ValueError, IndexError):
+                next_num = 1
+        else:
+            next_num = 1
+        return f"{bu_prefix}-{sequence_type}-{month}-{year}-{next_num:04d}"
 
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get("name", "New") == "New":
-                bu = vals.get("business_unit")
-                if not bu:
-                    raise UserError("Business Unit is required to generate the sequence.")
+            if not self._is_sale_order_new_name(vals.get("name")):
+                continue
 
-                bu_prefix = get_business_unit_prefix(bu)
+            business_unit = self._get_business_unit_for_vals(vals)
+            vals["business_unit"] = business_unit
+            vals["name"] = self._generate_business_unit_sequence_name(
+                business_unit, "SQ"
+            )
 
-                if not bu_prefix:
-                    raise UserError(f"Invalid business unit: {bu}")
-
-                now = datetime.now()
-                month = now.strftime("%b").upper()  # APR
-                year = now.strftime("%Y")  # 2025
-                sequence_code = f"{bu_prefix}-SQ-{month}-{year}"
-
-                # Ensure sequence exists for this key (dynamic per BU-Month-Year)
-                seq = (
-                    self.env["ir.sequence"]
-                    .sudo()
-                    .search([("code", "=", sequence_code)], limit=1)
-                )
-                if not seq:
-                    try:
-                        seq = (
-                            self.env["ir.sequence"]
-                            .sudo()
-                            .create(
-                                {
-                                    "name": sequence_code,
-                                    "code": sequence_code,
-                                    "prefix": f"{bu_prefix}-SQ-{month}-{year}-",
-                                    "padding": 4,  # Reduced padding
-                                    "number_next": 1,
-                                    "number_increment": 1,
-                                    "active": True,  # Ensure it's active
-                                    "implementation": "standard",  # Use standard implementation
-                                }
-                            )
-                        )
-                        # Commit the sequence creation
-                        self.env.cr.commit()
-                    except Exception as e:
-                        raise UserError(
-                            f"Failed to create sequence {sequence_code}: {str(e)}"
-                        )
-
-                # Get the next sequence number with error handling
-                try:
-                    if seq:
-                        # Use the sequence object directly
-                        next_name = seq._next()
-                    else:
-                        # Fallback to next_by_code
-                        next_name = (
-                            self.env["ir.sequence"].sudo().next_by_code(sequence_code)
-                        )
-
-                    if not next_name:
-                        # Manual fallback sequence generation
-                        last_order = (
-                            self.env["sale.order"]
-                            .sudo()
-                            .search(
-                                [("name", "like", f"{bu_prefix}-SQ-{month}-{year}-%")],
-                                order="id desc",
-                                limit=1,
-                            )
-                        )
-
-                        if last_order and last_order.name:
-                            # Extract number from last sequence
-                            try:
-                                last_num = int(last_order.name.split("-")[-1])
-                                next_num = last_num + 1
-                            except (ValueError, IndexError):
-                                next_num = 1
-                        else:
-                            next_num = 1
-
-                        next_name = f"{bu_prefix}-SQ-{month}-{year}-{next_num:04d}"
-
-                    vals["name"] = next_name
-
-                except Exception as e:
-                    raise UserError(
-                        f"Failed to generate sequence for code {sequence_code}: {str(e)}"
-                    )
-
-        return super(SaleOrder, self).create(vals_list)
+        return super().create(vals_list)
 
     def _compute_total_qty_units(self):
         for rec in self:

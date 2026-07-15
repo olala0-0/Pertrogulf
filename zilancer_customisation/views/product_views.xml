@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_product_template_form_customs" model="ir.ui.view">
+    <!-- <record id="view_product_template_form_customs" model="ir.ui.view">
         <field name="name">product.template.form.custom</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
@@ -8,23 +8,20 @@
             <xpath expr="//field[@name='invoice_policy']" position="replace">
             </xpath>
         </field>
-    </record>
+    </record> -->
 
     <record id="product_template_form_view_customs" model="ir.ui.view">
         <field name="name">product.template.form.custom</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='sales']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//page[@name='purchase']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//page[@name='inventory']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
+            <!-- Sales / Purchase / Inventory tabs were forced hidden here;
+                 leave them visible so standard Odoo product tabs show. -->
             <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="height"/>
+                <field name="width"/>
+                <field name="gross_weight"/>
+                <field name="net_weight"/>
                 <field name="pds_link"/>
                 <field name="pack_size_id"/>
                 <field name="moq_pkg_type"/>

@@ -16,3 +16,8 @@ class ProductTemplate(models.Model):
     client_product_code = fields.Char(string='Client Product Code')
     sap_fg_description = fields.Text(string='SAP FG Description')
     client_fg_description = fields.Text(string='Client FG Description')
+
+    height = fields.Float(string="Height (cm)", required=True)
+    width = fields.Float(string="Width (cm)", required=True)
+    gross_weight = fields.Float(string="Gross Weight (kg)", required=True)
+    net_weight = fields.Float(string="Net Weight (kg)", required=True)

@@ -121,7 +121,7 @@
                                 </td>
                                 <td name="td_unit_qty" class="text-end text-nowrap">
                                     <span t-field="line.unit_qty">3</span>
-                                    <span t-field="line.product_uom">units</span>
+                                    <span t-field="line.product_uom_id">units</span>
                                 </td>
                                 <td name="td_unit_qty" class="text-end text-nowrap">
                                     <span t-field="line.pack_size_id.name">3</span>

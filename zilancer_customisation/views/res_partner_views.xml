@@ -194,7 +194,7 @@
         </record>
 
         <record id="contacts.action_contacts" model="ir.actions.act_window">
-            <field name="domain" eval="[('user_ids', '=', False)]"/>
+            <field name="domain" eval="['|', ('customer_rank', '>', 0), ('supplier_rank', '>', 0)]"/>
         </record>
 
         <record id="link_tracker_view_form_inherit" model="ir.ui.view">
