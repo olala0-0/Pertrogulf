@@ -4,12 +4,14 @@ from odoo import models, fields
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    weight_per_unit = fields.Float(string="Weight per Unit (kg)", required=True)
+    # default=0.0 (not required at DB level) so existing product rows upgrade cleanly.
+    # UI can still mark these required on the form if needed.
+    weight_per_unit = fields.Float(string="Weight per Unit (kg)", default=0.0)
     pds_link = fields.Char(string="PDS Link")
     is_expences = fields.Boolean(string="Is Expences")
     pack_size_id = fields.Many2one('pack.size.master', string='PKG Type')
     moq_pkg_type = fields.Char(string='MOQ PKG Type')
-    kgs_per_pkg_type = fields.Float(string="KGS per PKG Type")
+    kgs_per_pkg_type = fields.Float(string="KGS per PKG Type", default=0.0)
 
     sap_fg_code = fields.Char(string='SAP FG Code')
     hs_code = fields.Char(string='HS Code')
@@ -17,7 +19,7 @@ class ProductTemplate(models.Model):
     sap_fg_description = fields.Text(string='SAP FG Description')
     client_fg_description = fields.Text(string='Client FG Description')
 
-    height = fields.Float(string="Height (cm)", required=True)
-    width = fields.Float(string="Width (cm)", required=True)
-    gross_weight = fields.Float(string="Gross Weight (kg)", required=True)
-    net_weight = fields.Float(string="Net Weight (kg)", required=True)
+    height = fields.Float(string="Height (cm)", default=0.0)
+    width = fields.Float(string="Width (cm)", default=0.0)
+    gross_weight = fields.Float(string="Gross Weight (kg)", default=0.0)
+    net_weight = fields.Float(string="Net Weight (kg)", default=0.0)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Zilancer Customisation",
-    'version': '19.0.1.0.5',
+    'version': '19.0.1.0.6',
     "category": 'Contacts',
     'summary': """Zilancer Customisation""",
     'description': """Zilancer Customisation""",
@@ -10,6 +10,8 @@
     'maintainer': 'Zilancer',
     'website': 'https://www.zilancer.com',
     'depends': ['mail', 'contacts', 'sale', 'sale_stock', 'sale_purchase_inter_company_rules', 'project', 'helpdesk_mgmt', 'print_minutes_of_meeting', 'link_tracker', 'event', 'sale_order_enquiry'],
+    'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': 'post_init_hook',
     'data': [
         'security/ir.model.access.csv',
         'security/security.xml',
