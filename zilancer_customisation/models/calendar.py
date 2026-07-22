@@ -20,36 +20,30 @@ class CalendarEvent(models.Model):
         required=True,
     )
 
-    # @api.model_create_multi
-    # def create(self, vals_list):
-    #     for vals in vals_list:
-    #         if vals.get('meeting_id', 'New') == 'New':
-    #             vals['meeting_id'] = self.env['ir.sequence'].next_by_code('calendar.event') or 'New'
-    #     return super(CalendarEvent, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('meeting_id', 'New') == 'New' and vals.get('business_unit'):
+                bu = vals.get('business_unit')
+                if not bu:
+                    raise UserError("Business Unit is required to generate the sequence.")
+                bu_prefix = get_business_unit_prefix(vals['business_unit']) or 'PG'
 
-    @api.model
-    def create(self, vals):
-        if vals.get('meeting_id', 'New') == 'New' and vals.get('business_unit'):
-            bu = vals.get('business_unit')
-            if not bu:
-                raise UserError("Business Unit is required to generate the sequence.")
-            bu_prefix = get_business_unit_prefix(vals['business_unit']) or 'PG'
+                now = fields.Date.today()
+                date_code = now.strftime('%b').upper() + now.strftime('%y')  # APR25
 
-            now = fields.Date.today()
-            date_code = now.strftime('%b').upper() + now.strftime('%y')  # APR25
+                # Count existing meetings for this business unit in this month/year
+                existing_count = self.search_count([
+                    ('business_unit', '=', vals['business_unit']),
+                    ('create_date', '>=', now.replace(day=1)),
+                    ('create_date', '<=', now),
+                ])
 
-            # Count existing meetings for this business unit in this month/year
-            existing_count = self.search_count([
-                ('business_unit', '=', vals['business_unit']),
-                ('create_date', '>=', now.replace(day=1)),
-                ('create_date', '<=', now),
-            ])
+                seq_number = str(existing_count + 1).zfill(6)
 
-            seq_number = str(existing_count + 1).zfill(6)
+                vals['meeting_id'] = f"{bu_prefix}-{date_code}-{seq_number}"
 
-            vals['meeting_id'] = f"{bu_prefix}-{date_code}-{seq_number}"
-
-        return super().create(vals)
+        return super().create(vals_list)
 
 
 class MeetingActions(models.Model):
