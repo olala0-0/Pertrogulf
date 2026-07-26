@@ -69,6 +69,10 @@
                         </group>
                     </page>
                 </xpath>
+                <!-- Allow changing UoM on operations until Done/Cancel (e.g. match PO UoM on receipt) -->
+                <xpath expr="//page[@name='operations']//field[@name='move_ids']/list/field[@name='product_uom']" position="attributes">
+                    <attribute name="readonly">state in ('done', 'cancel')</attribute>
+                </xpath>
                 <!-- Add package and pack fields to the Operations page list view -->
                 <xpath expr="//page[@name='operations']//field[@name='move_ids']/list/field[@name='product_uom']" position="after">
                     <field name="package" string="Package"/>
