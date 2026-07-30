@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_form_view_mrp_custom" model="ir.ui.view">
+        <field name="name">mrp.production.form.mrp.custom</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_purchase_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        invisible="purchase_order_count == 0"
+                        groups="purchase.group_purchase_user">
+                    <field name="purchase_order_count" widget="statinfo" string="RFQs"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
+                <field name="parent_mo_id" readonly="1" invisible="not parent_mo_id"/>
+                <field name="purchase_order_count" invisible="1"/>
+                <field name="delivery_instruction"
+                         invisible="not delivery_picking_id and not delivery_instruction"
+                         placeholder="From Delivery Order..."/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_mrp_custom" model="ir.ui.view">
+        <field name="name">purchase.order.form.mrp.custom</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
+                <field name="mrp_production_ids" widget="many2many_tags" readonly="1"
+                         invisible="not mrp_production_ids"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

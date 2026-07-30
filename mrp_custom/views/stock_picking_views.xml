@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_mrp_custom" model="ir.ui.view">
+        <field name="name">stock.picking.form.mrp.custom</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Create Manufacturing Order button (Delivery only) -->
+            <xpath expr="//button[@name='button_validate'][1]" position="before">
+                <button name="action_create_manufacturing_orders"
+                        string="Create Manufacturing Order"
+                        type="object"
+                        class="btn-primary"
+                        invisible="picking_type_code != 'outgoing' or state in ('done', 'cancel') or mrp_production_count > 0"
+                        groups="mrp.group_mrp_user"/>
+            </xpath>
+
+            <!-- Smart buttons: linked MOs + RFQs -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_mrp_productions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-wrench"
+                        invisible="mrp_production_count == 0"
+                        groups="mrp.group_mrp_user">
+                    <field name="mrp_production_count" widget="statinfo" string="Manufacturing"/>
+                </button>
+                <button name="action_view_purchase_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        invisible="purchase_order_count == 0"
+                        groups="purchase.group_purchase_user">
+                    <field name="purchase_order_count" widget="statinfo" string="RFQs"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="after">
+                <field name="mrp_production_count" invisible="1"/>
+                <field name="purchase_order_count" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
