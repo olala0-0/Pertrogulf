@@ -155,7 +155,7 @@
                 <th name="th_sm_exp_date"><strong>Exp Dt</strong></th>
                 <th name="th_sm_sap_fg_code"><strong>SAP FG code</strong></th>
             </t>
-            <th name="th_sm_remark"><strong>Remarks</strong></th>
+            <th name="th_sm_remark"><strong>Dispatch Instructions</strong></th>
         </xpath>
         <xpath expr="//table[@name='stock_move_table']//td[3]" position="replace">
             <td class="o_td_quantity text-end">

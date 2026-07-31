@@ -4,20 +4,16 @@ Create Manufacturing Orders from Delivery Orders.
 
 Flow:
 1. User clicks "Create Manufacturing Order" on an outgoing delivery.
-2. For each delivery product that has a normal BoM → create MO linked to the
-   delivery move (move_dest_ids) so finished qty feeds the delivery.
-3. If BoM components also have a normal BoM → create child MOs and link them
-   to the parent MO raw moves (dependency chain).
-4. For BoM components without a manufacturing BoM → create Purchase RFQs
-   (grouped by vendor) linked to the related MOs / delivery.
-5. Validate delivery only after linked MOs are done (stock is available).
+2. Create child (component) MOs first (bottom-up), then the parent MO.
+3. Origin on all MOs = Sale Order reference (fallback: delivery name).
+4. Link parent/child via parent_mo_id and production_group parent/child.
+5. Purchase RFQs are created later from the MO via "Create Purchase Order".
+6. Validate delivery only after linked MOs are done.
 """
-from collections import defaultdict
-
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tools import html2plaintext
+from odoo.tools import float_round, html2plaintext
 
 
 class StockPicking(models.Model):
@@ -54,8 +50,16 @@ class StockPicking(models.Model):
                 picking.purchase_order_ids.filtered(lambda p: p.state != 'cancel')
             )
 
+    def _mrp_custom_sale_origin(self):
+        """Sale Order name for MO origin; fallback to delivery name."""
+        self.ensure_one()
+        sale = self.sale_id if 'sale_id' in self._fields else False
+        if sale:
+            return sale.name
+        return self.name
+
     def action_create_manufacturing_orders(self):
-        """Create MO(s) for finished goods on this delivery (with nested BoMs + RFQs)."""
+        """Create MO(s) for finished goods on this delivery (with nested BoMs)."""
         self.ensure_one()
         if self.picking_type_code != 'outgoing':
             raise UserError(_('Manufacturing Orders can only be created from a Delivery Order.'))
@@ -69,6 +73,7 @@ class StockPicking(models.Model):
             ) % '\n'.join(existing.mapped('name')))
 
         created = self.env['mrp.production']
+        origin = self._mrp_custom_sale_origin()
         moves = self.move_ids.filtered(
             lambda m: m.state != 'cancel' and m.product_uom_qty > 0
         )
@@ -76,27 +81,22 @@ class StockPicking(models.Model):
             bom = self._mrp_custom_find_bom(move.product_id)
             if not bom:
                 continue
-            mo = self._mrp_custom_create_mo(
+            # Bottom-up: children first, then parent
+            mos, _root = self._mrp_custom_create_mo_tree(
                 product=move.product_id,
                 qty=move.product_uom_qty,
                 uom=move.product_uom,
                 bom=bom,
                 move_dest=move,
-                origin=self.name,
+                origin=origin,
             )
-            created |= mo
-            # Nested finished goods (components that also have a BoM)
-            created |= self._mrp_custom_create_component_mos(mo)
+            created |= mos
 
         if not created:
             raise UserError(_(
                 'No product on this delivery has a Manufacturing Bill of Materials.'
             ))
 
-        # Purchase RFQs for BoM components that are not manufactured
-        self._mrp_custom_create_purchase_rfqs(created)
-
-        # Try to reserve delivery once MOs are linked
         self.action_assign()
         return self.action_view_mrp_productions()
 
@@ -136,6 +136,100 @@ class StockPicking(models.Model):
                 unique_parts.append(key)
         return '\n\n'.join(unique_parts) or False
 
+    def _mrp_custom_component_specs(self, product, qty, uom, bom):
+        """
+        Return list of (component_product, component_qty, component_uom, component_bom)
+        for BoM lines that themselves have a normal manufacturing BoM.
+        """
+        self.ensure_one()
+        product_qty = uom._compute_quantity(qty, bom.product_uom_id)
+        factor = product_qty / bom.product_qty if bom.product_qty else 0.0
+        specs = []
+        for line in bom.bom_line_ids:
+            if line._skip_bom_line(product):
+                continue
+            child_bom = self._mrp_custom_find_bom(line.product_id)
+            if not child_bom:
+                continue
+            line_qty = float_round(
+                line.product_qty * factor,
+                precision_rounding=line.product_uom_id.rounding,
+            )
+            if line_qty <= 0:
+                continue
+            specs.append((line.product_id, line_qty, line.product_uom_id, child_bom))
+        return specs
+
+    def _mrp_custom_create_mo_tree(self, product, qty, uom, bom, move_dest=False, origin=False):
+        """
+        Create child component MOs first (recursively), then this MO.
+
+        :return: (all_created_mos, root_mo)
+        """
+        self.ensure_one()
+        origin = origin or self._mrp_custom_sale_origin()
+        created = self.env['mrp.production']
+
+        # 1) Create deepest children first (no move_dest yet)
+        pending_children = self.env['mrp.production']
+        for comp_product, comp_qty, comp_uom, child_bom in self._mrp_custom_component_specs(
+            product, qty, uom, bom
+        ):
+            child_mos, child_root = self._mrp_custom_create_mo_tree(
+                product=comp_product,
+                qty=comp_qty,
+                uom=comp_uom,
+                bom=child_bom,
+                move_dest=False,
+                origin=origin,
+            )
+            created |= child_mos
+            pending_children |= child_root
+
+        # 2) Create this (parent) MO
+        mo = self._mrp_custom_create_mo(
+            product=product,
+            qty=qty,
+            uom=uom,
+            bom=bom,
+            move_dest=move_dest,
+            origin=origin,
+        )
+        created |= mo
+
+        # 3) Link children to this MO (moves + parent_mo + production group)
+        for child in pending_children:
+            self._mrp_custom_link_child_to_parent(child, mo)
+
+        return created, mo
+
+    def _mrp_custom_link_child_to_parent(self, child_mo, parent_mo):
+        """Wire child finished output into parent raw move + Source/Child links."""
+        self.ensure_one()
+        child_mo.ensure_one()
+        parent_mo.ensure_one()
+
+        child_mo.parent_mo_id = parent_mo.id
+        child_mo._mrp_custom_link_production_groups(parent_mo)
+
+        raw_move = parent_mo.move_raw_ids.filtered(
+            lambda m: m.product_id == child_mo.product_id and m.state != 'cancel'
+        )[:1]
+        if not raw_move:
+            return
+
+        finished = child_mo.move_finished_ids.filtered(
+            lambda m: m.product_id == child_mo.product_id and m.state != 'cancel'
+        )
+        if finished:
+            raw_move.write({
+                'procure_method': 'make_to_order',
+                'move_orig_ids': [Command.link(f.id) for f in finished],
+            })
+            finished.write({
+                'move_dest_ids': [Command.link(raw_move.id)],
+            })
+
     def _mrp_custom_create_mo(self, product, qty, uom, bom, move_dest=False, origin=False):
         """Create one MO; optionally link finished output to move_dest."""
         self.ensure_one()
@@ -152,7 +246,7 @@ class StockPicking(models.Model):
             'product_qty': product_qty,
             'product_uom_id': bom.product_uom_id.id,
             'bom_id': bom.id,
-            'origin': origin or self.name,
+            'origin': origin or self._mrp_custom_sale_origin(),
             'delivery_picking_id': self.id,
             'company_id': self.company_id.id,
             'picking_type_id': picking_type.id,
@@ -181,149 +275,6 @@ class StockPicking(models.Model):
                 })
         return mo
 
-    def _mrp_custom_create_component_mos(self, parent_mo):
-        """
-        For each raw component of parent_mo that has its own BoM,
-        create a child MO and link it to the parent raw move.
-        """
-        self.ensure_one()
-        created = self.env['mrp.production']
-        for raw_move in parent_mo.move_raw_ids.filtered(lambda m: m.state != 'cancel'):
-            bom = self._mrp_custom_find_bom(raw_move.product_id)
-            if not bom:
-                continue
-            child = self._mrp_custom_create_mo(
-                product=raw_move.product_id,
-                qty=raw_move.product_uom_qty,
-                uom=raw_move.product_uom,
-                bom=bom,
-                move_dest=raw_move,
-                origin=parent_mo.name,
-            )
-            child.parent_mo_id = parent_mo.id
-            created |= child
-            # Recurse if child components are also manufactured
-            created |= self._mrp_custom_create_component_mos(child)
-        return created
-
-    def _mrp_custom_create_purchase_rfqs(self, productions):
-        """
-        Create draft Purchase RFQs for BoM components that do not have a
-        manufacturing BoM (i.e. must be purchased), grouped by vendor.
-        RFQs are linked to the delivery and related MOs.
-        """
-        self.ensure_one()
-        # product_id -> {qty in product uom, uom, mo_ids, bom_ids}
-        to_buy = defaultdict(lambda: {
-            'qty': 0.0,
-            'uom': False,
-            'mo_ids': self.env['mrp.production'],
-            'bom_ids': self.env['mrp.bom'],
-        })
-
-        for mo in productions:
-            for raw_move in mo.move_raw_ids.filtered(
-                lambda m: m.state != 'cancel' and m.product_uom_qty > 0
-            ):
-                # Skip components that are manufactured via a child MO
-                if self._mrp_custom_find_bom(raw_move.product_id):
-                    continue
-                product = raw_move.product_id
-                qty = raw_move.product_uom._compute_quantity(
-                    raw_move.product_uom_qty, product.uom_id
-                )
-                entry = to_buy[product.id]
-                entry['qty'] += qty
-                entry['uom'] = product.uom_id
-                entry['mo_ids'] |= mo
-                if mo.bom_id:
-                    entry['bom_ids'] |= mo.bom_id
-
-        if not to_buy:
-            return self.env['purchase.order']
-
-        # Group lines by vendor
-        vendor_lines = defaultdict(list)
-        missing_vendor = []
-        for product_id, data in to_buy.items():
-            product = self.env['product.product'].browse(product_id)
-            seller = product._select_seller(
-                quantity=data['qty'],
-                uom_id=data['uom'],
-            )
-            partner = seller.partner_id if seller else False
-            if not partner and product.seller_ids:
-                partner = product.seller_ids[0].partner_id
-            if not partner:
-                missing_vendor.append(product.display_name)
-                continue
-            vendor_lines[partner.id].append({
-                'product': product,
-                'qty': data['qty'],
-                'uom': data['uom'],
-                'mo_ids': data['mo_ids'],
-                'bom_ids': data['bom_ids'],
-                'seller': seller,
-            })
-
-        if missing_vendor:
-            raise UserError(_(
-                'Cannot create Purchase RFQs. Set a Vendor on these products:\n%s'
-            ) % '\n'.join(missing_vendor))
-
-        PurchaseOrder = self.env['purchase.order']
-        created_pos = PurchaseOrder
-        date_planned = fields.Datetime.now()
-
-        for partner_id, lines in vendor_lines.items():
-            mo_ids = self.env['mrp.production']
-            bom_names = set()
-            for line in lines:
-                mo_ids |= line['mo_ids']
-                bom_names.update(line['bom_ids'].mapped('display_name'))
-
-            origin_parts = [self.name] + mo_ids.mapped('name')
-            po = PurchaseOrder.create({
-                'partner_id': partner_id,
-                'origin': ', '.join(origin_parts),
-                'company_id': self.company_id.id,
-                'delivery_picking_id': self.id,
-                'mrp_production_ids': [Command.set(mo_ids.ids)],
-                'order_line': [
-                    Command.create({
-                        'product_id': line['product'].id,
-                        'product_qty': line['qty'],
-                        'product_uom_id': line['uom'].id,
-                        'date_planned': date_planned,
-                        'name': _(
-                            '%(product)s (MO: %(mos)s%(bom)s)'
-                        ) % {
-                            'product': line['product'].display_name,
-                            'mos': ', '.join(line['mo_ids'].mapped('name')),
-                            'bom': (
-                                _(' / BoM: %s') % ', '.join(line['bom_ids'].mapped('display_name'))
-                                if line['bom_ids'] else ''
-                            ),
-                        },
-                    })
-                    for line in lines
-                ],
-            })
-            created_pos |= po
-            po.message_post(body=_(
-                'RFQ created from Delivery %(picking)s for Manufacturing Orders: %(mos)s'
-            ) % {
-                'picking': self.name,
-                'mos': ', '.join(mo_ids.mapped('name')),
-            })
-
-        if created_pos:
-            self.message_post(body=_(
-                'Purchase RFQs created: %(rfqs)s'
-            ) % {'rfqs': ', '.join(created_pos.mapped('name'))})
-
-        return created_pos
-
     def action_view_mrp_productions(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('mrp.mrp_production_action')
@@ -331,7 +282,7 @@ class StockPicking(models.Model):
         action['domain'] = [('id', 'in', mos.ids)]
         action['context'] = {
             'default_delivery_picking_id': self.id,
-            'default_origin': self.name,
+            'default_origin': self._mrp_custom_sale_origin(),
         }
         if len(mos) == 1:
             action['views'] = [(False, 'form')]
@@ -345,7 +296,7 @@ class StockPicking(models.Model):
         action['domain'] = [('id', 'in', orders.ids)]
         action['context'] = {
             'default_delivery_picking_id': self.id,
-            'default_origin': self.name,
+            'default_origin': self._mrp_custom_sale_origin(),
         }
         if len(orders) == 1:
             action['views'] = [(False, 'form')]

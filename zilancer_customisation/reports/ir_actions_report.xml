@@ -63,6 +63,19 @@
         <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_marine')])]"/> -->
     </record>
 
+    <record id="action_report_pgm_libe_au" model="ir.actions.report">
+        <field name="name">PGM Lube EU</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_pgm_lube</field>
+        <field name="report_file">zilancer_customisation.report_pgm_lube</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PGM_Lube_EU - %s' % (object.name)) or 'PGM_Lube_EU - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_quotation_marine')])]"/> -->
+    </record>
+
     <record id="action_report_aviation" model="ir.actions.report">
         <field name="name">Quotation - Petrogulf Aviation</field>
         <field name="model">sale.order</field>
@@ -97,7 +110,7 @@
         <field name="print_report_name">(object.state in ('draft', 'sent') and 'PI-PowerX - %s' % (object.name)) or 'PI-PowerX - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_sale_order"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_powerx"/>
+        <!-- <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_powerx"/> -->
         <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_powerx')])]"/> -->
     </record>
 
@@ -108,6 +121,19 @@
         <field name="report_name">zilancer_customisation.report_auto_proforma</field>
         <field name="report_file">zilancer_customisation.report_auto_proforma</field>
         <field name="print_report_name">(object.state in ('draft', 'sent') and 'PRO-FORMA - %s' % (object.name)) or 'PRO-FORMA - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+        <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_automotive')])]"/> -->
+    </record>
+
+    <record id="action_report_pgm_oman" model="ir.actions.report">
+        <field name="name">PGM OMAN</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_pgm_oman</field>
+        <field name="report_file">zilancer_customisation.report_pgm_oman</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PGM-OMAN - %s' % (object.name)) or 'PGM-OMAN - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_sale_order"/>
         <field name="binding_type">report</field>
         <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>

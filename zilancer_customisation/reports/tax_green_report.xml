@@ -151,113 +151,59 @@
 <template id="report_tax_green_document">
     <t t-call="web.external_layout">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
+        <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
         <div class="page" style="font-family: Arial, sans-serif; font-size: 14px;">
             <!-- TITLE -->
             <div style="text-align:center; font-weight:bold; font-size:18px; margin-top:10px; text-transform:uppercase;">
-                Proforma Invoice
+                Quotation
             </div>
-            <!-- HEADER SECTION -->
-            <table style="width:100%; border-collapse: collapse; border:1px solid #000;">
-                <tr>
-                    <!-- Left: Logo & Company Info -->
-                    <td style="width:55%; padding:6px; vertical-align:top;">
-                        <t t-if="doc.company_id.logo">
-                            <img t-att-src="image_data_uri(doc.company_id.logo)" 
-                                 alt="Logo" 
-                                 style="max-width:120px; max-height:80px; display:inline-block; vertical-align:top;"/>
-                        </t>
-                        <div style="display:inline-block; vertical-align:top; margin-left:10px; font-size:14px;">
-                            <strong t-esc="doc.company_id.name"/><br/>
-                            <span t-esc="doc.company_id.street"/><br/>
-                            <t t-if="doc.company_id.street2"><span t-esc="doc.company_id.street2"/><br/></t>
-                            <span t-esc="doc.company_id.city"/>
-                            <t t-if="doc.company_id.state_id">, <span t-esc="doc.company_id.state_id.name"/></t><br/>
-                            <t t-if="doc.company_id.country_id"><span t-esc="doc.company_id.country_id.name"/></t><br/>
-                            <t t-if="doc.company_id.vat">TRN: <span t-esc="doc.company_id.vat"/></t>
-                        </div>
-                    </td>
+            <div class="row col-12 mb4">
+                <t t-if="doc.state in ['draft','sent']">
+                    <span style="font-size:20px !important;">Quotation No: </span> <span style="font-size:20px !important;" t-field="doc.name"></span><br/>
+                </t>
+                <t t-else="">
+                    <span style="font-size:20px !important;">Order No: </span> <span style="font-size:20px !important;" t-field="doc.name"></span><br/>
+                </t>
+            </div>
+            <div class="row col-12 mb-8 mt-2">
+                <span style="font-size:20px !important;">Kind Attn: </span> <span style="font-size:20px !important;" t-field="doc.inquiry_rec_from"></span><br/>
+            </div>
+            <div class="row col-12 mb-8 mt-2">
+                <span style="font-size:20px !important;">Customer Name: </span> <span style="font-size:20px !important;" t-field="doc.partner_id.name"></span><br/>
+            </div>
+            <div class="row col-12 mb-8 mt-2">
+                <span style="font-size:20px !important;">Customer Address: </span> <span style="font-size:20px !important;" t-field="doc.partner_id.street"></span> <span style="font-size:20px !important;" t-field="doc.partner_id.street2"></span><span style="font-size:20px !important;" t-field="doc.partner_id.city"></span> <span style="font-size:20px !important;" t-field="doc.partner_id.country_id.name"></span><br/>
+            </div>
 
-                    <!-- Right: Document Details (no border-left) -->
-                    <td style="width:45%; padding:6px; vertical-align:top;">
-                        <!-- Right: Document Details (label: value layout) -->
-                        <div style="padding:6px; font-size:14px;">
-                            <div style="margin-bottom:4px;">
-                                <strong>Voucher No:</strong> <span t-esc="doc.name"/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Dated:</strong> <span t-field="doc.date_order" t-options='{"widget": "date"}'/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Quote Valid Till Date:</strong> <span t-field="doc.validity_date" t-options='{"widget": "date"}'/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Mode/Terms of Payment:</strong> <span t-esc="doc.payment_term_id.name or ''"/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Buyer's Ref/Order No:</strong> <span t-esc="doc.client_order_ref or ''"/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Dispatch Through:</strong> <span t-field="doc.dispatch_through"/>
-                            </div>
-                            <div style="margin-bottom:4px;">
-                                <strong>Destination:</strong> <span t-esc="doc.destination or ''"/>
-                            </div>
-                            <!-- <div>
-                                <strong>Terms of Delivery:</strong>
-                                <t t-if="doc.incoterm">
-                                    <span t-field="doc.incoterm"/>
-                                </t>
-                            </div> -->
-                        </div>
-                    </td>
-                </tr>
-            </table>
-
-            <!-- INVOICE TO SECTION -->
-            <table style="width:100%; border:1px solid #000; border-top:none; border-collapse:collapse;">
-                <tr>
-                    <td style="width:55%; padding:6px; vertical-align:top;">
-                        <strong>Invoice to</strong>
-                        <br/>
-                        <span t-esc="doc.partner_id.name"/>
-                        <br/>
-                        <span t-esc="doc.partner_id.street"/>
-                        <br/>
-                        <t t-if="doc.partner_id.street2">
-                            <span t-esc="doc.partner_id.street2"/>
-                            <br/>
-                        </t>
-                        <span t-esc="doc.partner_id.city"/>
-                        <br/>
-                        <t t-if="doc.partner_id.state_id">Emirate: 
-                            <span t-esc="doc.partner_id.state_id.name"/>
-                        </t>
-                        <br/>
-                        <t t-if="doc.partner_id.country_id">Country: 
-                            <span t-esc="doc.partner_id.country_id.name"/>
-                        </t>
-                        <br/>
-                        <t t-if="doc.partner_id.vat">TRN: 
-                            <span t-esc="doc.partner_id.vat"/>
-                        </t>
-                    </td>
-                    <td style="width:45%; border-left:1px solid #000; padding:6px; vertical-align:top;">
-                        <strong>Terms of Delivery</strong>
-                        <br/>
-                        <t t-if="doc.incoterm">
-                            <span t-field="doc.incoterm"/>
-                        </t>
-          
-                    </td>
-                </tr>
-            </table>
+            <div class="row mb-4 mt32" id="informations">
+                <div t-if="doc.client_order_ref" class="col" name="informations_reference">
+                    <strong>Your Reference</strong>
+                    <div t-field="doc.client_order_ref">SO0000</div>
+                </div>
+                <div t-if="doc.date_order" class="col" name="informations_date">
+                    <strong t-if="is_proforma">Issued Date</strong>
+                    <strong t-elif="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                    <strong t-else="">Order Date</strong>
+                    <div t-field="doc.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
+                </div>
+                <div t-if="doc.validity_date and doc.state in ['draft', 'sent']"
+                    class="col"
+                    name="expiration_date">
+                    <strong>Quote Valid Till Date</strong>
+                    <div t-field="doc.validity_date">2023-12-31</div>
+                </div>
+                <div t-if="doc.create_uid.name" class="col">
+                    <strong>Quoted by</strong>
+                    <div t-field="doc.create_uid">Mitchell Admin</div>
+                </div>
+            </div>
             <!-- PRODUCT TABLE -->
             <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;" border="1">
                 <thead style="background:#f5f5f5;">
                     <tr>
                         <th style="text-align:center; width:5%; padding:8px; line-height:1.8;">Sl No.</th>
                         <th style="text-align:left; width:35%; padding:8px; line-height:1.8;">Description of Goods</th>
-                        <th style="text-align:center; width:15%; padding:8px; line-height:1.8;">Part No.</th>
+                        <!-- <th style="text-align:center; width:15%; padding:8px; line-height:1.8;">Part No.</th> -->
                         <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Quantity</th>
                         <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Rate</th>
                         <th style="text-align:center; width:10%; padding:8px; line-height:1.8;">Per</th>
@@ -276,9 +222,9 @@
                             <td style="padding:8px; line-height:1.8;">
                                 <span t-field="line.name"/>
                             </td>
-                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                            <!-- <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-esc="line.product_id.default_code or ''"/>
-                            </td>
+                            </td> -->
                             <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.product_uom_qty"/>
                                 <span t-field="line.product_uom_id.name"/>
@@ -300,8 +246,22 @@
                     </t>
                 </tbody>
                 <tfoot>
+                    <tr t-if="doc.vat_selection and doc.vat_selection != 'vat_not_applicable'" style="border-top:1px solid #000;">
+                        <td colspan="4" style="padding:8px; line-height:1.8;"></td>
+                        <td style="text-align:center; padding:8px; line-height:1.8;"></td>
+                        <td style="text-align:right; font-weight:bold; padding:8px; line-height:1.8;">
+                            <span t-if="doc.vat_selection == 'vat_5'">VAT 5%</span>
+                            <span t-if="doc.vat_selection == 'vat_0'">VAT 0%</span>
+                        </td>
+                        <td style="text-align:right; font-weight:bold; padding:8px; line-height:1.8;">
+                            <t t-if="doc.currency_id">
+                                <span t-esc="'{:,.2f}'.format(doc.amount_tax)"/>
+                                <span t-esc="doc.currency_id.symbol"/>
+                            </t>
+                        </td>
+                    </tr>
                     <tr style="border-top:1px solid #000;">
-                        <td colspan="5" style="padding:8px; line-height:1.8;"></td>
+                        <td colspan="4" style="padding:8px; line-height:1.8;"></td>
                         <td style="text-align:center; font-weight:bold; padding:8px; line-height:1.8;">
                             <!-- <span t-out="sum(l.product_uom_qty for l in doc.order_line)"/> -->
                         </td>
@@ -318,25 +278,65 @@
         Amount Chargeable (in words): 
                 <t t-out="doc.currency_id.amount_to_text(doc.amount_total)"/>
             </div>
-            <!-- BANK DETAILS + AUTHORISED SIGNATORY (no table) -->
-            <div style="width:50%; float:right; font-size:14px; margin-top:50px;">
-
-                <!-- Bank Details (no border) -->
+            <!-- <div style="width:50%; float:right; font-size:14px; margin-top:50px;">
                 <div style="padding:10px; line-height:1.5; margin-bottom:10px;">
-                    <!-- <strong>Company's Bank Details</strong><br/>
-                    Bank Name : Abu Dhabi Commercial Bank (USD)<br/>
-                    A/c No. : 1183 5183 9200 01<br/>
-                    IBAN : AE320 0300 1183 5183 9200 01<br/>
-                    Branch &amp; SWIFT Code : Sharjah &amp; ADCBAEAAXXX -->
                     <span t-field="doc.note" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if doc.company_id.terms_type != 'html' else ''}" name="order_note"/>
                 </div>
-
-                <!-- Authorised Signatory (with border) -->
                 <div style="padding:10px; text-align:center; min-height:80px; border:1px solid #000;">
                     for <strong t-esc="doc.company_id.name"/><br/><br/><br/>
                     <strong>Authorised Signatory</strong>
                 </div>
+            </div> -->
 
+            <t t-if="not is_proforma">
+                <div style="margin-top:40px;">
+                    <span t-field="doc.note" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if doc.company_id.terms_type != 'html' else ''}" name="order_note"/>
+                </div>
+            </t>
+
+            <!-- OPTIONAL Hide/Unhide Headers/Column box - left aligned, fixed width -->
+            <div class="row" style="margin-top:15px;">
+                <div class="col-12">
+                    <table style="width:280px; border-collapse:collapse; border:1px solid #000;">
+                        <tbody>
+                            <tr>
+                                <td style="background-color:#FFF9C4; text-align:center; font-weight:bold; padding:4px; border:1px solid #000;">
+                                    OPTIONAL Hide/Unhide
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; text-align:center; font-weight:bold; padding:4px; border:1px solid #000;">
+                                    Headers/Coloumn
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; padding:4px; border:1px solid #000;">
+                                    Packing-Drum/Bulk/IBC/flexi...
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; padding:4px; border:1px solid #000;">
+                                    DRUM- Nt Weight and Gross Wt
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; padding:4px; border:1px solid #000;">
+                                    IBC- Gross Wt and Net wt
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; padding:4px; border:1px solid #000;">
+                                    Bulk- Net weight
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="background-color:#FFF9C4; padding:4px; border:1px solid #000;">
+                                    Flexi - Net wt
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Clear float to avoid overlapping with other content -->
@@ -344,9 +344,9 @@
 
 
             <!-- FOOTER -->
-            <div style="text-align:center; font-size:14px; margin-top:40px;">
+            <!-- <div style="text-align:center; font-size:14px; margin-top:40px;">
                 This is a Computer Generated Document
-            </div>
+            </div> -->
         </div>
     </t>
 </template>

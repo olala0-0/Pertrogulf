@@ -61,6 +61,12 @@ class MrpBom(models.Model):
         copy=False,
         required=True,
     )
+    qc_control_ids = fields.One2many(
+        'mrp.bom.qc.control',
+        'bom_id',
+        string='QC Controls',
+        copy=True,
+    )
 
     # Sum of components Qty in Ltr
     total_qty_liters = fields.Float(

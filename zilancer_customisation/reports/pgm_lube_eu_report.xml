@@ -1,41 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="report_notax_green_document">
+<template id="report_pgm_lube_document">
     <t t-call="web.external_layout">
         <t t-set="doc" t-value="doc.with_context(lang=doc.partner_id.lang)" />
         <t t-set="forced_vat" t-value="doc.fiscal_position_id.foreign_vat"/> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
         <div style="text-align: center; font-size: 25px; font-weight: bold; margin-bottom: 25px;">
             QUOTATION
         </div>
-        <!-- <t t-set="address">
-            <div t-field="doc.partner_id"
-                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-            <p t-if="doc.partner_id.vat">
-                <t t-if="doc.company_id.account_fiscal_country_id.vat_label" t-out="doc.company_id.account_fiscal_country_id.vat_label"/>
-                <t t-else="">Tax ID</t>: <span t-field="doc.partner_id.vat"/>
-            </p>
-        </t>
-        <t t-if="doc.partner_shipping_id == doc.partner_invoice_id
-                             and doc.partner_invoice_id != doc.partner_id
-                             or doc.partner_shipping_id != doc.partner_invoice_id">
-            <t t-set="information_block">
-                <strong>
-                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
-                        Invoicing and Shipping Address
-                    </t>
-                    <t t-else="">
-                        Invoicing Address
-                    </t>
-                </strong>
-                <div t-field="doc.partner_invoice_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong>Shipping Address</strong>
-                    <div t-field="doc.partner_shipping_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                </t>
-            </t>
-        </t> -->
         <div class="row col-12 mb4">
             <t t-if="doc.state in ['draft','sent']">
                 <span style="font-size:20px !important;">Quotation No: </span> <span style="font-size:20px !important;" t-field="doc.name"></span><br/>
@@ -53,28 +24,9 @@
         <div class="row col-12 mb-8 mt-2">
             <span style="font-size:20px !important;">Customer Address: </span> <span style="font-size:20px !important;" t-field="doc.partner_id.street"></span> <span style="font-size:20px !important;" t-field="doc.partner_id.street2"></span><span style="font-size:20px !important;" t-field="doc.partner_id.city"></span> <span style="font-size:20px !important;" t-field="doc.partner_id.country_id.name"></span><br/>
         </div>
-        <!-- <div class="row col-12 mb-2 mt32" style="font-size:16px !important;">
-            <div class="col-4">
-                <span>Vessel Name: </span> <span t-field="doc.vessel_no_id.name"></span>
-            </div>
-            <div class="col-4">
-                <span>IMO No.: </span> <span t-field="doc.imo_no_id"></span>
-            </div>
-            <div class="col-4">
-                <span>Port Name: </span> <span t-field="doc.port_master_id.name"></span>
-            </div>
-        </div> -->
         <div class="page">
             <div class="oe_structure"/>
-
             <t t-set="is_proforma" t-value="env.context.get('proforma', False) or is_pro_forma"/>
-            <!-- <t t-set="layout_document_title">
-                <span style="font-size:20px !important" t-if="is_proforma">Pro-Forma Invoice # </span>
-                <span style="font-size:20px !important" t-elif="doc.state in ['draft','sent']">Quotation # </span>
-                <span style="font-size:20px !important" t-else="">Order # </span>
-                <span style="font-size:20px !important" t-field="doc.name">SO0000</span>
-            </t> -->
-
             <div class="row mb-4 mt32" id="informations">
                 <div t-if="doc.client_order_ref" class="col" name="informations_reference">
                     <strong>Your Reference</strong>
@@ -96,19 +48,10 @@
                     <strong>Quoted by</strong>
                     <div t-field="doc.create_uid">Mitchell Admin</div>
                 </div>
-
-                <!-- <div t-if="doc.vessel_no_id" class="col" name="vessel_no_id">
-                    <strong>Vessel Name</strong>
-                    <div t-field="doc.vessel_no_id"></div>
-                </div> -->
                 <div t-if="doc.vessel_no" class="col" name="vessel_no">
                     <strong>Vessel Name</strong>
                     <div t-field="doc.vessel_no"></div>
                 </div>
-                <!-- <div t-if="doc.imo_no_id" class="col" name="imo_no_id">
-                    <strong>IMO No</strong>
-                    <div t-field="doc.imo_no_id"></div>
-                </div> -->
                 <div t-if="doc.imo_number" class="col" name="imo_number">
                     <strong>IMO No</strong>
                     <div t-field="doc.imo_number"></div>
@@ -226,116 +169,6 @@
                     </t>
                 </tbody>
             </table>
-            <!-- <div class="clearfix" name="so_total_summary">
-                <div id="total" class="row mt-n3" name="total">
-                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
-                        <table class="o_total_table table table-borderless">
-                            <t t-set="tax_totals" t-value="doc.tax_totals"/>
-                            <t t-set="currency" t-value="doc.currency_id"/>
-                            <t t-set="same_tax_base" t-value="tax_totals['same_tax_base']"/>
-                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                <tr class="o_subtotal">
-                                    <td>
-                                        <span>Total Amount</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <span t-att-class="oe_subtotal_footer_separator"
-                                              t-out="subtotal['base_amount_currency']"
-                                              t-options='{"widget": "monetary", "display_currency": currency}'
-                                        >27.00</span>
-                                    </td>
-                                </tr>
-
-                                <t t-foreach="subtotal['tax_groups']" t-as="tax_group">
-                                    <tr class="o_taxes">
-                                        <t t-if="same_tax_base or tax_group['display_base_amount_currency'] is None">
-                                            <td>
-                                                <span class="text-nowrap" t-out="tax_group['group_name']">Tax 15%</span>
-                                            </td>
-                                            <td class="text-end o_price_total">
-                                                <span class="text-nowrap"
-                                                      t-out="tax_group['tax_amount_currency']"
-                                                      t-options='{"widget": "monetary", "display_currency": currency}'
-                                                >1.05</span>
-                                            </td>
-                                        </t>
-                                        <t t-else="">
-                                            <td>
-                                                <span t-out="tax_group['group_name']">Tax 15%</span>
-                                                <span> on </span>
-                                                <span class="text-nowrap"
-                                                      t-out="tax_group['display_base_amount_currency']"
-                                                      t-options='{"widget": "monetary", "display_currency": currency}'
-                                                >27.00</span>
-                                            </td>
-                                            <td class="text-end o_price_total">
-                                                <span class="text-nowrap"
-                                                      t-out="tax_group['tax_amount_currency']"
-                                                      t-options='{"widget": "monetary", "display_currency": currency}'
-                                                >4.05</span>
-                                            </td>
-                                        </t>
-                                    </tr>
-                                </t>
-                            </t>
-
-                            <tr t-if="'cash_rounding_base_amount_currency' in tax_totals">
-                                <td>Rounding</td>
-                                <td class="text-end">
-                                    <span t-out="tax_totals['cash_rounding_base_amount_currency']"
-                                          t-options='{"widget": "monetary", "display_currency": currency}'
-                                    >0</span>
-                                </td>
-                            </tr>
-                            
-                            <tr class="o_total">
-                                <td><strong>Net Amount</strong></td>
-                                <td class="text-end">
-                                    <strong t-out="tax_totals['total_amount_currency']"
-                                            t-options='{"widget": "monetary", "display_currency": currency}'
-                                    >31.05</strong>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div> -->
-            <!-- Totals (Only Last Two Columns Visible) -->
-            <!-- <table class="table" style="width: 85%; margin-top: -17px;; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
-                <tr>
-                    <td style="text-align: right; font-weight: bold;width: 89.26%;">Total</td>
-                    <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                        <span t-out="sum(doc.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal'))"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: right; font-weight: bold;width: 89.26%;">Discount</td>
-                    <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                        <span t-esc="sum(doc.order_line.filtered(lambda l: l.product_id.name == 'Discount').mapped('price_subtotal'))"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: right; font-weight: bold;width: 89.26%;">Discounted Value</td>
-                    <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                        <span t-esc="sum(doc.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal')) + sum(doc.order_line.filtered(lambda l: l.product_id.name == 'Discount').mapped('price_subtotal'))"/>
-                    </td>
-                </tr>
-
-                <t t-foreach="doc.order_line.filtered(lambda l: l.product_id.is_expences)" t-as="line">
-                    <tr>
-                        <td style="text-align: right; font-weight: bold;width: 89.26%;"><t t-esc="line.product_id.name"/></td>
-                        <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                            <span t-out="line.price_subtotal"/>
-                        </td>
-                    </tr>
-                </t>
-                <tr>
-                    <td style="text-align: right; font-weight: bold;width: 89.26%;">Grand Total</td>
-                    <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
-                        <strong t-out="doc.amount_total"/>
-                    </td>
-                </tr>
-            </table> -->
             <t t-if="doc.sale_type == 'local_sale'">
                 <table class="table" style="width: 100%; margin-top: -17px;; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
                     <tr>
@@ -512,20 +345,20 @@
     </t>
 </template>
 
-<template id="report_notax_green_raw">
+<template id="report_pgm_lube_raw">
     <t t-call="web.html_container">
         <t t-foreach="docs" t-as="doc">
-            <t t-call="zilancer_customisation.report_notax_green_document" t-lang="doc.partner_id.lang"/>
+            <t t-call="zilancer_customisation.report_pgm_lube_document" t-lang="doc.partner_id.lang"/>
         </t>
     </t>
 </template>
 
-<template id="report_notax_green">
-    <t t-call="zilancer_customisation.report_notax_green_raw"/>
+<template id="report_pgm_lube">
+    <t t-call="zilancer_customisation.report_pgm_lube_raw"/>
 </template>
 
-<template id="report_notax_green_a4">
-    <t t-call="zilancer_customisation.report_notax_green_raw"/>
+<template id="report_pgm_lube_a4">
+    <t t-call="zilancer_customisation.report_pgm_lube_raw"/>
 </template>
 
 

@@ -149,6 +149,18 @@
                 </group>
             </xpath>
 
+            <!-- QC Controls tab (BoM + Production Blend Sheet) -->
+            <xpath expr="//notebook" position="inside">
+                <page string="QC Controls" name="qc_controls">
+                    <field name="qc_control_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
         </field>
     </record>
 </odoo>

@@ -146,7 +146,7 @@ class StockMove(models.Model):
 
     package = fields.Char("Package")
     pack = fields.Char("Pack")
-    remarks = fields.Text("Remarks")
+    remarks = fields.Text("Dispatch Instructions")
     batch_no = fields.Char("Batch No")
     mfg_date = fields.Date("Mfg Dt")
     sap_fg_code = fields.Char(
@@ -154,3 +154,27 @@ class StockMove(models.Model):
         string="SAP FG code", store=True)
     sample_type = fields.Char("Sample Type", default="Kettle + Filling Sample")
     exp_date = fields.Date("Exp Dt")
+
+    def _assign_picking_post_process(self, new=False):
+        """Copy SO delivery special instructions onto the delivery note."""
+        res = super()._assign_picking_post_process(new=new)
+        if not new:
+            return res
+        for picking in self.mapped('picking_id'):
+            sale = picking.sale_id
+            if (
+                sale
+                and sale.delivery_special_instructions
+                and not picking.note
+            ):
+                picking.note = sale.delivery_special_instructions
+        return res
+
+
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
+
+    def _get_custom_move_fields(self):
+        fields = super()._get_custom_move_fields()
+        fields.append('remarks')
+        return fields

@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="Remarks">
+                    <page string="Dispatch Instructions">
                         <group>
                             <group>
                                 <field name="vessel_no" required="False"/>
@@ -69,6 +69,14 @@
                         </group>
                     </page>
                 </xpath>
+                <xpath expr="//page[@name='note']" position="attributes">
+                    <attribute name="string">Delivery Instruction</attribute>
+                </xpath>
+                <xpath expr="//page[@name='note']/field[@name='note']" position="attributes">
+                    <attribute name="string">Delivery Instruction</attribute>
+                    <attribute name="placeholder">Delivery instructions for this order...</attribute>
+                </xpath>
+
                 <!-- Allow changing UoM on operations until Done/Cancel (e.g. match PO UoM on receipt) -->
                 <xpath expr="//page[@name='operations']//field[@name='move_ids']/list/field[@name='product_uom']" position="attributes">
                     <attribute name="readonly">state in ('done', 'cancel')</attribute>
@@ -82,7 +90,7 @@
                     <field name="sample_type" column_invisible="parent.document_type != 'general_dispatch'" optional="show"/>
                     <field name="exp_date" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
                     <field name="sap_fg_code" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
-                    <field name="remarks"/>
+                    <field name="remarks" string="Dispatch Instructions"/>
                 </xpath>
                 <xpath expr="//field[@name='location_id']" position="after">
                     <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="company_id != 9"/>

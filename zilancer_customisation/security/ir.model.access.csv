@@ -24,3 +24,9 @@ access_sale_order_amendment_wizard,access_sale_order_amendment_wizard,model_sale
 automotive_stage.access_automotive_stage,access_automotive_stage,zilancer_customisation.model_automotive_stage,base.group_user,1,1,1,1
 quotation_line.access_quotation_line,access_quotation_line,zilancer_customisation.model_quotation_line,base.group_user,1,1,1,1
 loaded_by.access_loaded_by,access_loaded_by,zilancer_customisation.model_loaded_by,base.group_user,1,1,1,1
+access_analysis_product_type,access.analysis.product.type,model_analysis_product_type,base.group_user,1,1,1,1
+access_analysis_product_brand,access.analysis.product.brand,model_analysis_product_brand,base.group_user,1,1,1,1
+access_analysis_api_api,access.analysis.api.api,model_analysis_api_api,base.group_user,1,1,1,1
+access_analysis_sae_sae,access.analysis.sae.sae,model_analysis_sae_sae,base.group_user,1,1,1,1
+access_analysis_tbn_tbn,access.analysis.tbn.tbn,model_analysis_tbn_tbn,base.group_user,1,1,1,1
+access_analysis_iso_tbn,access.analysis.iso.tbn,model_analysis_iso_tbn,base.group_user,1,1,1,1

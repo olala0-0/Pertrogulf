@@ -28,6 +28,9 @@
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <field name="sale_type" widget="radio" options="{'horizontal': true}"/>
                 </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
+                </xpath>
                 <xpath expr="//header" position="inside">
                     <button name="action_request_approval"
                             string="Approve"
@@ -78,7 +81,7 @@
                     <field name="total_quantity"/>
                     <field name="total_qty_units"/>
                     <field name="client_po_order_no"/>
-                    <field name="vat_selection" invisible="1"/>
+                    <field name="vat_selection" invisible="0"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="attributes">
                     <attribute name="required">1</attribute>
@@ -432,15 +435,16 @@
                             <field name="partner_id"
                                    widget="res_partner_many2one"
                                    context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
                                    placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
                             <field name="partner_invoice_id"
                                   groups="account.group_delivery_invoice_address"
-                                  options="{'no_quick_create': True}"
+                                  options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
                                   context="{'default_type':'invoice', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                                   readonly="state == 'cancel' or locked"/>
                             <field name="partner_shipping_id"
                                   groups="account.group_delivery_invoice_address"
-                                  options="{'no_quick_create': True}"
+                                  options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
                                   context="{'default_type':'delivery', 'show_address': False, 'show_vat': False, 'default_parent_id': partner_id}"
                                   readonly="state == 'cancel' or locked"/>
                             <field name="vessel_no_id"/>
@@ -488,15 +492,18 @@
                             <field name="quotation_lines">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="customer_ref_id"/>
-                                    <field name="customer_brand"/>
-                                    <field name="cust_ref_pro_category"/>
-                                    <field name="product_id" string="Offered Item"/>
-                                    <field name="product_uom_qty" string="Qty in Units"/>
-                                    <field name="pack_size_id"/>
-                                    <field name="unit_qty" string="Quantity"/>
-                                    <field name="product_uom"/>
-                                    <field name="price_unit"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
+                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
+                                    <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
+                                    <field name="product_id" string="Offered Item" width="320px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="product_uom_qty" string="Qty in Units" width="90px"/>
+                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="unit_qty" string="Quantity" width="80px"/>
+                                    <field name="product_uom" string="UoM" width="70px"/>
+                                    <field name="price_unit" width="90px"/>
                                     <field name="tax_id"
                                            widget="many2many_tags"
                                            optional="show"/>
@@ -552,6 +559,7 @@
                                                         'company_id': parent.company_id,
                                                         'default_uom_id': product_uom_id,
                                                     }"
+                                                    options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"
                                                     readonly="not product_updatable"
                                                     required="not display_type and not is_downpayment"
                                                     force_save="True"
@@ -649,67 +657,50 @@
                                     <field name="product_updatable" column_invisible="True"/>
                                     <field name="is_downpayment" column_invisible="True"/>
                                     <field name="translated_product_name" column_invisible="True"/>
-                                    <field name="customer_ref_id"/>
-                                    <field name="customer_brand"/>
-                                    <field name="cust_ref_pro_category"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
+                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
+                                    <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
                                     <field
-                                        string="Offered Item"
                                         name="product_id"
+                                        string="Offered Item"
                                         readonly="not product_updatable"
                                         required="not display_type and not is_downpayment"
-                                        force_save="True"
+                                        force_save="1"
                                         context="{
-                                            'partner_id': parent.partner_id,
-                                            'quantity': product_uom_qty,
-                                            'pricelist': parent.pricelist_id,
-                                            'uom':product_uom_id,
-                                            'company_id': parent.company_id,
                                             'default_lst_price': price_unit,
                                             'default_uom_id': product_uom_id,
+                                            'partner_id': parent.partner_id,
                                         }"
                                         options="{
+                                            'show_label_warning': True,
+                                            'no_create': True,
+                                            'no_create_edit': True,
+                                            'no_quick_create': True,
                                             'no_open': True,
                                         }"
                                         optional="hide"
+                                        width="320px"
                                         domain="[('sale_ok', '=', True)]"
                                         widget="sol_product_many2one"/>
-                                    <!-- <field name="product_template_id"
-                                        string="Offered Item"
-                                        readonly="id and not product_updatable"
-                                        required="not display_type and not is_downpayment"
-                                        context="{
-                                            'partner_id': parent.partner_id,
-                                            'quantity': product_uom_qty,
-                                            'pricelist': parent.pricelist_id,
-                                            'uom':product_uom_id,
-                                            'company_id': parent.company_id,
-                                            'default_list_price': price_unit,
-                                            'default_uom_id': product_uom_id,
-                                        }"
-                                        options="{
-                                            'no_open': True,
-                                        }"
-                                        optional="show"
-                                        domain="[('sale_ok', '=', True)]"
-                                        widget="sol_product_many2one"
-                                        placeholder="Type to find a product..."/> -->
                                     <field name="product_template_id"
                                         string="Offered Item"
                                         readonly="id and not product_updatable"
                                         required="not display_type and not is_downpayment"
                                         context="{
-                                            'partner_id': parent.partner_id,
-                                            'quantity': product_uom_qty,
-                                            'pricelist': parent.pricelist_id,
-                                            'uom':product_uom_id,
-                                            'company_id': parent.company_id,
                                             'default_list_price': price_unit,
                                             'default_uom_id': product_uom_id,
+                                            'partner_id': parent.partner_id,
                                         }"
                                         options="{
+                                            'show_label_warning': True,
+                                            'no_create': True,
+                                            'no_create_edit': True,
+                                            'no_quick_create': True,
                                             'no_open': True,
                                         }"
                                         optional="show"
+                                        width="320px"
                                         domain="[('sale_ok', '=', True)]"
                                         widget="sol_product_many2one"
                                         placeholder="Type to find a product..."/>
@@ -746,8 +737,10 @@
                                             'uom': product_uom_id,
                                             'company_id': parent.company_id
                                         }"
-                                        readonly="is_downpayment" string="Qty in Units"/>
-                                    <field name="pack_size_id"/>
+                                        readonly="is_downpayment" string="Qty in Units" width="90px"/>
+                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="unit_qty" string="Quantity" optional="show" width="80px"/>
                                     <field
                                         name="qty_delivered"
                                         decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
@@ -776,7 +769,6 @@
                                         options='{"no_open": True}'
                                         width="60px"
                                         optional="show"/>
-                                    <field name="unit_qty" string="Quantity"/>
                                     <field
                                         name="customer_lead"
                                         optional="hide"

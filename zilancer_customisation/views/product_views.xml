@@ -22,6 +22,7 @@
                 <field name="width"/>
                 <field name="gross_weight"/>
                 <field name="net_weight"/>
+                <field name="density"/>
                 <field name="pds_link"/>
                 <field name="pack_size_id"/>
                 <field name="moq_pkg_type"/>
@@ -39,6 +40,26 @@
                 <field name="client_product_code"/>
                 <field name="sap_fg_description"/>
                 <field name="client_fg_description"/>
+            </xpath>
+
+            <!-- Analysis Codes tab (template + variant forms) -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Analysis Codes" name="analysis_codes">
+                    <group>
+                        <group>
+                            <field name="analysis_product_type_id"/>
+                            <field name="analysis_brand_id"/>
+                            <field name="analysis_product_categ_id"/>
+                            <field name="analysis_api_id"/>
+                        </group>
+                        <group>
+                            <field name="analysis_sae_id"/>
+                            <field name="analysis_tbn_id"/>
+                            <field name="analysis_iso_tbn_id"/>
+                            <field name="analysis_package_id"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

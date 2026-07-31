@@ -1,6 +1,6 @@
 {
     'name': "Sale Order Enquiry",
-    'version': '19.0.0.1',
+    'version': '19.0.0.3',
     'summary': 'Order Enquiry feature that helps manage and track potential sales efficiently. It centralizes all relevant information, automates calculations, and integrates smoothly with existing sales processes. This means your team can handle inquiries more effectively, improve customer service, and streamline the sales process from initial inquiry to final sale.',
     'sequence': 10,
     'depends': ['base', 'base_setup', 'sale',  'product', 'account'],

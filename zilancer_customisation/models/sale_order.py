@@ -788,6 +788,17 @@ class SaleOrderLine(models.Model):
             if line.is_downpayment:
                 line.name = line._get_downpayment_description()
 
+    def _prepare_procurement_values(self):
+        """Pass sale line product notes to delivery move Dispatch Instructions."""
+        values = super()._prepare_procurement_values()
+        self.ensure_one()
+        if self.display_type or self.is_downpayment:
+            return values
+        # Line description / notes (product name + any extra notes on the line)
+        if self.name:
+            values['remarks'] = self.name
+        return values
+
     @api.depends("purchase_price", "margin_value", "product_uom_qty", "unit_qty")
     def _compute_profit_value(self):
         """Compute profit value based on margin and quantity"""

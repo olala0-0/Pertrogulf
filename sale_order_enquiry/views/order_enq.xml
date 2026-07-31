@@ -33,7 +33,8 @@
                     </div>
                     <group col="2">
                         <group>
-                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')" />
+                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')"
+                                     options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="company_id" readonly="True"/>
                             <field name="user_id" readonly="True"/>
                             <field name="state" invisible="True"/>
@@ -92,15 +93,18 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_type" column_invisible="True"/>
-                                    <field name="customer_ref_id"/>
-                                    <field name="customer_brand"/>
-                                    <field name="cust_ref_pro_category"/>
-                                    <field name="product_id" widget="product_configurator" string="Offered Item"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
+                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
+                                    <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
+                                    <field name="product_id" widget="product_configurator" string="Offered Item" width="320px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="name" widget="section_and_note_text" column_invisible="True"/>
-                                    <field name="product_uom_qty" string="Qty in Units"/>
-                                    <field name="pack_size_id"/>
-                                    <field name="unit_qty" string="Quantity"/>
-                                    <field name="product_uom_id"/>
+                                    <field name="product_uom_qty" string="Qty in Units" width="90px"/>
+                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="unit_qty" string="Quantity" width="80px"/>
+                                    <field name="product_uom_id" string="UoM" width="70px"/>
                                     <field name="company_id" optional="hide"/>
                                     <field name="sale_order_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
@@ -155,7 +159,8 @@
                         <field name="sequence" invisible="True"/>
                         <field name="display_type" invisible="True"/>
                         <group>
-                            <field name="product_id" string="Offered Item"/>
+                            <field name="product_id" string="Offered Item"
+                                   options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="name"/>
                             <!-- <field name="price_unit"/> -->
                             <!-- <field name="product_uom"/> -->
@@ -390,7 +395,8 @@
                     <group col="2">
                         <group>
                             <field name="toll_sale_type" widget="radio" options="{'horizontal': true}"/>
-                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')" />
+                            <field name="partner_id" required="True" readonly="state in ('convert_quote', 'cancel')"
+                                     options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                             <field name="company_id" readonly="True"/>
                             <field name="user_id" readonly="True"/>
                             <field name="state" invisible="True"/>
@@ -450,15 +456,18 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_type" column_invisible="True"/>
-                                    <field name="customer_ref_id"/>
-                                    <field name="customer_brand"/>
-                                    <field name="cust_ref_pro_category"/>
-                                    <field name="product_id" widget="product_configurator" string="Offered Item"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
+                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
+                                    <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
+                                    <field name="product_id" widget="product_configurator" string="Offered Item" width="320px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="name" widget="section_and_note_text" column_invisible="True"/>
-                                    <field name="product_uom_qty" string="Qty in Units"/>
-                                    <field name="pack_size_id"/>
-                                    <field name="unit_qty" string="Quantity"/>
-                                    <field name="product_uom_id"/>
+                                    <field name="product_uom_qty" string="Qty in Units" width="90px"/>
+                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                             options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="unit_qty" string="Quantity" width="80px"/>
+                                    <field name="product_uom_id" string="UoM" width="70px"/>
                                     <field name="company_id" optional="hide"/>
                                     <field name="sale_order_id" column_invisible="True"/>
                                     <field name="currency_id" column_invisible="True"/>
@@ -647,9 +656,8 @@
             <!-- <xpath expr="//group[1]" position="attributes">
                 <attribute name="col">3</attribute>
             </xpath> -->
-            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_id']" position="replace">
-            </xpath>
-            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_template_id']" position="replace">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_shipping_id']" position="before">
                 <field name="order_enquirey_id" readonly="True" invisible="not order_enquirey_id"/>
@@ -664,86 +672,46 @@
             <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='name']" position="after">
-                <field name="customer_ref_id"/>
-                <field name="customer_brand"/>
-                <field name="cust_ref_pro_category"/>
-                <field name="product_template_id"
-                    string="Offered Item"
-                    readonly="id and not product_updatable"
-                    required="not display_type and not is_downpayment"
-                    context="{
-                        'partner_id': parent.partner_id,
-                        'quantity': product_uom_qty,
-                        'pricelist': parent.pricelist_id,
-                        'uom':product_uom_id,
-                        'company_id': parent.company_id,
-                        'default_list_price': price_unit,
-                        'default_uom_id': product_uom_id,
-                    }"
-                    options="{
-                        'no_open': True,
-                    }"
-                    optional="show"
-                    domain="[('sale_ok', '=', True)]"
-                    widget="sol_product_many2one"
-                    placeholder="Type to find a product..."/>
-                <field
-                    name="product_id"
-                    string="Offered Item"
-                    readonly="not product_updatable"
-                    required="not display_type and not is_downpayment"
-                    force_save="True"
-                    context="{
-                        'partner_id': parent.partner_id,
-                        'quantity': product_uom_qty,
-                        'pricelist': parent.pricelist_id,
-                        'uom':product_uom_id,
-                        'company_id': parent.company_id,
-                        'default_lst_price': price_unit,
-                        'default_uom_id': product_uom_id,
-                    }"
-                    options="{
-                        'no_open': True,
-                    }"
-                    optional="hide"
-                    domain="[('sale_ok', '=', True)]"
-                    widget="sol_product_many2one"/>
-                <!-- <field name="customer_brand"/> -->
-                <!-- <field name="cust_ref_pro_category"/> -->
+
+            <!-- Keep base Offered Item (product) fields; only relabel + block create -->
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_template_id']" position="attributes">
+                <attribute name="string">Offered Item</attribute>
+                <attribute name="options">{'show_label_warning': True, 'no_create': True, 'no_create_edit': True, 'no_quick_create': True, 'no_open': True}</attribute>
+                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+                <attribute name="width">380px</attribute>
             </xpath>
-            <!-- string="Offered Item" -->
-            <!-- <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom'][2]" position="replace">
-            </xpath> -->
-            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="replace">
-                <field
-                    name="product_uom_qty"
-                    decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
-                    context="{
-                        'partner_id': parent.partner_id,
-                        'quantity': product_uom_qty,
-                        'pricelist': parent.pricelist_id,
-                        'uom': product_uom_id,
-                        'company_id': parent.company_id
-                    }"
-                    readonly="is_downpayment" string="Qty in Units"/>
-                <field name="pack_size_id"/>
-                <field name="unit_qty" string="Quantity"/>
-                <field
-                    name="product_uom_id"
-                    force_save="True"
-                    string="UoM"
-                    readonly="product_uom_readonly"
-                    required="not display_type and not is_downpayment"
-                    context="{'company_id': parent.company_id}"
-                    groups="uom.group_uom"
-                    options='{"no_open": True}'
-                    width="60px"
-                    optional="show"/>
-                
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_id']" position="attributes">
+                <attribute name="string">Offered Item</attribute>
+                <attribute name="options">{'show_label_warning': True, 'no_create': True, 'no_create_edit': True, 'no_quick_create': True, 'no_open': True}</attribute>
+                <attribute name="domain">[('sale_ok', '=', True)]</attribute>
+                <attribute name="width">380px</attribute>
             </xpath>
 
-            
+            <!-- Customer ref fields before Offered Item -->
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_template_id']" position="before">
+                <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
+                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
+                <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
+            </xpath>
+
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="attributes">
+                <attribute name="string">Qty in Units</attribute>
+                <attribute name="width">90px</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
+                <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                <field name="unit_qty" string="Quantity" optional="show" width="80px"/>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_id'][@groups='uom.group_uom']" position="attributes">
+                <attribute name="string">UoM</attribute>
+                <attribute name="width">70px</attribute>
+            </xpath>
+            <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='name']" position="attributes">
+                <attribute name="width">180px</attribute>
+            </xpath>
+
         </field>
     </record>
 

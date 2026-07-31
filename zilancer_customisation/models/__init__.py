@@ -7,8 +7,10 @@ from . import crm_lead
 from . import crm_action_point
 from . import crm_action_type
 from . import container_master
+from . import analysis_masters
 from . import product_template
 from . import sale_container_allocation
+
 from . import res_partner
 from . import helpdesk_ticket
 from . import calendar

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Zilancer Customisation",
-    'version': '19.0.1.0.6',
+    'version': '19.0.1.0.11',
     "category": 'Contacts',
     'summary': """Zilancer Customisation""",
     'description': """Zilancer Customisation""",
@@ -21,6 +21,7 @@
         'views/res_users_views.xml',
         'views/crm_lead_views.xml',
         'views/product_views.xml',
+        'views/analysis_masters_views.xml',
         'views/res_partner_views.xml',
         'views/helpdesk_ticket_view.xml',
         'views/calendar_event_view.xml',
@@ -37,6 +38,8 @@
         'reports/without_tax_quote_report.xml',
         'reports/delivery_slip_report.xml',
         'reports/toll_blanding_report.xml',
+        'reports/pgm_lube_eu_report.xml',
+        'reports/pgm_oman_report.xml',
         'wizard/sale_order_approval_views.xml',
         'wizard/sale_amendment_wizard_views.xml',
     ],

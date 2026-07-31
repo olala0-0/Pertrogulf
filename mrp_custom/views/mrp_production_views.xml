@@ -5,6 +5,14 @@
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_purchase_orders"
+                        type="object"
+                        string="Create Purchase Order"
+                        class="btn-primary"
+                        groups="purchase.group_purchase_user"
+                        invisible="state in ('done', 'cancel') or purchase_order_count > 0"/>
+            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_purchase_orders"
                         type="object"
@@ -19,9 +27,45 @@
                 <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
                 <field name="parent_mo_id" readonly="1" invisible="not parent_mo_id"/>
                 <field name="purchase_order_count" invisible="1"/>
+                <field name="qc_controls_readonly" invisible="1"/>
                 <field name="delivery_instruction"
                          invisible="not delivery_picking_id and not delivery_instruction"
                          placeholder="From Delivery Order..."/>
+            </xpath>
+
+            <!-- QC Controls tab (lines come from BoM; no manual create) -->
+            <xpath expr="//notebook" position="inside">
+                <page string="QC Controls" name="qc_controls">
+                    <field name="qc_control_ids"
+                            readonly="qc_controls_readonly"
+                            force_save="1">
+                        <list editable="bottom" create="false" delete="false" open_form_view="false">
+                            <field name="sequence" column_invisible="1"/>
+                            <field name="name" readonly="1" force_save="1"/>
+                            <button name="action_qc_pass"
+                                    type="object"
+                                    icon="fa-check"
+                                    title="Pass"
+                                    string=" "
+                                    class="text-success"
+                                    invisible="parent.state == 'done'"/>
+                            <button name="action_qc_fail"
+                                    type="object"
+                                    icon="fa-times"
+                                    title="Fail"
+                                    string=" "
+                                    class="text-danger"
+                                    invisible="parent.state == 'done'"/>
+                            <field name="result"
+                                   readonly="1"
+                                   force_save="1"
+                                   decoration-success="result == 'pass'"
+                                   decoration-danger="result == 'fail'"/>
+                            <field name="description"
+                                   readonly="parent.state == 'done'"/>
+                        </list>
+                    </field>
+                </page>
             </xpath>
         </field>
     </record>
