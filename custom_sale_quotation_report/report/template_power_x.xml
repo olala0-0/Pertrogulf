@@ -1,0 +1,75 @@
+<odoo>
+    <template id="body_power_x">
+        <table class="table table-sm o_main_table" style="border:1px solid #333;">
+            <thead>
+                <tr style="background-color:#e6e6e6;">
+                    <th>Sn</th>
+                    <th>Description of Goods</th>
+                    <th>Rate</th>
+                    <th>Per</th>
+                    <th>Discount</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="sn" t-value="0"/>
+                <t t-foreach="o.order_line" t-as="line">
+                    <t t-if="not line.display_type">
+                        <t t-set="sn" t-value="sn + 1"/>
+                        <tr>
+                            <td><span t-esc="sn"/></td>
+                            <td>
+                                <span t-field="line.name"/>
+                                <!-- Optional packing/weight info, only for Power X -->
+                                <t t-if="line.packing_type">
+                                    <br/>
+                                    <small class="text-muted">
+                                        Packing: <span t-esc="line.packing_type"/>
+                                        <t t-if="line.packing_type == 'drum'">
+                                            | Net Wt: <span t-field="line.net_weight"/> | Gross Wt: <span t-field="line.gross_weight"/>
+                                        </t>
+                                        <t t-elif="line.packing_type == 'ibc'">
+                                            | Gross Wt: <span t-field="line.gross_weight"/> | Net Wt: <span t-field="line.net_weight"/>
+                                        </t>
+                                        <t t-elif="line.packing_type == 'bulk'">
+                                            | Net Wt: <span t-field="line.net_weight"/>
+                                        </t>
+                                        <t t-elif="line.packing_type == 'flexi'">
+                                            | Net Wt: <span t-field="line.net_weight"/>
+                                        </t>
+                                    </small>
+                                </t>
+                            </td>
+                            <td><span t-field="line.price_unit"/></td>
+                            <td><span t-field="line.product_uom.name"/></td>
+                            <td><span t-field="line.discount"/>%</td>
+                            <td class="text-right"><span t-field="line.price_subtotal"/></td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-right"><strong>Total</strong></td>
+                    <td class="text-right"><span t-field="o.amount_untaxed"/></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-right"><strong>Vat 5%</strong></td>
+                    <td class="text-right"><span t-field="o.amount_tax"/></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-right"><strong>Grand Total</strong></td>
+                    <td class="text-right"><span t-field="o.amount_total"/></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="mt-3">
+            <strong>Terms &amp; Conditions:</strong>
+            <ul>
+               <div t-field="o.note"/>
+            </ul>
+           <strong>Payment terms: </strong><span t-field="o.payment_term_id.name"/>
+        </div>
+    </template>
+</odoo>
