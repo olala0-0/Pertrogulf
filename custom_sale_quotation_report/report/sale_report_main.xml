@@ -40,8 +40,8 @@
                                     <td style="color:#888;"><strong>Country of Origin:</strong> <span t-field="o.country_of_origin"/></td>
                                 </t>
 
-                                <!-- Marine-only extra header fields -->
-                                <t t-if="o.company_id.business_unit == 'pg_marine'">
+                                <!-- Marine / Lube EU - extra header fields -->
+                                <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece')">
                                     <td style="color:#888;"><strong>Vessel Name:</strong> <span t-field="o.vessel_no_id.name"/></td>
                                     <td style="color:#888;"><strong>IMO No:</strong> <span t-field="o.imo_number"/></td>
                                     <td style="color:#888;"><strong>Port Name:</strong> <span t-field="o.port_master_id.name"/></td>
@@ -68,6 +68,10 @@
                         </t>
                         <t t-elif="o.company_id.business_unit == 'pg_marine'">
                             <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_greece'">
+                            <t t-call="custom_sale_quotation_report.body_pgm_lube_eu"/>
                         </t>
 
 <!--                        <t t-elif="o.company_id.business_unit == 'petrogulf_toll_blending_adnoc'">-->
