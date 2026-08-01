@@ -23,6 +23,7 @@
         'report/template_petrogulf_automotive.xml',
         'report/template_petrogulf_aviation.xml',
         'report/template_toll_blending.xml',
+        'report/template_petrogulf_marine.xml',
         'report/header_labels.xml',
     ],
     'installable': True,
