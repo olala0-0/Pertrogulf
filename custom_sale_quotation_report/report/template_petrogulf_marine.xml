@@ -1,6 +1,5 @@
 <odoo>
     <template id="body_petrogulf_marine">
-        <div>
             <table class="table table-sm o_main_table mb-0" style="border:1px solid #333; font-size:11px;">
                 <thead>
                     <tr style="background-color:#f4b6bb;">
@@ -147,6 +146,5 @@
                 <a href="https://www.petrogulfmarine.com/GTCs.pdf">https://www.petrogulfmarine.com/GTCs.pdf</a>
             </p>
 
-        </div>
     </template>
 </odoo>

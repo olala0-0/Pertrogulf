@@ -9,9 +9,6 @@
                  cell doesn't exist in every context this layout is rendered in
                  (e.g. the Document Layout preview widget) and a missing-element
                  xpath hard-fails view combination there. -->
-            <style t-if="o and o.company_id.business_unit in ('pg_aviation', 'pg_tblnd', 'pg_auto', 'pg_marine')">
-                .o_company_tagline { display: none !important; }
-            </style>
             <div t-if="o and o.company_id.business_unit == 'pg_aviation'"
                  style="font-size:9px; color:#888; text-align:center;">
                 Petrogulf Aviation - Quotation Template
