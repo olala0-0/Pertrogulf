@@ -81,6 +81,10 @@
             </xpath>
 
             <xpath expr="//field[@name='code']" position="after">
+                <field name="bom_version" readonly="1" force_save="1"
+                       help="Auto-incremented when this BOM is duplicated."/>
+                <field name="lot_number" invisible="not context.get('production_blend_sheet')"
+                       placeholder="Enter Lot / Serial No manually..."/>
                 <field name="density" invisible="not context.get('production_blend_sheet')"/>
                 <field name="batch_start_time" invisible="not context.get('production_blend_sheet')"/>
                 <field name="batch_stop_time" invisible="not context.get('production_blend_sheet')"/>

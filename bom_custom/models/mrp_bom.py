@@ -61,6 +61,20 @@ class MrpBom(models.Model):
         copy=False,
         required=True,
     )
+    # Version tracking: auto-incremented on duplicate; shown in MRP form
+    bom_version = fields.Integer(
+        string='Version',
+        default=1,
+        copy=False,
+        help='BOM version number. Auto-incremented when this BOM is duplicated.',
+    )
+    # Lot/Serial No: manually entered here and pulled into Manufacturing Order
+    lot_number = fields.Char(
+        string='Lot / Serial No',
+        copy=False,
+        help='Manual Lot/Serial number. Pulled into the Manufacturing Order '
+             'when this BOM is selected.',
+    )
     qc_control_ids = fields.One2many(
         'mrp.bom.qc.control',
         'bom_id',
@@ -161,6 +175,38 @@ class MrpBom(models.Model):
                     'Total component percentage cannot exceed 100%% '
                     '(currently %.2f%%).'
                 ) % (total * 100.0))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Auto-set bom_version to (max existing version for that product) + 1
+        when creating a new BOM, so each record for the same product gets
+        a unique, incrementing version number.
+        """
+        for vals in vals_list:
+            if not vals.get('bom_version') and vals.get('product_tmpl_id'):
+                max_v = max(
+                    self.search([
+                        ('product_tmpl_id', '=', vals['product_tmpl_id'])
+                    ]).mapped('bom_version') or [0]
+                )
+                vals['bom_version'] = max_v + 1
+        return super().create(vals_list)
+
+    def copy(self, default=None):
+        """
+        When duplicating a BOM / Blendsheet, automatically assign the next
+        version number for the same product template.
+        """
+        default = dict(default or {})
+        if 'bom_version' not in default:
+            max_v = max(
+                self.search([
+                    ('product_tmpl_id', '=', self.product_tmpl_id.id)
+                ]).mapped('bom_version') or [0]
+            )
+            default['bom_version'] = max_v + 1
+        return super().copy(default)
 
     def write(self, vals):
         res = super().write(vals)

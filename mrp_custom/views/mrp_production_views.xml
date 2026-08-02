@@ -6,12 +6,13 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
+                <!-- Fix #1: Button only visible after BOTH QC and Store have approved -->
                 <button name="action_create_purchase_orders"
                         type="object"
                         string="Create Purchase Order"
                         class="btn-primary"
                         groups="purchase.group_purchase_user"
-                        invisible="state in ('done', 'cancel') or purchase_order_count > 0"/>
+                        invisible="state in ('done', 'cancel') or purchase_order_count > 0 or mo_approval_state != 'approved'"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_purchase_orders"
@@ -27,15 +28,26 @@
                 <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
                 <field name="parent_mo_id" readonly="1" invisible="not parent_mo_id"/>
                 <field name="purchase_order_count" invisible="1"/>
+                <!-- mo_approval_state is needed for the Create PO button visibility (#1) and QC tab (#2b) -->
+                <field name="mo_approval_state" invisible="1"/>
                 <field name="qc_controls_readonly" invisible="1"/>
+                <!-- BOM Version: read-only display, pulled from selected BOM (#8b) -->
+                <field name="bom_version" readonly="1"
+                       invisible="not bom_id"
+                       string="BOM Version"/>
                 <field name="delivery_instruction"
                          invisible="not delivery_picking_id and not delivery_instruction"
                          placeholder="From Delivery Order..."/>
             </xpath>
 
-            <!-- QC Controls tab (lines come from BoM; no manual create) -->
+            <!-- QC Controls tab:
+                 - Hidden in pending_qc and pending_store stages (#2b: not visible before both approvals)
+                 - Editable only by QC Approver users (#2a: enforced in Python via qc_controls_readonly)
+                 - No manual create/delete (lines come from BOM)
+            -->
             <xpath expr="//notebook" position="inside">
-                <page string="QC Controls" name="qc_controls">
+                <page string="QC Controls" name="qc_controls"
+                      invisible="mo_approval_state in ('pending_qc', 'pending_store')">
                     <field name="qc_control_ids"
                             readonly="qc_controls_readonly"
                             force_save="1">
@@ -66,6 +78,18 @@
                         </list>
                     </field>
                 </page>
+            </xpath>
+
+            <!-- Fix #8e: Hide the auto-generate lot/serial number buttons.
+                 In Odoo 19 MRP the buttons are named 'action_generate_serial'.
+                 We hide all three (Generate Serial x2, Generate Lot x1) so
+                 the lot must be entered manually on the BOM and pulled into MRP.
+                 The lot_producing_ids field itself remains visible/editable. -->
+            <xpath expr="//div[button[@name='action_generate_serial']]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='lot_producing_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
             </xpath>
         </field>
     </record>
