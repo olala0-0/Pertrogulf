@@ -1,0 +1,39 @@
+<odoo>
+    <template id="report_header_business_unit_label" inherit_id="web.external_layout_bubble">
+
+        <xpath expr="//div[contains(@t-attf-class, 'header o_company_')]/*[1]" position="before">
+            <!-- company.report_header (Odoo's built-in tagline cell, rendered
+                 left-aligned elsewhere in this same layout) would duplicate the
+                 centered label below for our business units. It's hidden with
+                 CSS rather than an xpath on that cell directly, because that
+                 cell doesn't exist in every context this layout is rendered in
+                 (e.g. the Document Layout preview widget) and a missing-element
+                 xpath hard-fails view combination there. -->
+            <div t-if="o and o.company_id.business_unit == 'pg_aviation'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                Petrogulf Aviation - Quotation Template
+            </div>
+            <div t-if="o and o.company_id.business_unit == 'pg_tblnd'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                Toll Blending - Quotation Template
+            </div>
+            <div t-if="o and o.company_id.business_unit == 'pg_auto'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                Petrogulf Automotive - Quotation Template
+            </div>
+            <div t-if="o and o.company_id.business_unit == 'pg_marine'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                Petrogulf Marine - Quotation Template
+            </div>
+            <div t-if="o and o.company_id.business_unit == 'pg_greece'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                PGM Lube EU - Quotation Template
+            </div>
+        </xpath>
+
+        <xpath expr="//img[@class='o_company_logo mb-2']" position="attributes">
+            <attribute name="class">o_company_logo mb-2 d-block ms-0 me-auto</attribute>
+        </xpath>
+
+    </template>
+</odoo>

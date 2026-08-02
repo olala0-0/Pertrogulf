@@ -1,0 +1,96 @@
+<odoo>
+
+    <template id="report_saleorder_business_unit">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <!--
+                        web.external_layout reads o.company_id's Document Layout
+                        settings automatically (logo, colors, watermark, font).
+                        Nothing below touches that - we only build the BODY.
+                    -->
+                    <div class="page">
+
+                        <h2 class="text-center" style="color:#000000; font-weight:bold;">Quotation</h2>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Quotation No:</strong> <span t-field="o.name"/><br/>
+                                <strong style="color:#000000; font-weight:bold;">Kind Attn:</strong> <span t-field="o.partner_id.name"/><br/>
+                                <strong>Customer Name:</strong> <span t-field="o.partner_id.name"/><br/>
+                                <strong>Customer Address:</strong>
+                                <span t-field="o.partner_id"
+                                      t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+                                <t t-if="o.partner_id.phone">
+                                    <br/><strong>Contact No:</strong> <span t-field="o.partner_id.phone"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm" style="border:1px;">
+                            <tr >
+                                <td style="color:#888;"><strong>Quotation Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/></td>
+                                <td style="color:#888;"><strong>Quote Valid Till:</strong> <span t-field="o.validity_date"/></td>
+                                <td style="color:#888;"><strong>Quoted by:</strong> <span t-field="o.user_id.name"/></td>
+
+                                <!-- Aviation-only extra header fields -->
+                                <t t-if="o.company_id.business_unit == 'pg_aviation'">
+                                    <td style="color:#888;"><strong>Aircraft Reg Details:</strong> <span t-field="o.aircraft_reg_details"/></td>
+                                    <td style="color:#888;"><strong>Aircraft Type:</strong> <span t-field="o.aircraft_type"/></td>
+                                    <td style="color:#888;"><strong>Country of Origin:</strong> <span t-field="o.country_of_origin"/></td>
+                                </t>
+
+                                <!-- Marine / Lube EU - extra header fields -->
+                                <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece')">
+                                    <td style="color:#888;"><strong>Vessel Name:</strong> <span t-field="o.vessel_no_id.name"/></td>
+                                    <td style="color:#888;"><strong>IMO No:</strong> <span t-field="o.imo_number"/></td>
+                                    <td style="color:#888;"><strong>Port Name:</strong> <span t-field="o.port_master_id.name"/></td>
+                                </t>
+                            </tr>
+                        </table>
+
+                        <!-- ============ BUSINESS UNIT DISPATCH ============ -->
+
+                        <t t-if="o.company_id.business_unit == 'power_x'">
+                            <t t-call="custom_sale_quotation_report.body_power_x"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_auto'">
+                            <t t-call="custom_sale_quotation_report.body_petrogulf_automotive"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_aviation'">
+                            <t t-call="custom_sale_quotation_report.body_petrogulf_aviation"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_tblnd'">
+                            <t t-call="custom_sale_quotation_report.body_toll_blending"/>
+                        </t>
+                        <t t-elif="o.company_id.business_unit == 'pg_marine'">
+                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_greece'">
+                            <t t-call="custom_sale_quotation_report.body_pgm_lube_eu"/>
+                        </t>
+
+<!--                        <t t-elif="o.company_id.business_unit == 'petrogulf_toll_blending_adnoc'">-->
+<!--                            <t t-call="custom_sale_quotation_report.body_toll_blending_adnoc"/>-->
+<!--                        </t>-->
+
+                        <t t-else="">
+                            <!-- Fallback: generic layout if business_unit is not set / unrecognized -->
+                            <p class="text-danger">
+                                No quotation layout configured for business unit:
+                                <span t-esc="o.company_id.business_unit"/>.
+                                Falling back to default line table.
+                            </p>
+                            <t t-call="custom_sale_quotation_report.body_power_x"/>
+                        </t>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

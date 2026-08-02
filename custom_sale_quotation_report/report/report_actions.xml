@@ -1,0 +1,31 @@
+<odoo>
+    <!--
+        We keep Odoo's standard "Print Quotation" button/action working as-is.
+        Instead of creating a second print option, we point the EXISTING
+        action at our new master template. Users see no change in the UI -
+        same button, same menu entry - only the rendered content differs
+        per company business_unit.
+    -->
+    <record id="action_report_saleorder_business_unit" model="ir.actions.report">
+        <field name="name">Quotation / Order (Business Unit)</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_sale_quotation_report.report_saleorder_business_unit</field>
+        <field name="report_file">custom_sale_quotation_report.report_saleorder_business_unit</field>
+        <field name="print_report_name">'Quotation - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!--
+        OPTIONAL (commented out): if you want THIS report to literally replace
+        Odoo's default "Print" button instead of appearing as a second option
+        in the print menu, uncomment below to hide the native action from the
+        binding list. Left disabled by default since it's safer to test the
+        new report alongside the original first.
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="binding_type">no_bind</field>
+    </record>
+    -->
+</odoo>
