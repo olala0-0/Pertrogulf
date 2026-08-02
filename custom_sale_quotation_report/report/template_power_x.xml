@@ -1,6 +1,6 @@
 <odoo>
     <template id="body_power_x">
-        <table class="table table-sm o_main_table" style="border:1px solid #333;">
+        <table class="table table-sm o_main_table">
             <thead>
                 <tr style="background-color:#e6e6e6;">
                     <th>Sn</th>

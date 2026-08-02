@@ -1,6 +1,6 @@
 <odoo>
     <template id="body_petrogulf_automotive">
-        <table class="table table-sm o_main_table" style="border:1px solid #333;">
+        <table class="table table-sm o_main_table">
             <thead>
                 <tr style="background-color:#f4b6bb;">
                     <th>Sn</th>

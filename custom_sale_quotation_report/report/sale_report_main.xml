@@ -11,14 +11,16 @@
                     -->
                     <div class="page">
 
-                        <h2 class="text-center" style="color:#000000; font-weight:bold;">Quotation</h2>
+                        <div style="text-align: center; font-size: 25px; font-weight: bold; margin-bottom: 25px;">
+                            QUOTATION
+                        </div>
 
                         <div class="row mb-3">
                             <div class="col-6">
-                                <strong>Quotation No:</strong> <span t-field="o.name"/><br/>
-                                <strong style="color:#000000; font-weight:bold;">Kind Attn:</strong> <span t-field="o.partner_id.name"/><br/>
-                                <strong>Customer Name:</strong> <span t-field="o.partner_id.name"/><br/>
-                                <strong>Customer Address:</strong>
+                                <span style="font-size:15px !important;">Quotation No:</span> <span t-field="o.name"/><br/>
+                                <span style="font-size:15px !important;">Kind Attn:</span> <span t-field="o.partner_id.name"/><br/>
+                                <span style="font-size:15px !important;">Customer Name:</span> <span t-field="o.partner_id.name"/><br/>
+                                <span style="font-size:15px !important;">Customer Address:</span>
                                 <span t-field="o.partner_id"
                                       t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
                                 <t t-if="o.partner_id.phone">
@@ -29,22 +31,22 @@
 
                         <table class="table table-sm" style="border:1px;">
                             <tr >
-                                <td style="color:#888;"><strong>Quotation Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/></td>
-                                <td style="color:#888;"><strong>Quote Valid Till:</strong> <span t-field="o.validity_date"/></td>
-                                <td style="color:#888;"><strong>Quoted by:</strong> <span t-field="o.user_id.name"/></td>
+                                <td><strong>Quotation Date:</strong> <span t-field="o.date_order" t-options="{'widget': 'date'}"/></td>
+                                <td><strong>Quote Valid Till:</strong> <span t-field="o.validity_date"/></td>
+                                <td> <strong>Quoted by:</strong> <span t-field="o.user_id.name"/></td>
 
                                 <!-- Aviation-only extra header fields -->
                                 <t t-if="o.company_id.business_unit == 'pg_aviation'">
-                                    <td style="color:#888;"><strong>Aircraft Reg Details:</strong> <span t-field="o.aircraft_reg_details"/></td>
-                                    <td style="color:#888;"><strong>Aircraft Type:</strong> <span t-field="o.aircraft_type"/></td>
-                                    <td style="color:#888;"><strong>Country of Origin:</strong> <span t-field="o.country_of_origin"/></td>
+                                    <td> <strong>Aircraft Reg Details:</strong> <span t-field="o.aircraft_reg_details"/></td>
+                                    <td> <strong>Aircraft Type:</strong> <span t-field="o.aircraft_type"/></td>
+                                    <td> <strong>Country of Origin:</strong> <span t-field="o.country_of_origin"/></td>
                                 </t>
 
                                 <!-- Marine / Lube EU - extra header fields -->
                                 <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece')">
-                                    <td style="color:#888;"><strong>Vessel Name:</strong> <span t-field="o.vessel_no_id.name"/></td>
-                                    <td style="color:#888;"><strong>IMO No:</strong> <span t-field="o.imo_number"/></td>
-                                    <td style="color:#888;"><strong>Port Name:</strong> <span t-field="o.port_master_id.name"/></td>
+                                    <td> <strong>Vessel Name:</strong> <span t-field="o.vessel_no_id.name"/></td>
+                                    <td> <strong>IMO No:</strong> <span t-field="o.imo_number"/></td>
+                                    <td> <strong>Port Name:</strong> <span t-field="o.port_master_id.name"/></td>
                                 </t>
                             </tr>
                         </table>

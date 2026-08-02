@@ -4,7 +4,7 @@
         Petrogulf Aviation - Quotation Template
     </div>
         <div style="position:relative; z-index:1; padding-bottom:32mm;">
-            <table class="table table-sm o_main_table mb-0" style="border:1px solid #333; font-size:11px;">
+            <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
                     <tr style="background-color:#f4b6bb;">
                         <th>Sn</th>
@@ -70,7 +70,7 @@
             </table>
 
             <table class="table table-sm o_main_table mb-0"
-                   style="border:1px solid #333; border-top:none; margin-top:0; font-size:11px;">
+                   style="margin-top:0; font-size:11px;">
                 <tr>
                     <td style="text-align:right;width:75%">
                         <strong>Sub Total</strong>

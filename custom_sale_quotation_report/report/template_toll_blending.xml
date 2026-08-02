@@ -2,7 +2,7 @@
 
     <!-- ============ STANDARD TOLL BLENDING ============ -->
     <template id="body_toll_blending">
-        <table class="table table-sm o_main_table mb-0" style="border:1px solid #333; font-size:9px;">
+        <table class="table table-sm o_main_table mb-0" style="font-size:9px;">
 
             <thead>
                 <tr style="background-color:#f4b6bb;">
@@ -44,7 +44,7 @@
             </tbody>
         </table>
         <table class="table table-sm o_main_table mb-0"
-               style="border:1px solid #333; border-top:none; margin-top:0; font-size:9px;">
+               style="margin-top:0; font-size:9px;">
             <tr>
                 <td style="text-align:right;width:75%">
                     <strong>Sub Total</strong>
@@ -88,7 +88,7 @@
     <!-- ============ TOLL BLENDING - ADNOC VARIANT ============ -->
     <!-- Simplified: no qty/amount/totals shown, only product type/description/selling unit/unit price -->
     <template id="body_toll_blending_adnoc">
-        <table class="table table-sm o_main_table" style="border:1px solid #333;">
+        <table class="table table-sm o_main_table">
             <thead>
                 <tr style="background-color:#f4b6bb;">
                     <th>Sn</th>

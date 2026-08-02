@@ -1,6 +1,6 @@
 <odoo>
     <template id="body_petrogulf_marine">
-            <table class="table table-sm o_main_table mb-0" style="border:1px solid #333; font-size:11px;">
+            <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
                     <tr style="background-color:#f4b6bb;">
                         <th>Sn</th>
@@ -60,7 +60,7 @@
             <t t-set="pg_other_expense_lines" t-value="expense_lines - pg_delivery_charge_lines - pg_port_charge_lines"/>
 
             <table class="table table-sm o_main_table mb-0"
-                   style="border:1px solid #333; border-top:none; margin-top:0; font-size:11px;">
+                   style="margin-top:0; font-size:11px;">
                 <tr>
                     <td style="text-align:right;width:75%">
                         <strong>Total</strong>
