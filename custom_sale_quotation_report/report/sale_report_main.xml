@@ -53,7 +53,7 @@
 
                         <!-- ============ BUSINESS UNIT DISPATCH ============ -->
 
-                        <t t-if="o.company_id.business_unit == 'power_x'">
+                        <t t-if="o.company_id.business_unit == 'pg_powerx'">
                             <t t-call="custom_sale_quotation_report.body_power_x"/>
                         </t>
 
