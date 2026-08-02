@@ -502,10 +502,10 @@
                                     <field name="product_id" string="Offered Item" width="320px"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="product_uom_qty" string="Qty in Units" width="90px"/>
-                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                    <field name="pack_size_id" string="Pack Size" column_invisible="1"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
-                                    <field name="unit_qty" string="Quantity" width="80px"/>
                                     <field name="product_uom" string="UoM" width="70px"/>
+                                    <field name="unit_qty" string="Qty (Base UoM)" width="90px"/>
                                     <field name="price_unit" width="90px"/>
                                     <field name="tax_id"
                                            widget="many2many_tags"
@@ -741,9 +741,22 @@
                                             'company_id': parent.company_id
                                         }"
                                         readonly="is_downpayment" string="Qty in Units" width="90px"/>
-                                    <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
+                                    <field name="pack_size_id" string="Pack Size" column_invisible="1"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
-                                    <field name="unit_qty" string="Quantity" optional="show" width="80px"/>
+                                    <field name="product_uom_readonly" column_invisible="True"/>
+                                    <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
+                                    <field
+                                        name="product_uom_id"
+                                        force_save="True"
+                                        string="UoM"
+                                        readonly="product_uom_readonly"
+                                        required="not display_type and not is_downpayment"
+                                        context="{'company_id': parent.company_id}"
+                                        groups="uom.group_uom"
+                                        options='{"no_open": True}'
+                                        width="60px"
+                                        optional="show"/>
+                                    <field name="unit_qty" string="Qty (Base UoM)" optional="show" width="90px"/>
                                     <field
                                         name="qty_delivered"
                                         decoration-info="(not display_type and invoice_status == 'to invoice')" decoration-bf="(not display_type and invoice_status == 'to invoice')"
@@ -759,19 +772,6 @@
                                         column_invisible="parent.state != 'sale'"
                                         optional="show"/>
                                     <field name="qty_to_invoice" column_invisible="True"/>
-                                    <field name="product_uom_readonly" column_invisible="True"/>
-                                    <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
-                                    <field
-                                        name="product_uom_id"
-                                        force_save="True"
-                                        string="UoM"
-                                        readonly="product_uom_readonly"
-                                        required="not display_type and not is_downpayment"
-                                        context="{'company_id': parent.company_id}"
-                                        groups="uom.group_uom"
-                                        options='{"no_open": True}'
-                                        width="60px"
-                                        optional="show"/>
                                     <field
                                         name="customer_lead"
                                         optional="hide"
