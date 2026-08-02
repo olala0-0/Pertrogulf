@@ -27,7 +27,9 @@
                     </t>
                 </t>
             </tbody>
-            <tfoot>
+        </table>
+        <table class="table table-sm o_main_table mb-0"
+                   style="margin-top:0; font-size:11px;">
                 <tr>
                     <td colspan="5" class="text-right"><strong>Total</strong></td>
                     <td class="text-right"><span t-field="o.amount_untaxed"/></td>
@@ -40,22 +42,13 @@
                     <td colspan="5" class="text-right"><strong>Grand Total</strong></td>
                     <td class="text-right"><span t-field="o.amount_total"/></td>
                 </tr>
-            </tfoot>
         </table>
 
-        <div class="mt-3">
-            <strong>Terms &amp; Conditions:</strong>
-            <ul>
-                <li>Lead time: 4-5 working day(s) subject to availability.</li>
-                <li>Delivery care of agenti Boat to be arrarnged by the Agent under Owners account for supply at the anchorage</li>
-                <li>Pumping if required USD 600.00/- additional charges applicable.</li>
-                <li>Duty free for vessel under foreign run.</li>
-                <li>Prices are valid for the requested quantities only.</li>
-                <li>Any change in volume, delivery point, or conditions may result in a revised price.</li>
-                <li>Deliveries are always subject to weather conditions and "Force Majeure".</li>
-                <li>Availability and any additional charges (if applicable) are subject to reconfirmation upon nomination.</li>
-            </ul>
-            <strong>Payment terms: </strong><span t-field="o.payment_term_id.name"/>
-        </div>
+            <div class="mt-3">
+                <strong>Terms &amp; Conditions:</strong>
+                <div t-field="o.note"/>
+                <strong>Payment terms:</strong>
+                <span t-field="o.payment_term_id.name"/>
+            </div>
     </template>
 </odoo>
