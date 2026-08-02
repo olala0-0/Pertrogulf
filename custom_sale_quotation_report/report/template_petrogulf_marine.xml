@@ -6,7 +6,7 @@
                         <th>Sn</th>
                         <th>Inquired Item</th>
                         <th>Offered Item</th>
-                        <th>Pack Size</th>
+                        <th>Unit of Measure</th>
                         <th>No of Units</th>
                         <th>Unit Price</th>
                         <th class="text-right">Amount</th>
@@ -28,7 +28,7 @@
                                     <span t-field="line.product_template_id"/>
                                 </td>
                                 <td>
-                                    <span t-field="line.pack_size_id"/>
+                                    <span t-field="line.product_uom_id"/>
                                 </td>
                                 <td>
                                     <span t-field="line.product_uom_qty"/>
