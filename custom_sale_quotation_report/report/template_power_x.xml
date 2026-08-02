@@ -41,7 +41,7 @@
                                 </t>
                             </td>
                             <td><span t-field="line.price_unit"/></td>
-                            <td><span t-field="line.product_uom.name"/></td>
+                            <td><span t-field="line.product_uom_id.name"/></td>
                             <td><span t-field="line.discount"/>%</td>
                             <td class="text-right"><span t-field="line.price_subtotal"/></td>
                         </tr>

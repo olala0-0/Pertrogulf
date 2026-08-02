@@ -29,6 +29,10 @@
                  style="font-size:9px; color:#888; text-align:center;">
                 PGM Lube EU - Quotation Template
             </div>
+            <div t-if="o and o.company_id.business_unit == 'pg_golden'"
+                 style="font-size:9px; color:#888; text-align:center;">
+                Petrogulf Oman - Quotation Template
+            </div>
         </xpath>
 
         <xpath expr="//img[@class='o_company_logo mb-2']" position="attributes">
