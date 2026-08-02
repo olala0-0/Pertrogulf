@@ -57,11 +57,22 @@ class MrpProduction(models.Model):
         compute='_compute_qc_controls_readonly',
         string='QC Controls Readonly',
     )
+    # BOM version: pulled from the selected Bill of Materials (read-only in MRP)
+    bom_version = fields.Integer(
+        related='bom_id.bom_version',
+        string='BOM Version',
+        store=False,
+    )
 
     @api.depends('state')
     def _compute_qc_controls_readonly(self):
+        # QC Controls are editable only by users in the QC Approver group.
+        # All other users see the tab as read-only regardless of MO state.
+        is_qc_user = self.env.user.has_group('mrp_approval_flow.group_mrp_qc_approver')
         for production in self:
-            production.qc_controls_readonly = production.state == 'done'
+            production.qc_controls_readonly = (
+                production.state == 'done' or not is_qc_user
+            )
 
     @api.depends('purchase_order_ids', 'purchase_order_ids.state')
     def _compute_purchase_order_count(self):
@@ -84,6 +95,12 @@ class MrpProduction(models.Model):
                 lambda l: l.name and str(l.name).strip()
             )
         ]
+
+    @api.onchange('bom_id')
+    def _onchange_bom_id_lot(self):
+        """When BOM is (re)selected, pull the lot/serial number from BOM into MO."""
+        if self.bom_id and self.bom_id.lot_number:
+            self._mrp_custom_sync_lot_from_bom()
 
     @api.model
     def _mrp_custom_sanitize_qc_control_commands(self, commands):
@@ -114,6 +131,9 @@ class MrpProduction(models.Model):
         for production in productions:
             if production.bom_id and not production.qc_control_ids:
                 production._mrp_custom_sync_qc_controls_from_bom()
+            # Pull lot number from BOM if set
+            if production.bom_id and production.bom_id.lot_number:
+                production._mrp_custom_sync_lot_from_bom()
         return productions
 
     def write(self, vals):
@@ -127,6 +147,9 @@ class MrpProduction(models.Model):
         if bom_changed:
             for production in self.filtered(lambda p: p.state != 'done'):
                 production._mrp_custom_sync_qc_controls_from_bom()
+                # Pull lot number from new BOM if set
+                if production.bom_id and production.bom_id.lot_number:
+                    production._mrp_custom_sync_lot_from_bom()
         return res
 
     def _mrp_custom_sync_qc_controls_from_bom(self):
@@ -149,6 +172,33 @@ class MrpProduction(models.Model):
                 }
                 for line in lines
             ])
+
+    def _mrp_custom_sync_lot_from_bom(self):
+        """
+        Pull the Lot/Serial number from the selected BOM into the MO's
+        lot_producing_id. Finds an existing lot by name or creates a new one.
+        The lot is NOT auto-generated; it must be entered manually on the BOM.
+        """
+        Lot = self.env['stock.lot']
+        for production in self:
+            if not production.bom_id or not production.bom_id.lot_number:
+                continue
+            lot_name = str(production.bom_id.lot_number).strip()
+            if not lot_name:
+                continue
+            # Find existing lot or create a new one
+            lot = Lot.search([
+                ('name', '=', lot_name),
+                ('product_id', '=', production.product_id.id),
+                ('company_id', '=', production.company_id.id),
+            ], limit=1)
+            if not lot:
+                lot = Lot.create({
+                    'name': lot_name,
+                    'product_id': production.product_id.id,
+                    'company_id': production.company_id.id,
+                })
+            production.lot_producing_id = lot
 
     @api.depends(
         'production_group_id.child_ids.production_ids',
@@ -274,6 +324,18 @@ class MrpProduction(models.Model):
                 qty = raw_move.product_uom._compute_quantity(
                     raw_move.product_uom_qty, product.uom_id
                 )
+                # --- Fix #3 + #5: Skip if stock is already available ---
+                # Check on-hand qty at the MO source location (per-MO, so child
+                # MOs also use their own source location correctly).
+                available_qty = product.with_context(
+                    location=mo.location_src_id.id
+                ).qty_available
+                qty_to_buy = qty - available_qty
+                if qty_to_buy <= 0.0:
+                    # Sufficient stock exists; no purchase needed for this component
+                    continue
+                qty = qty_to_buy
+                # -------------------------------------------------------
                 entry = to_buy[product.id]
                 entry['qty'] += qty
                 entry['uom'] = product.uom_id

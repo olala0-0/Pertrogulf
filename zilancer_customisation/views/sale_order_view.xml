@@ -66,10 +66,10 @@
                 </xpath>
                 <xpath expr="//button[@name='action_confirm'][not(@id)]" position="replace">
                 </xpath>
-                <xpath expr="//button[@id='create_invoice']" position="replace">
-                </xpath>
-                <xpath expr="//button[@id='create_invoice_percentage']" position="replace">
-                </xpath>
+                <!-- <xpath expr="//button[@id='create_invoice']" position="replace">
+                </xpath> -->
+                <!-- <xpath expr="//button[@id='create_invoice_percentage']" position="replace">
+                </xpath> -->
                 <xpath expr="//field[@name='state']" position="replace">
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,sale"/>
                 </xpath>
@@ -82,6 +82,7 @@
                     <field name="total_qty_units"/>
                     <field name="client_po_order_no"/>
                     <field name="vat_selection" invisible="0"/>
+                    <field name="create_uid" invisible="0"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="attributes">
                     <attribute name="required">1</attribute>
@@ -485,6 +486,8 @@
                             <field name="payment_term_id" placeholder="Immediate" options="{'no_open': True, 'no_create': True}"/>
                             <field name="business_unit" readonly="True" force_save="True"/>
                             <field name="client_po_order_no"/>
+                            <field name="vat_selection" invisible="0"/>
+                            <field name="create_uid" invisible="0"/>
                         </group>
                     </group>
                     <notebook>

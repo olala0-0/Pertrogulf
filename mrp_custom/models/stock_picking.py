@@ -259,9 +259,11 @@ class StockPicking(models.Model):
 
         mo = self.env['mrp.production'].create(vals)
 
-        # Confirm only when MO approval flow is not blocking (or already approved)
+        # Confirm only when MO approval flow is not blocking (or already approved).
+        # Pass skip_mrp_approval_check=True so child MOs (which start at
+        # pending_qc) can be confirmed here without raising a UserError.
         if 'mo_approval_state' not in mo._fields or mo.mo_approval_state == 'approved':
-            mo.action_confirm()
+            mo.with_context(skip_mrp_approval_check=True).action_confirm()
 
         # Ensure destination move waits for this production (MTO link)
         if move_dest:
@@ -304,8 +306,15 @@ class StockPicking(models.Model):
         return action
 
     def button_validate(self):
-        """Block validate until linked Manufacturing Orders are done."""
+        """Block validate on OUTGOING deliveries until linked Manufacturing Orders are done.
+
+        Incoming receipts (e.g. from POs generated from MOs) are not blocked
+        so they can be validated freely even if MOs are still in progress.
+        """
         for picking in self:
+            # Only enforce the check on outgoing delivery orders linked to MOs.
+            if picking.picking_type_code != 'outgoing':
+                continue
             pending = picking.mrp_production_ids.filtered(
                 lambda m: m.state not in ('done', 'cancel')
             )

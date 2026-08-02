@@ -89,7 +89,14 @@ class MrpProduction(models.Model):
         }
 
     def action_confirm(self):
+        # Allow programmatic (internal) confirms to bypass the approval gate.
+        # Example: child MOs created from delivery are confirmed automatically
+        # and must not be blocked by pending_qc (they start fresh at pending_qc
+        # and will go through the approval flow separately).
+        skip = self.env.context.get('skip_mrp_approval_check')
         for production in self:
+            if skip:
+                continue
             if production.mo_approval_state != 'approved':
                 if production.mo_approval_state == 'pending_qc':
                     raise UserError(_(
