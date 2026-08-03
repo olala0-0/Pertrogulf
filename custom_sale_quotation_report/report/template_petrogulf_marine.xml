@@ -124,13 +124,14 @@
                 <strong>Terms &amp; Conditions:</strong>
                 <div t-field="o.note"/>
                 <strong>Payment terms:</strong>
-                <span t-field="o.payment_term_id.name"/>
 
-                <p style="background-color:#8fd3c7; padding:4px;">
+                <p style="background-color:#77E8E8; padding:4px;">
                     <strong>Once order is confirmed, any subsequent cancellation will incur applicable cancellation
                         charges.
                     </strong>
                 </p>
+                <span t-field="o.payment_term_id.name"/>
+
             </div>
 
             <t t-if="o.show_bank_details">
@@ -140,11 +141,11 @@
                 </div>
             </t>
 
-            <p style="font-size:10px; margin-top:24px;">
-                This quotation and any resulting sale are governed by Petro Gulf Oil Manufacturing LLC's General
-                Terms &amp; Conditions (GTCs), which are deemed incorporated herein and available at:
-                <a href="https://www.petrogulfmarine.com/GTCs.pdf">https://www.petrogulfmarine.com/GTCs.pdf</a>
-            </p>
+<!--            <p style="font-size:10px; margin-top:24px;">-->
+<!--                This quotation and any resulting sale are governed by Petro Gulf Oil Manufacturing LLC's General-->
+<!--                Terms &amp; Conditions (GTCs), which are deemed incorporated herein and available at:-->
+<!--                <a href="https://www.petrogulfmarine.com/GTCs.pdf">https://www.petrogulfmarine.com/GTCs.pdf</a>-->
+<!--            </p>-->
 
     </template>
 </odoo>
