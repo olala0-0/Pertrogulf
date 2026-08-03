@@ -68,14 +68,13 @@
                     </t>
                 </tbody>
             </table>
-
             <table class="table table-sm o_main_table mb-0"
-                   style="margin-top:0; font-size:11px;">
+                   style="margin-top:0; font-size:11px; border-top:none;">
                 <tr>
-                    <td style="text-align:right;width:75%">
+                    <td style="text-align:right;width:75%;border-top:none;">
                         <strong>Sub Total</strong>
                     </td>
-                    <td colspan="3" style="text-align:right;">
+                    <td colspan="3" style="text-align:right;border-top:none;">
                         <span t-field="o.amount_untaxed"/>
                     </td>
                 </tr>
