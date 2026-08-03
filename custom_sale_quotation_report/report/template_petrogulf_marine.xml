@@ -125,11 +125,6 @@
                 <div t-field="o.note"/>
                 <strong>Payment terms:</strong>
 
-                <p style="background-color:#77E8E8; padding:4px;">
-                    <strong>Once order is confirmed, any subsequent cancellation will incur applicable cancellation
-                        charges.
-                    </strong>
-                </p>
                 <span t-field="o.payment_term_id.name"/>
 
             </div>
