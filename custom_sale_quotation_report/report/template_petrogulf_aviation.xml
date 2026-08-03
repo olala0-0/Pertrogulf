@@ -7,18 +7,18 @@
             <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
                     <tr style="background-color:#f4b6bb;">
-                        <th>Sn</th>
-                        <th>Inquired Items</th>
-                        <th>Product Description</th>
-                        <th>Offered Product</th>
-                        <th>Category</th>
-                        <th>Lead Time</th>
-                        <th>Pkg Type</th>
-                        <th>Requested Qty</th>
-                        <th>Kgs per Pkg Type</th>
-                        <th>Total Kgs</th>
-                        <th>Rate per Pack</th>
-                        <th class="text-right">Amount</th>
+                        <td>Sn</td>
+                        <td>Inquired Items</td>
+                        <td>Product Description</td>
+                        <td>Offered Product</td>
+                        <td>Category</td>
+                        <td>Lead Time</td>
+                        <td>Pkg Type</td>
+                        <td>Requested Qty</td>
+                        <td>Kgs per Pkg Type</td>
+                        <td>Total Kgs</td>
+                        <td>Rate per Pack</td>
+                        <td class="text-right">Amount</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -101,12 +101,6 @@
                 <div t-field="o.note"/>
                 <strong>Payment terms:</strong>
                 <span t-field="o.payment_term_id.name"/>
-
-                <p style="background-color:#8fd3c7; padding:4px;">
-                    <strong>Once order is confirmed, any subsequent cancellation will incur applicable cancellation
-                        charges.
-                    </strong>
-                </p>
             </div>
 
             <t t-if="o.show_bank_details">
