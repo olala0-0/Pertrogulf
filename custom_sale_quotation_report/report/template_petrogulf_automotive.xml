@@ -1,7 +1,6 @@
 <odoo>
     <template id="body_petrogulf_automotive">
         <table class="table table-sm o_main_table">
-            <thead>
                 <tr style="background-color:#f4b6bb;">
                     <td>Sn</td>
                     <td>Offered Items</td>
@@ -10,7 +9,6 @@
                     <td>Unit Price</td>
                     <td class="text-right">Amount</td>
                 </tr>
-            </thead>
             <tbody>
                 <t t-set="sn" t-value="0"/>
                 <t t-foreach="o.order_line" t-as="line">
