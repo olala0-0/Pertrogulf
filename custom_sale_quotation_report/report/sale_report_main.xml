@@ -17,13 +17,13 @@
 
                         <div class="row mb-3">
                             <div class="col-6">
-                                <span style="font-size:15px !important; ">Quotation No:</span><span t-field="o.name"/><br/>
-                                <span style="font-size:15px !important; ">Kind Attn:</span><span t-field="o.partner_id.name"/><br/>
-                                <span style="font-size:15px !important; ">Customer Name:</span><span t-field="o.partner_id.name"/><br/>
-                                <span style="font-size:15px !important; ">Customer Address:</span><span t-field="o.partner_id"
+                                <span style="font-size:15px !important; ">Quotation No:</span><span style="font-size:15px;" t-field="o.name"/><br/>
+                                <span style="font-size:15px !important; ">Kind Attn:</span><span style="font-size:15px;" t-field="o.partner_id.name"/><br/>
+                                <span style="font-size:15px !important; ">Customer Name:</span><span style="font-size:15px;" t-field="o.partner_id.name"/><br/>
+                                <span style="font-size:15px !important; ">Customer Address:</span><span style="font-size:15px;" t-field="o.partner_id"
                                       t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit != 'pg_marine'">
-                                    <br/><span style="font-size:15px !important; ">Contact No:</span><span t-field="o.partner_id.phone"/>
+                                    <br/><span style="font-size:15px !important; ">Contact No:</span><span style="font-size:15px;" t-field="o.partner_id.phone"/>
                                 </t>
                             </div>
                         </div>
