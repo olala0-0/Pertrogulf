@@ -2,7 +2,7 @@
     <template id="body_petrogulf_marine">
             <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
-                    <tr style="background-color:#f4b6bb;">
+                    <tr style="background-color:#70E5E5;">
                         <td>Inquired Item</td>
                         <td>Offered Item</td>
                         <td>Unit of Measure</td>
