@@ -103,5 +103,6 @@
             <strong>Payment terms:</strong>
             <span t-field="o.payment_term_id.name"/>
         </div>
+      </div>
     </template>
 </odoo>
