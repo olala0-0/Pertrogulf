@@ -3,12 +3,12 @@
             <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
                     <tr style="background-color:#f4b6bb;">
-                        <th>Inquired Item</th>
-                        <th>Offered Item</th>
-                        <th>Unit of Measure</th>
-                        <th>No of Units</th>
-                        <th>Unit Price</th>
-                        <th class="text-right">Amount</th>
+                        <td>Inquired Item</td>
+                        <td>Offered Item</td>
+                        <td>Unit of Measure</td>
+                        <td>No of Units</td>
+                        <td>Unit Price</td>
+                        <td class="text-right">Amount</td>
                     </tr>
                 </thead>
                 <tbody>
