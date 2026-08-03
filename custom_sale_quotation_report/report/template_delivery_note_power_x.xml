@@ -106,55 +106,55 @@
                             <div class="col-6">
                                 <table style="font-size:11px; border-collapse:collapse; width:100%;">
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">DN No.</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">DN No.</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.document_number"/></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Date &amp; Time In</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Date &amp; Time In</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Vehicle No.</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Vehicle No.</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.vehicle_no"/></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Date &amp; Time Out</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Date &amp; Time Out</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Driver</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Driver</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.driver_name"/></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">EID - No.</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">EID - No.</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.driver_id"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Customer</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Customer</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.partner_id.name"/></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Container #1</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Container #1</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"><span t-field="o.container_no"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Material</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Material</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Container #2</td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Loaded Weight</td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">TANK NO</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Container #2</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Empty Weight</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Loaded Weight</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Vat Amount</td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Net Weight</td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Total Amount</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">TANK NO</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #bbb; padding:2px 4px;">Operator</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Empty Weight</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Vat Amount</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Net Weight</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Total Amount</td>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #bbb; padding:2px 4px;background-color:#e6e6e6;">Operator</td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
                                         <td style="border:1px solid #bbb; padding:2px 4px;"></td>
