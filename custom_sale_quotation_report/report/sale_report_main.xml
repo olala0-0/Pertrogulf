@@ -111,18 +111,18 @@
                             </t>
                             <!-- Aviation-only extra header fields -->
                             <t t-if="o.company_id.business_unit == 'pg_aviation'">
-                                <td style="border:none;color:#888;">
-                                    <strong>Aircraft Reg Details:</strong>
-                                    <span t-field="o.aircraft_reg_details"/>
-                                </td>
-                                <td style="border:none;color:#888;">
-                                    <strong>Aircraft Type:</strong>
-                                    <span t-field="o.aircraft_type"/>
-                                </td>
-                                <td style="border:none;color:#888;">
-                                    <strong>Country of Origin:</strong>
-                                    <span t-field="o.country_of_origin"/>
-                                </td>
+                                <div class="col" name="aircraft_reg_details">
+                                    <strong>Aircraft Reg Details</strong>
+                                    <div t-field="o.aircraft_reg_details"></div>
+                                </div>
+                                <div class="col" name="aircraft_type">
+                                    <strong>Aircraft Type</strong>
+                                    <div t-field="o.aircraft_type"></div>
+                                </div>
+                                <div class="col" name="country_of_origin">
+                                    <strong>Country of Origin</strong>
+                                    <div t-field="o.country_of_origin"></div>
+                                </div>
                             </t>
                         </div>
 
@@ -150,6 +150,10 @@
 
                         <t t-elif="o.company_id.business_unit == 'pg_greece'">
                             <t t-call="custom_sale_quotation_report.body_pgm_lube_eu"/>
+                        </t>
+
+                        <t t-elif="o.company_id.business_unit == 'pg_sing'">
+                            <t t-call="custom_sale_quotation_report.body_pgm_singapore"/>
                         </t>
 
                         <t t-elif="o.company_id.business_unit == 'pg_golden'">

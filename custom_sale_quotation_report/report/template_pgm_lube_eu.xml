@@ -1,18 +1,20 @@
 <odoo>
     <template id="body_pgm_lube_eu">
-            <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
+            <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
                 <thead>
-                    <tr style="background-color:#f4b6bb;">
+                    <tr style="background-color:#619FAF;">
                         <th>Sn</th>
-                        <th>Inquired Item</th>
-                        <th>Offered Item</th>
-                        <th>Pack Size</th>
-                        <th>No of Units</th>
-                        <th>Unit Price</th>
-                        <th class="text-right">Amount</th>
+                        <th class="text-start">Inquired Item</th>
+                        <th class="text-start">Offered Item</th>
+                        <th class="text-end text-nowrap">Unit of Measure</th>
+                        <th class="text-end text-nowrap">No of Units</th>
+                        <th class="text-end text-nowrap">Unit Price</th>
+                        <th name="th_subtotal" class="text-end">
+                            <span>Amount</span>
+                        </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="sale_tbody">
                     <t t-set="sn" t-value="0"/>
                     <t t-foreach="o.order_line" t-as="line">
                         <t t-if="not line.display_type">
@@ -28,7 +30,7 @@
                                     <span t-field="line.product_template_id"/>
                                 </td>
                                 <td>
-                                    <span t-field="line.pack_size_id"/>
+                                    <span t-field="line.product_uom_id"/>
                                 </td>
                                 <td>
                                     <span t-field="line.product_uom_qty"/>
@@ -60,12 +62,12 @@
             <t t-set="pg_other_expense_lines" t-value="expense_lines - pg_delivery_charge_lines - pg_port_charge_lines"/>
 
             <table class="table table-sm o_main_table mb-0"
-                   style="margin-top:0; font-size:11px;">
+               style="margin-top:0; font-size:15px; border-top:none;">
                 <tr>
-                    <td style="text-align:right;width:75%">
+                    <td style="text-align:right;width:75%;border-top:none;">
                         <strong>Total</strong>
                     </td>
-                    <td colspan="3" style="text-align:right;">
+                    <td colspan="3" style="text-align:right;border-top:none;">
                         <span t-esc="pg_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
