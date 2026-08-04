@@ -6,14 +6,14 @@
             padding-right: 0 !important;
             }
         </style>
-        <table class="table table-sm o_main_table mb-0;font-size:15px;" >
+        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#619FAF;">
                     <th>Sn</th>
                     <th class="text-start">Inquired Item</th>
                     <th class="text-start">Offered Item</th>
                     <th class="text-end text-nowrap">Unit of Measure</th>
-                    <th cclass="text-end text-nowrap">No of Units</th>
+                    <th class="text-end text-nowrap">No of Units</th>
                     <th class="text-end text-nowrap">Unit Price</th>
                     <th name="th_subtotal" class="text-end">
                         <span>Amount</span>
