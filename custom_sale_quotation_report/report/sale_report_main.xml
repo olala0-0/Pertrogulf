@@ -7,7 +7,7 @@
                     <div class="page">
                         <div class="oe_structure"/>
 
-                        <div t-if="o.company_id.business_unit != 'pg_marine'"
+                        <div t-if="o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')"
                              style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 1px;">
                             QUOTATION
                         </div>
@@ -26,7 +26,7 @@
                                 <span style="font-size:20px !important; ">Customer Address:</span>
                                 <span style="font-size:20px;" t-field="o.partner_id"
                                       t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
-                                <t t-if="o.partner_id.phone and o.company_id.business_unit != 'pg_marine'">
+                                <t t-if="o.partner_id.phone and o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')'">
                                     <br/>
                                     <span style="font-size:20px !important; ">Contact No:</span>
                                     <span style="font-size:20px;" t-field="o.partner_id.phone"/>
@@ -53,7 +53,7 @@
                                 <strong>Quoted by</strong>
                                 <div t-field="o.create_uid">Mitchell Admin</div>
                             </div>
-                            <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece')">
+                            <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece','pg_sing')">
                                 <div t-if="o.vessel_no_id" class="col" name="vessel_no">
                                     <strong>Vessel Name</strong>
                                     <div t-field="o.vessel_no_id.name"></div>
@@ -102,25 +102,22 @@
                         <t t-elif="o.company_id.business_unit == 'pg_tblnd'">
                             <t t-call="custom_sale_quotation_report.body_toll_blending"/>
                         </t>
-                        <t t-elif="o.company_id.business_unit == 'pg_marine'">
+                        <t t-elif="o.company_id.business_unit in ('pg_marine', 'pg_greece', 'pg_sing')">
                             <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
                         </t>
 
-                        <t t-elif="o.company_id.business_unit == 'pg_greece'">
-                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
-                        </t>
+<!--                        <t t-elif="o.company_id.business_unit == 'pg_greece'">-->
+<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
+<!--                        </t>-->
 
-                        <t t-elif="o.company_id.business_unit == 'pg_sing'">
-                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
-                        </t>
+<!--                        <t t-elif="o.company_id.business_unit == 'pg_sing'">-->
+<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
+<!--                        </t>-->
 
                         <t t-elif="o.company_id.business_unit == 'pg_golden'">
                             <t t-call="custom_sale_quotation_report.body_golden"/>
                         </t>
 
-                        <!--                        <t t-elif="o.company_id.business_unit == 'petrogulf_toll_blending_adnoc'">-->
-                        <!--                            <t t-call="custom_sale_quotation_report.body_toll_blending_adnoc"/>-->
-                        <!--                        </t>-->
 
                         <t t-else="">
                             <!-- Fallback: generic layout if business_unit is not set / unrecognized -->
