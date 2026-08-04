@@ -128,11 +128,6 @@
                 <strong>Payment terms:</strong>
                 <span t-field="o.payment_term_id.name"/>
 
-                <p style="background-color:#8fd3c7; padding:4px;">
-                    <strong>Once order is confirmed, any subsequent cancellation will incur applicable cancellation
-                        charges.
-                    </strong>
-                </p>
             </div>
 
             <t t-if="o.show_bank_details">

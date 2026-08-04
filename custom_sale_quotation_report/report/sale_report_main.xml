@@ -4,48 +4,6 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
-                    <!--
-                        web.external_layout reads o.company_id's Document Layout
-                        settings automatically (logo, colors, watermark, font).
-                        Nothing below touches that - we only build the BODY.
-                    -->
-                    <!--                    <div class="row col-12 mb4">-->
-                    <!--                        <t t-if="doc.state in ['draft','sent']">-->
-                    <!--                            <span style="font-size:20px !important;">Quotation No:</span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="o.name"></span>-->
-                    <!--                            <br/>-->
-                    <!--                        </t>-->
-                    <!--                        <t t-else="">-->
-                    <!--                            <span style="font-size:20px !important;">Order No:</span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="o.name"></span>-->
-                    <!--                            <br/>-->
-                    <!--                        </t>-->
-                    <!--                        <div class="row col-12 mb-8 mt-2">-->
-                    <!--                            <span style="font-size:20px !important;">Kind Attn:</span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="o.inquiry_rec_from"></span>-->
-                    <!--                            <br/>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="row col-12 mb-8 mt-2">-->
-                    <!--                            <span style="font-size:20px !important;">Customer Name:</span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.name"></span>-->
-                    <!--                            <br/>-->
-                    <!--                        </div>-->
-                    <!--                        <div class="row col-12 mb-8 mt-2">-->
-                    <!--                            <span style="font-size:20px !important;">Customer Address:</span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.street"></span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.street2"></span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.city"></span>-->
-                    <!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.country_id.name"></span>-->
-                    <!--                            <br/>-->
-                    <!--                        </div>-->
-                    <!--                        <t t-if="o.partner_id.phone and o.company_id.business_unit != 'pg_marine'">-->
-                    <!--                            <br/>-->
-                    <!--                            <span style="font-size:15px !important; ">Contact No:</span>-->
-                    <!--                            <span style="font-size:15px;" t-field="o.partner_id.phone"/>-->
-                    <!--                        </t>-->
-
-                    <!--                    </div>-->
-
                     <div class="page">
                         <div class="oe_structure"/>
 
@@ -149,11 +107,11 @@
                         </t>
 
                         <t t-elif="o.company_id.business_unit == 'pg_greece'">
-                            <t t-call="custom_sale_quotation_report.body_pgm_lube_eu"/>
+                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
                         </t>
 
                         <t t-elif="o.company_id.business_unit == 'pg_sing'">
-                            <t t-call="custom_sale_quotation_report.body_pgm_singapore"/>
+                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
                         </t>
 
                         <t t-elif="o.company_id.business_unit == 'pg_golden'">
