@@ -3,6 +3,7 @@
             <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
                 <thead>
                     <tr style="background-color:#70E5E5;">
+                        <td>Sn</td>
                         <td>Inquired Item</td>
                         <td>Offered Item</td>
                         <td>Unit of Measure</td>
@@ -12,10 +13,14 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <t t-set="sn" t-value="0"/>
                     <t t-foreach="o.order_line" t-as="line">
                         <t t-if="not line.display_type">
-
+                            <t t-set="sn" t-value="sn + 1"/>
                             <tr>
+                                <td>
+                                    <span t-esc="sn"/>
+                                </td>
                                 <td>
                                     <span t-field="line.inquired_item"/>
                                 </td>
