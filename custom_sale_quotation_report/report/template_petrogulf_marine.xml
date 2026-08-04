@@ -6,7 +6,7 @@
             padding-right: 0 !important;
             }
         </style>
-        <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
+        <table class="table table-sm o_main_table mb-0" style="font-size:14px;">
             <thead>
                 <tr style="background-color:#619FAF;">
                     <th>Sn</th>
