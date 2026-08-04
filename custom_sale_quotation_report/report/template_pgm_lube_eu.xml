@@ -123,8 +123,10 @@
                 </tr>
             </table>
             <div class="mt-3">
+            <t t-if="o.note">
                 <strong>Terms &amp; Conditions:</strong>
                 <div t-field="o.port_note"/>
+            </t>
                 <strong>Payment terms:</strong>
                 <span t-field="o.payment_term_id.name"/>
 
