@@ -1,6 +1,6 @@
 <odoo>
     <template id="body_power_x">
-        <table class="table table-sm o_main_table">
+        <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
             <thead>
                 <tr style="background-color:#e6e6e6;">
                     <th>Sn</th>
@@ -49,8 +49,8 @@
                 </t>
             </tbody>
         </table>
-                    <table class="table table-sm o_main_table mb-0"
-                   style="margin-top:0; font-size:11px;">
+        <table class="table table-sm o_main_table mb-0"
+                   style="margin-top:0; font-size:11px; border-top:none;" >
                 <tr>
                     <td style="text-align:right;width:75%">
                         <strong>Sub Total</strong>
