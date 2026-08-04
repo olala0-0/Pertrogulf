@@ -9,16 +9,19 @@
         <table class="table table-sm o_main_table mb-0" style="font-size:11px;">
             <thead>
                 <tr style="background-color:#619FAF;">
-                    <td>Sn</td>
-                    <td>Inquired Item</td>
-                    <td>Offered Item</td>
-                    <td>Unit of Measure</td>
-                    <td>No of Units</td>
-                    <td>Unit Price</td>
-                    <td class="text-right">Amount</td>
+                    <th>Sn</th>
+                    <th class="text-start">Inquired Item</th>
+                    <th class="text-start">Offered Item</th>
+                    <th class="text-end text-nowrap">Unit of Measure</th>
+                    <th cclass="text-end text-nowrap">No of Units</th>
+                    <th class="text-end text-nowrap">Unit Price</th>
+                    <th name="th_subtotal" class="text-end">
+                        <span>Amount</span>
+                    </th>
+
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="sale_tbody">
                 <t t-set="sn" t-value="0"/>
                 <t t-foreach="o.order_line" t-as="line">
                     <t t-if="not line.display_type">

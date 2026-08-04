@@ -9,21 +9,68 @@
                         settings automatically (logo, colors, watermark, font).
                         Nothing below touches that - we only build the BODY.
                     -->
+<!--                    <div class="row col-12 mb4">-->
+<!--                        <t t-if="doc.state in ['draft','sent']">-->
+<!--                            <span style="font-size:20px !important;">Quotation No:</span>-->
+<!--                            <span style="font-size:20px !important;" t-field="o.name"></span>-->
+<!--                            <br/>-->
+<!--                        </t>-->
+<!--                        <t t-else="">-->
+<!--                            <span style="font-size:20px !important;">Order No:</span>-->
+<!--                            <span style="font-size:20px !important;" t-field="o.name"></span>-->
+<!--                            <br/>-->
+<!--                        </t>-->
+<!--                        <div class="row col-12 mb-8 mt-2">-->
+<!--                            <span style="font-size:20px !important;">Kind Attn:</span>-->
+<!--                            <span style="font-size:20px !important;" t-field="o.inquiry_rec_from"></span>-->
+<!--                            <br/>-->
+<!--                        </div>-->
+<!--                        <div class="row col-12 mb-8 mt-2">-->
+<!--                            <span style="font-size:20px !important;">Customer Name:</span>-->
+<!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.name"></span>-->
+<!--                            <br/>-->
+<!--                        </div>-->
+<!--                        <div class="row col-12 mb-8 mt-2">-->
+<!--                            <span style="font-size:20px !important;">Customer Address:</span>-->
+<!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.street"></span>-->
+<!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.street2"></span>-->
+<!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.city"></span>-->
+<!--                            <span style="font-size:20px !important;" t-field="doc.partner_id.country_id.name"></span>-->
+<!--                            <br/>-->
+<!--                        </div>-->
+<!--                        <t t-if="o.partner_id.phone and o.company_id.business_unit != 'pg_marine'">-->
+<!--                            <br/>-->
+<!--                            <span style="font-size:15px !important; ">Contact No:</span>-->
+<!--                            <span style="font-size:15px;" t-field="o.partner_id.phone"/>-->
+<!--                        </t>-->
+
+<!--                    </div>-->
+
                     <div class="page">
 
-                        <div t-if="o.company_id.business_unit != 'pg_marine'" style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 1px;">
+                        <div t-if="o.company_id.business_unit != 'pg_marine'"
+                             style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 1px;">
                             QUOTATION
                         </div>
 
-                        <div class="row mb-3">
+                        <div class="row col-12 mb4">
                             <div class="col-6">
-                                <span style="font-size:15px !important; ">Quotation No:</span><span style="font-size:15px;" t-field="o.name"/><br/>
-                                <span style="font-size:15px !important; ">Kind Attn:</span><span style="font-size:15px;" t-field="o.partner_id.name"/><br/>
-                                <span style="font-size:15px !important; ">Customer Name:</span><span style="font-size:15px;" t-field="o.partner_id.name"/><br/>
-                                <span style="font-size:15px !important; ">Customer Address:</span><span style="font-size:15px;" t-field="o.partner_id"
+                                <span style="font-size:20px !important; ">Quotation No:</span>
+                                <span style="font-size:20px;" t-field="o.name"/>
+                                <br/>
+                                <span style="font-size:20px !important; ">Kind Attn:</span>
+                                <span style="font-size:20px;" t-field="o.partner_id.name"/>
+                                <br/>
+                                <span style="font-size:20px !important; ">Customer Name:</span>
+                                <span style="font-size:20px;" t-field="o.partner_id.name"/>
+                                <br/>
+                                <span style="font-size:20px !important; ">Customer Address:</span>
+                                <span style="font-size:20px;" t-field="o.partner_id"
                                       t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit != 'pg_marine'">
-                                    <br/><span style="font-size:15px !important; ">Contact No:</span><span style="font-size:15px;" t-field="o.partner_id.phone"/>
+                                    <br/>
+                                    <span style="font-size:20px !important; ">Contact No:</span>
+                                    <span style="font-size:20px;" t-field="o.partner_id.phone"/>
                                 </t>
                             </div>
                         </div>
@@ -38,8 +85,8 @@
                                 <div t-field="o.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                             </div>
                             <div t-if="o.validity_date and o.state in ['draft', 'sent']"
-                                class="col"
-                                name="expiration_date">
+                                 class="col"
+                                 name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
                                 <div t-field="o.validity_date">2023-12-31</div>
                             </div>
@@ -57,19 +104,27 @@
                                     <strong>IMO No</strong>
                                     <div t-field="o.imo_number"></div>
                                 </div>
-                                    <div t-if="o.port_master_id" class="col" name="port_master_id">
-                                        <strong>Port Name</strong>
-                                        <div t-field="o.port_master_id.name"></div>
-                                    </div>
+                                <div t-if="o.port_master_id" class="col" name="port_master_id">
+                                    <strong>Port Name</strong>
+                                    <div t-field="o.port_master_id.name"></div>
+                                </div>
                             </t>
-            <!-- Aviation-only extra header fields -->
+                            <!-- Aviation-only extra header fields -->
                             <t t-if="o.company_id.business_unit == 'pg_aviation'">
-                                <td style="border:none;color:#888;"> <strong>Aircraft Reg Details:</strong> <span t-field="o.aircraft_reg_details"/></td>
-                                <td style="border:none;color:#888;"> <strong>Aircraft Type:</strong> <span t-field="o.aircraft_type"/></td>
-                                <td style="border:none;color:#888;"> <strong>Country of Origin:</strong> <span t-field="o.country_of_origin"/></td>
+                                <td style="border:none;color:#888;">
+                                    <strong>Aircraft Reg Details:</strong>
+                                    <span t-field="o.aircraft_reg_details"/>
+                                </td>
+                                <td style="border:none;color:#888;">
+                                    <strong>Aircraft Type:</strong>
+                                    <span t-field="o.aircraft_type"/>
+                                </td>
+                                <td style="border:none;color:#888;">
+                                    <strong>Country of Origin:</strong>
+                                    <span t-field="o.country_of_origin"/>
+                                </td>
                             </t>
                         </div>
-
 
 
                         <!-- ============ BUSINESS UNIT DISPATCH ============ -->
@@ -101,9 +156,9 @@
                             <t t-call="custom_sale_quotation_report.body_golden"/>
                         </t>
 
-<!--                        <t t-elif="o.company_id.business_unit == 'petrogulf_toll_blending_adnoc'">-->
-<!--                            <t t-call="custom_sale_quotation_report.body_toll_blending_adnoc"/>-->
-<!--                        </t>-->
+                        <!--                        <t t-elif="o.company_id.business_unit == 'petrogulf_toll_blending_adnoc'">-->
+                        <!--                            <t t-call="custom_sale_quotation_report.body_toll_blending_adnoc"/>-->
+                        <!--                        </t>-->
 
                         <t t-else="">
                             <!-- Fallback: generic layout if business_unit is not set / unrecognized -->

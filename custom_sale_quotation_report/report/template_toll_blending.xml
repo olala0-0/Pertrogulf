@@ -78,9 +78,11 @@
         </p>
         <div class="mt-3">
             <strong>Terms &amp; Conditions:</strong>
-            <div t-field="o.port_note"/>
+            <div t-field="o.note"/>
             <strong>Payment terms:</strong>
+
             <span t-field="o.payment_term_id.name"/>
+
         </div>
 
     </template>
