@@ -2,20 +2,20 @@
     <template id="body_petrogulf_marine">
         <style>
             .article {
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
             }
         </style>
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#619FAF;">
-                    <th>Sn</th>
-                    <th class="text-start">Inquired Item</th>
-                    <th class="text-start">Offered Item</th>
-                    <th class="text-start">Unit of Measure</th>
-                    <th class="text-start">No of Units</th>
-                    <th class="text-start">Unit Price</th>
-                    <th name="th_subtotal" class="text-start">
+                    <th style="text-align: left !important;">Sn</th>
+                    <th style="text-align: left !important;">Inquired Item</th>
+                    <th style="text-align: left !important;">Offered Item</th>
+                    <th style="text-align: left !important; white-space: nowrap;">Unit of Measure</th>
+                    <th style="text-align: left !important; white-space: nowrap;">No of Units</th>
+                    <th style="text-align: left !important; white-space: nowrap;">Unit Price</th>
+                    <th name="th_subtotal" style="text-align: left !important;">
                         <span>Amount</span>
                     </th>
                 </tr>
@@ -26,25 +26,25 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.inquired_item"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.product_template_id"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.product_uom_id"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.product_uom_qty"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.price_unit"/>
                             </td>
-                            <td>
+                            <td style="text-align: left !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
@@ -62,9 +62,6 @@
         <t t-set="pg_discounted_value" t-value="pg_total - pg_discount"/>
         <t t-set="pg_expense_total" t-value="sum(expense_lines.mapped('price_subtotal'))"/>
 
-        <!-- These two are always shown (0.00 if not on the order), matching the
-             fixed row layout in the sample - any other OOS-type expense line is
-             still caught and listed separately below them. -->
         <t t-set="pg_delivery_charge_lines"
            t-value="expense_lines.filtered(lambda l: l.product_id.name == 'Delivery Charge - OOS')"/>
         <t t-set="pg_port_charge_lines"
