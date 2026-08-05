@@ -1,0 +1,146 @@
+<odoo>
+    <template id="body_pgm_lube_eu">
+            <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
+                <thead>
+                    <tr style="background-color:#619FAF;">
+                        <th>Sn</th>
+                        <th class="text-start">Inquired Item</th>
+                        <th class="text-start">Offered Item</th>
+                        <th class="text-end text-nowrap">Unit of Measure</th>
+                        <th class="text-end text-nowrap">No of Units</th>
+                        <th class="text-end text-nowrap">Unit Price</th>
+                        <th name="th_subtotal" class="text-end">
+                            <span>Amount</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+                    <t t-set="sn" t-value="0"/>
+                    <t t-foreach="o.order_line" t-as="line">
+                        <t t-if="not line.display_type">
+                            <t t-set="sn" t-value="sn + 1"/>
+                            <tr>
+                                <td>
+                                    <span t-esc="sn"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.inquired_item"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_template_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_uom_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_uom_qty"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.price_unit"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.price_subtotal"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+
+            <t t-set="regular_lines" t-value="o.order_line.filtered(lambda l: not l.display_type and not l.product_id.is_expences)"/>
+            <t t-set="expense_lines" t-value="o.order_line.filtered(lambda l: not l.display_type and l.product_id.is_expences)"/>
+            <t t-set="pg_total" t-value="sum(regular_lines.mapped('price_subtotal'))"/>
+            <t t-set="pg_discount" t-value="sum(regular_lines.mapped('discount_value'))"/>
+            <t t-set="pg_discounted_value" t-value="pg_total - pg_discount"/>
+            <t t-set="pg_expense_total" t-value="sum(expense_lines.mapped('price_subtotal'))"/>
+
+            <!-- These two are always shown (0.00 if not on the order), matching the
+                 fixed row layout in the sample - any other OOS-type expense line is
+                 still caught and listed separately below them. -->
+            <t t-set="pg_delivery_charge_lines" t-value="expense_lines.filtered(lambda l: l.product_id.name == 'Delivery Charge - OOS')"/>
+            <t t-set="pg_port_charge_lines" t-value="expense_lines.filtered(lambda l: l.product_id.name == 'Port and Custom Charges - OOS')"/>
+            <t t-set="pg_other_expense_lines" t-value="expense_lines - pg_delivery_charge_lines - pg_port_charge_lines"/>
+
+            <table class="table table-sm o_main_table mb-0"
+               style="margin-top:0; font-size:15px; border-top:none;">
+                <tr>
+                    <td style="text-align:right;width:75%;border-top:none;">
+                        <strong>Total</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;border-top:none;">
+                        <span t-esc="pg_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;width:75%">
+                        <strong>Discount</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;">
+                        <span t-esc="pg_discount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;width:75%">
+                        <strong>Discounted Value</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;">
+                        <span t-esc="pg_discounted_value" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;width:75%">
+                        <strong>Delivery Charge - OOS</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;">
+                        <span t-esc="sum(pg_delivery_charge_lines.mapped('price_subtotal'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:right;width:75%">
+                        <strong>Port and Custom Charges - OOS</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;">
+                        <span t-esc="sum(pg_port_charge_lines.mapped('price_subtotal'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+                <t t-foreach="pg_other_expense_lines" t-as="line">
+                    <tr>
+                        <td style="text-align:right;width:75%">
+                            <strong><span t-field="line.product_id.name"/></strong>
+                        </td>
+                        <td colspan="3" style="text-align:right;">
+                            <span t-field="line.price_subtotal"/>
+                        </td>
+                    </tr>
+                </t>
+                <tr>
+                    <td style="text-align:right;width:75%">
+                        <strong>Grand Total</strong>
+                    </td>
+                    <td colspan="3" style="text-align:right;">
+                        <span t-esc="pg_discounted_value + pg_expense_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                    </td>
+                </tr>
+            </table>
+            <div class="mt-3">
+                <strong>Terms &amp; Conditions:</strong>
+                <div t-field="o.port_note"/>
+                <strong>Payment terms:</strong>
+                <span t-field="o.payment_term_id.name"/>
+
+                <p style="background-color:#8fd3c7; padding:4px;">
+                    <strong>Once order is confirmed, any subsequent cancellation will incur applicable cancellation
+                        charges.
+                    </strong>
+                </p>
+            </div>
+
+            <t t-if="o.show_bank_details">
+                <div class="mt-3">
+                    <strong>Bank Details:</strong>
+                    <p>-- pull from o.company_id / company bank accounts here --</p>
+                </div>
+            </t>
+
+    </template>
+</odoo>
