@@ -1,11 +1,5 @@
 <odoo>
-    <!--
-        We keep Odoo's standard "Print Quotation" button/action working as-is.
-        Instead of creating a second print option, we point the EXISTING
-        action at our new master template. Users see no change in the UI -
-        same button, same menu entry - only the rendered content differs
-        per company business_unit.
-    -->
+ 
     <record id="action_report_saleorder_business_unit" model="ir.actions.report">
         <field name="name">Quotation / Order (Business Unit)</field>
         <field name="model">sale.order</field>
