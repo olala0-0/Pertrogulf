@@ -3,12 +3,14 @@
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#e6e6e6;">
-                    <th>Sn</th>
-                    <th>Description of Goods</th>
-                    <th>Rate</th>
-                    <th>Per</th>
-                    <th>Discount</th>
-                    <th class="text-right">Amount</th>
+                    <th >Sn</th>
+                    <th class="text-start">Description of Goods</th>
+                    <th class="text-start">Rate</th>
+                    <th class="text-start">Per</th>
+                    <th class="text-start">Discount</th>
+                    <th name="th_subtotal" class="text-end">
+                        <span>Amount</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>

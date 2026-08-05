@@ -1,8 +1,8 @@
 <odoo>
     <template id="body_golden">
-        <table class="table table-sm o_main_table mb-0">
+        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
-                <tr style="background-color:#f4b6bb;">
+                <tr style="background-color:#619FAF;">
                     <th>Sn</th>
                     <th>Offered Items</th>
                     <th>Pack Size</th>
@@ -41,7 +41,7 @@
             </tbody>
         </table>
         <table class="table table-sm o_main_table mb-0"
-               style="margin-top:0; font-size:15px;">
+               style="margin-top:0; font-size:15px; border-top:none;">
             <tr>
                 <td style="text-align:right;width:75%;border-top:none;">
                     <strong>Total</strong>
