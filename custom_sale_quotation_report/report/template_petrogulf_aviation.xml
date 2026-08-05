@@ -3,18 +3,20 @@
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <td>Sn</td>
-                    <td>Inquired Items</td>
-                    <td>Product Description</td>
-                    <td>Offered Product</td>
-                    <td>Category</td>
-                    <td>Lead Time</td>
-                    <td>Pkg Type</td>
-                    <td>Requested Qty</td>
-                    <td>Kgs per Pkg Type</td>
-                    <td>Total Kgs</td>
-                    <td>Rate per Pack</td>
-                    <td class="text-right">Amount</td>
+                    <th>Sn</th>
+                    <th class="text-start">Inquired Items</th>
+                    <th class="text-start">Product Description</th>
+                    <th class="text-start">Offered Product</th>
+                    <th class="text-start">Category</th>
+                    <th class="text-start">Lead Time</th>
+                    <th class="text-start">Pkg Type</th>
+                    <th class="text-start">Requested Qty</th>
+                    <th class="text-start">Kgs per Pkg Type</th>
+                    <th class="text-start">Total Kgs</th>
+                    <th class="text-start">Rate per Pack</th>
+                    <th name="th_subtotal" class="text-end">
+                        <span>Amount</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>

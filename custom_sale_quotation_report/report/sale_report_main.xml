@@ -43,7 +43,7 @@
                                 <strong t-else="">Order Date</strong>
                                 <div t-field="o.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                             </div>
-                            <div t-if="o.validity_date and o.state in ['draft', 'sent']"
+                            <div
                                  class="col"
                                  name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
