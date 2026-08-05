@@ -12,10 +12,10 @@
                     <th>Sn</th>
                     <th class="text-start">Inquired Item</th>
                     <th class="text-start">Offered Item</th>
-                    <th class="text-end text-nowrap">Unit of Measure</th>
-                    <th class="text-end text-nowrap">No of Units</th>
-                    <th class="text-end text-nowrap">Unit Price</th>
-                    <th name="th_subtotal" class="text-end">
+                    <th class="text-end start-nowrap">Unit of Measure</th>
+                    <th class="text-end start-nowrap">No of Units</th>
+                    <th class="text-end start-nowrap">Unit Price</th>
+                    <th name="th_subtotal" class="text-start">
                         <span>Amount</span>
                     </th>
 
