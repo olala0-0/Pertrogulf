@@ -12,7 +12,7 @@
                     <th>Sn</th>
                     <th class="text-start">Inquired Item</th>
                     <th class="text-start">Offered Item</th>
-                    <th class="text-start">Unit of Measure</th>
+                    <th class="text-start">Pack Size</th>
                     <th class="text-start">No of Units</th>
                     <th class="text-start">Unit Price</th>
                     <th name="th_subtotal" class="text-end">
