@@ -106,9 +106,18 @@
                             <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
                         </t>
 
+<!--                        <t t-elif="o.company_id.business_unit == 'pg_greece'">-->
+<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
+<!--                        </t>-->
+
+<!--                        <t t-elif="o.company_id.business_unit == 'pg_sing'">-->
+<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
+<!--                        </t>-->
+
                         <t t-elif="o.company_id.business_unit == 'pg_golden'">
                             <t t-call="custom_sale_quotation_report.body_golden"/>
                         </t>
+
 
                         <t t-else="">
                             <!-- Fallback: generic layout if business_unit is not set / unrecognized -->
