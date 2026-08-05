@@ -2,7 +2,7 @@
     <template id="body_petrogulf_aviation">
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
-                <tr style="background-color:#f4b6bb;">
+                <tr style="background-color:#f4b6bb;font-weight:bold">
                     <th>Sn</th>
                     <th class="text-start">Inquired Items</th>
                     <th class="text-start">Product Description</th>
