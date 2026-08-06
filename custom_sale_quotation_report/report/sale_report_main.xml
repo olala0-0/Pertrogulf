@@ -24,12 +24,11 @@
                                 <span style="font-size:20px;" t-field="o.partner_id.name"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Address:</span>
-                                <span style="font-size:20px !important;">Customer Address:</span>
-                                <span style="font-size:20px !important;" t-field="doc.partner_id.street"></span>
-                                <span style="font-size:20px !important;" t-field="doc.partner_id.street2"></span>
-                                <span style="font-size:20px !important;" t-field="doc.partner_id.city"></span>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.street"></span>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.street2"></span>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
                                 <span style="font-size:20px !important;"
-                                      t-field="doc.partner_id.country_id.name"></span>
+                                      t-field="o.partner_id.country_id.name"></span>
                                 <br/>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')">
                                     <br/>
