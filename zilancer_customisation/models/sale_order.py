@@ -189,8 +189,7 @@ class SaleOrder(models.Model):
     business_unit = fields.Selection(
         BUSINESS_UNIT_SELECTION,
         string="Business Unit",
-        default=lambda self: self.env.company.business_unit
-    )
+        default=lambda self: getattr(self.env.company, 'business_unit', False)
     # default=lambda self: self.env.company.business_unit
     master_brand = fields.Char(string="Master Brand")
     brand_type = fields.Char(string="Brand Type")
