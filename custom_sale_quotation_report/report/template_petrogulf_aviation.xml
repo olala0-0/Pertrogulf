@@ -2,19 +2,19 @@
     <template id="body_petrogulf_aviation">
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
-                <tr style="background-color:#f4b6bb;font-weight:bold">
-                    <th>Sn</th>
-                    <th class="text-start">Inquired Items</th>
-                    <th class="text-start">Product Description</th>
-                    <th class="text-start">Offered Product</th>
-                    <th class="text-start">Category</th>
-                    <th class="text-start">Lead Time</th>
-                    <th class="text-start">Pkg Type</th>
-                    <th class="text-start">Requested Qty</th>
-                    <th class="text-start">Kgs per Pkg Type</th>
-                    <th class="text-start">Total Kgs</th>
-                    <th class="text-start">Rate per Pack</th>
-                    <th name="th_subtotal" class="text-end">
+                <tr style="background-color:#f4b6bb;">
+                    <th style="font-weight:bold">Sn</th>
+                    <th class="text-start" style="font-weight:bold">Inquired Items</th>
+                    <th class="text-start" style="font-weight:bold">Product Description</th>
+                    <th class="text-start" style="font-weight:bold">Offered Product</th>
+                    <th class="text-start" style="font-weight:bold">Category</th>
+                    <th class="text-start" style="font-weight:bold">Lead Time</th>
+                    <th class="text-start" style="font-weight:bold">Pkg Type</th>
+                    <th class="text-start" style="font-weight:bold">Requested Qty</th>
+                    <th class="text-start" style="font-weight:bold">Kgs per Pkg Type</th>
+                    <th class="text-start" style="font-weight:bold">Total Kgs</th>
+                    <th class="text-start" style="font-weight:bold">Rate per Pack</th>
+                    <th name="th_subtotal" class="text-end" style="font-weight:bold">
                         <span>Amount</span>
                     </th>
                 </tr>

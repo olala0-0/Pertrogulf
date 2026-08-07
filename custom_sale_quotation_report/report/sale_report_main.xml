@@ -18,14 +18,18 @@
                                 <span style="font-size:20px;" t-field="o.name"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Kind Attn:</span>
-                                <span style="font-size:20px;" t-field="o.partner_id.name"/>
+                                <span style="font-size:20px;" t-field="o.inquiry_rec_from"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Name:</span>
                                 <span style="font-size:20px;" t-field="o.partner_id.name"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Address:</span>
-                                <span style="font-size:20px;" t-field="o.partner_id"
-                                      t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': True}"/>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.street"></span>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.street2"></span>
+                                <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
+                                <span style="font-size:20px !important;"
+                                      t-field="o.partner_id.country_id.name"></span>
+                                <br/>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')">
                                     <br/>
                                     <span style="font-size:20px !important; ">Contact No:</span>
@@ -44,8 +48,8 @@
                                 <div t-field="o.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
                             </div>
                             <div
-                                 class="col"
-                                 name="expiration_date">
+                                    class="col"
+                                    name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
                                 <div t-field="o.validity_date">2023-12-31</div>
                             </div>
@@ -106,18 +110,9 @@
                             <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>
                         </t>
 
-<!--                        <t t-elif="o.company_id.business_unit == 'pg_greece'">-->
-<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
-<!--                        </t>-->
-
-<!--                        <t t-elif="o.company_id.business_unit == 'pg_sing'">-->
-<!--                            <t t-call="custom_sale_quotation_report.body_petrogulf_marine"/>-->
-<!--                        </t>-->
-
                         <t t-elif="o.company_id.business_unit == 'pg_golden'">
                             <t t-call="custom_sale_quotation_report.body_golden"/>
                         </t>
-
 
                         <t t-else="">
                             <!-- Fallback: generic layout if business_unit is not set / unrecognized -->
