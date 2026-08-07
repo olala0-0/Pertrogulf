@@ -1,0 +1,191 @@
+<odoo>
+    <template id="report_despatch_note_ajman">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="font-size:13px;">
+
+                    <!-- ============ HEADER ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                        <tr>
+                            <td style="width:50%; vertical-align:middle; background-color:#d9d9d9; padding:15px;">
+                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                     style="max-height:70px;"/>
+                            </td>
+                            <td style="width:50%; vertical-align:middle; text-align:right; padding:15px;">
+                                <span style="font-size:24px; font-weight:bold;">DESPATCH NOTE</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:50%; vertical-align:top; font-size:12px;">
+                                <div>
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                                <div>
+                                    <span t-field="o.company_id.street"/>
+                                </div>
+                                <div t-if="o.company_id.phone">
+                                    <span t-field="o.company_id.phone"/>
+                                </div>
+                                <div t-if="o.company_id.email">
+                                    <span t-field="o.company_id.email"/>
+                                </div>
+                                <div t-if="o.company_id.website">
+                                    <span t-field="o.company_id.website"/>
+                                </div>
+                            </td>
+                            <td style="width:50%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
+                                            <strong>Date</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-esc="o.date_done or o.scheduled_date"
+                                                  t-options="{'widget': 'date'}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>L.P.O No.</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.customer_lpo_no"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Invoice No.</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.invoice_no"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ PG NO / CONTACT ============ -->
+                    <table style="width:60%; border-collapse:collapse; margin-bottom:15px; font-size:12px;">
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:35%;">
+                                <strong>PG No.</strong>
+                            </td>
+                            <td style="border:1px solid #ccc; padding:4px;">
+                                <span t-field="o.document_number"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                <strong>Contact Person</strong>
+                            </td>
+                            <td style="border:1px solid #ccc; padding:4px;"> </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                <strong>Mr. / M/s.</strong>
+                            </td>
+                            <td style="border:1px solid #ccc; padding:4px;">
+                                <span t-field="o.partner_id.name"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ LINE ITEMS ============ -->
+                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background-color:#d9d9d9;">
+                                <th style="border:1px solid #ccc; padding:4px;">
+                                    Sn<br/><span style="font-weight:normal;">الرقم</span>
+                                </th>
+                                <th style="border:1px solid #ccc; padding:4px;">
+                                    Description<br/><span style="font-weight:normal;">التفاصيل</span>
+                                </th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Package</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Pack</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    Qty<br/><span style="font-weight:normal;">عدد</span>
+                                </th>
+                                <th style="border:1px solid #ccc; padding:4px;">
+                                    Remarks<br/><span style="font-weight:normal;">ملاحظات</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sn" t-value="0"/>
+                            <t t-foreach="o.move_ids.filtered(lambda m: m.state != 'cancel')" t-as="move">
+                                <t t-set="sn" t-value="sn + 1"/>
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-esc="sn"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-field="move.product_id.name"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.package"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.pack"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.quantity"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-field="move.remarks"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <div style="text-align:right; margin-top:10px;">
+                        <strong>For <span t-field="o.company_id.name"/></strong>
+                    </div>
+
+                    <!-- ============ VEHICLE / DRIVER DETAILS ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-top:40px; font-size:12px;">
+                        <tr>
+                            <td style="width:50%; padding:6px 0;">Container No. : <span t-field="o.container_no"/></td>
+                            <td style="width:50%; padding:6px 0;">Seal No. : <span t-field="o.seal_no"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px 0;">Vehicle No. : <span t-field="o.vehicle_no"/></td>
+                            <td style="padding:6px 0;">Driver Name : <span t-field="o.driver_name"/></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px 0;">Driver ID No. : <span t-field="o.driver_id"/></td>
+                            <td style="padding:6px 0;">Signature : </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px 0;">
+                                Prepared by : <span t-field="o.prepared_by"/>
+                                &#160;&#160;&#160; Loaded by : <span t-esc="o.loaded_by_id.name or o.loaded_by"/>
+                            </td>
+                            <td style="padding:6px 0;">Approved by : <span t-field="o.approved_by"/></td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-top:15px;">
+                        <strong>Received the above items in good condition</strong>
+                    </div>
+
+                    <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:12px;">
+                        <tr>
+                            <td style="width:50%; padding:6px 0;">
+                                Receiver's Name : <span t-field="o.receiver_name"/>
+                            </td>
+                            <td style="width:50%; padding:6px 0;">
+                                Receiver's Sign : <span t-field="o.receiver_sign"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
