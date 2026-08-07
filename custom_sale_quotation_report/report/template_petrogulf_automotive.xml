@@ -39,7 +39,7 @@
                                 <span t-field="line.product_uom_qty"/>
                             </td>
                             <td>
-                                <span t-field="line.price_unit"/>
+                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                             <td t-if="show_net_weight">
                                 <span t-field="line.net_weight"/>

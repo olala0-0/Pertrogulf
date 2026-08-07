@@ -42,7 +42,7 @@
                                     </small>
                                 </t>
                             </td>
-                            <td><span t-field="line.price_unit"/></td>
+                            <td><span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
                             <td><span t-field="line.product_uom_id.name"/></td>
                             <td><span t-field="line.discount"/>%</td>
                             <td class="text-right"><span t-field="line.price_subtotal"/></td>
