@@ -199,6 +199,7 @@ class SaleOrder(models.Model):
     brand_master_id = fields.Many2one("brand.master", string="Master Brand")
     port_master_id = fields.Many2one("port.master", string="Port Name")
     port_note = fields.Html("Notes")
+    incoterm = fields.Many2one("account.incoterms", string="Delivery Terms")
     vessel_agent_name = fields.Char(string="Vessel Agent Name")
     contact_details = fields.Char(string="Contact Details")
     delivery_special_instructions = fields.Html(

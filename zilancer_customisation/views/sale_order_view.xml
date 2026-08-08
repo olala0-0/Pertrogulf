@@ -66,14 +66,15 @@
                 </xpath>
                 <xpath expr="//button[@name='action_confirm'][not(@id)]" position="replace">
                 </xpath>
-                <!-- <xpath expr="//button[@id='create_invoice']" position="replace">
-                </xpath> -->
-                <!-- <xpath expr="//button[@id='create_invoice_percentage']" position="replace">
-                </xpath> -->
+                <xpath expr="//button[@id='create_invoice']" position="replace">
+                </xpath>
+                <xpath expr="//button[@id='create_invoice_percentage']" position="replace">
+                </xpath>
                 <xpath expr="//field[@name='state']" position="replace">
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,sale"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="incoterm" string="Delivery Terms" options="{'no_open': True, 'no_create': True}"/>
                     <field name="customer_user_id" invisible="True"/>
                     <field name="business_unit" readonly="True" force_save="True"/>
                     <field name="country_id" string="Country of Supply"/>

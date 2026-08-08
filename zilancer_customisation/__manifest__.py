@@ -18,6 +18,7 @@
         'data/ir_sequence.xml',
         'views/stock_picking_views.xml',
         'views/sale_order_view.xml',
+        'views/purchase_order_views.xml',
         'views/res_users_views.xml',
         'views/crm_lead_views.xml',
         'views/product_views.xml',
