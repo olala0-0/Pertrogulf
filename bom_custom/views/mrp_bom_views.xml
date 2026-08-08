@@ -77,11 +77,11 @@
                 <field name="previous_product" invisible="not context.get('production_blend_sheet')"/>
                 <field name="flushing_required" invisible="not context.get('production_blend_sheet')"/>
                 <field name="flushing_qty" invisible="not context.get('production_blend_sheet')"/>
-                <field name="total_qty_liters" readonly="1" invisible="not context.get('production_blend_sheet')"/>
+                <field name="total_qty_liters" readonly="True" invisible="not context.get('production_blend_sheet')"/>
             </xpath>
 
             <xpath expr="//field[@name='code']" position="after">
-                <field name="bom_version" readonly="1" force_save="1"
+                <field name="bom_version" readonly="True" force_save="True"
                        help="Auto-incremented when this BOM is duplicated."/>
                 <field name="lot_number" invisible="not context.get('production_blend_sheet')"
                        placeholder="Enter Lot / Serial No manually..."/>
@@ -134,7 +134,7 @@
                        column_invisible="not context.get('production_blend_sheet')"/>
             </xpath>
             <xpath expr="//page[@name='components']//field[@name='bom_line_ids']/list/field[@name='product_qty']" position="after">
-                <field name="qty_ltr" readonly="1" string="Qty in Ltr"
+                <field name="qty_ltr" readonly="True" string="Qty in Ltr"
                        column_invisible="not context.get('production_blend_sheet')"/>
                 <field name="actual_qty_ltr" string="Actual Qty Ltr"
                        column_invisible="not context.get('production_blend_sheet')"/>
@@ -147,8 +147,8 @@
             <xpath expr="//page[@name='components']//field[@name='bom_line_ids']" position="after">
                 <group invisible="not context.get('production_blend_sheet')">
                     <group string="Component Totals">
-                        <field name="total_component_qty_kg" readonly="1"/>
-                        <field name="total_component_qty_ltr" readonly="1"/>
+                        <field name="total_component_qty_kg" readonly="True"/>
+                        <field name="total_component_qty_ltr" readonly="True"/>
                     </group>
                 </group>
             </xpath>

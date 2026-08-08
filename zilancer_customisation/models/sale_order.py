@@ -722,9 +722,23 @@ class SaleOrder(models.Model):
                     }
                 )
 
+    def _check_company(self, fnames=None):
+        if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
+            return
+        if any(getattr(rec, "auto_generated", False) for rec in self):
+            return
+        super()._check_company(fnames=fnames)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    def _check_company(self, fnames=None):
+        if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
+            return
+        if any(getattr(rec.order_id, "auto_generated", False) for rec in self if rec.order_id):
+            return
+        super()._check_company(fnames=fnames)
 
     weight_per_unit = fields.Float(
         related="product_id.weight", string="Weight per Unit (kg)", store=True

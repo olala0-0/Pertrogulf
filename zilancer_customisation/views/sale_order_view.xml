@@ -81,11 +81,11 @@
                     <field name="total_quantity"/>
                     <field name="total_qty_units"/>
                     <field name="client_po_order_no"/>
-                    <field name="vat_selection" invisible="0"/>
-                    <field name="create_uid" invisible="0"/>
+                    <field name="vat_selection" invisible="False"/>
+                    <field name="create_uid" invisible="False"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="attributes">
-                    <attribute name="required">1</attribute>
+                    <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//page[@name='order_lines']" position="before">
                     <page string="Additional Details - Marine" invisible="company_id != 3">
@@ -108,7 +108,7 @@
                     </page>
                 </xpath>
                 <notebook position="inside">
-                    <page string="Container Allocation" invisible="1">
+                    <page string="Container Allocation" invisible="True">
                         <field name="container_allocation_ids">
                             <list editable="bottom">
                                 <field name="container_id"/>
@@ -117,7 +117,7 @@
                             </list>
                         </field>
                     </page>
-                    <page string="Additional Details" invisible="1">
+                    <page string="Additional Details" invisible="True">
                         <group>
                             <group>
                                 <field name="sales_order_received"/>
@@ -136,7 +136,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Adnoc" invisible="1">
+                    <page string="Adnoc" invisible="True">
                         <field name="adnoc_ids" >
                             <list editable="bottom">
                                 <field name="sequence"/>
@@ -150,7 +150,7 @@
                             </list>
                         </field>
                     </page>
-                    <page string="Automotive Industrial" invisible="1">
+                    <page string="Automotive Industrial" invisible="True">
                         <field name="automotive_ids">
                             <list editable="bottom">
                                 <field name="sequence"/>
@@ -183,7 +183,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="delivery_special_instructions" nolabel="1"
+                            <field name="delivery_special_instructions" nolabel="True"
                                    placeholder="Special instructions for the delivery..."/>
                         </group>
                     </page>
@@ -486,8 +486,8 @@
                             <field name="payment_term_id" placeholder="Immediate" options="{'no_open': True, 'no_create': True}"/>
                             <field name="business_unit" readonly="True" force_save="True"/>
                             <field name="client_po_order_no"/>
-                            <field name="vat_selection" invisible="0"/>
-                            <field name="create_uid" invisible="0"/>
+                            <field name="vat_selection" invisible="False"/>
+                            <field name="create_uid" invisible="False"/>
                         </group>
                     </group>
                     <notebook>
@@ -502,7 +502,7 @@
                                     <field name="product_id" string="Offered Item" width="320px"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="product_uom_qty" string="Qty in Units" width="90px"/>
-                                    <field name="pack_size_id" string="Pack Size" column_invisible="1"
+                                    <field name="pack_size_id" string="Pack Size" column_invisible="True"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="product_uom" string="UoM" width="70px"/>
                                     <field name="unit_qty" string="Qty (Base UoM)" width="90px"/>
@@ -669,7 +669,7 @@
                                         string="Offered Item"
                                         readonly="not product_updatable"
                                         required="not display_type and not is_downpayment"
-                                        force_save="1"
+                                        force_save="True"
                                         context="{
                                             'default_lst_price': price_unit,
                                             'default_uom_id': product_uom_id,
@@ -741,7 +741,7 @@
                                             'company_id': parent.company_id
                                         }"
                                         readonly="is_downpayment" string="Qty in Units" width="90px"/>
-                                    <field name="pack_size_id" string="Pack Size" column_invisible="1"
+                                    <field name="pack_size_id" string="Pack Size" column_invisible="True"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="product_uom_readonly" column_invisible="True"/>
                                     <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
@@ -958,7 +958,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Team Updates" invisible="1">
+                        <page string="Team Updates" invisible="True">
                             <field name="automotive_ids">
                                 <list editable="bottom">
                                     <field name="sequence"/>
@@ -972,7 +972,7 @@
                                 </list>
                             </field>
                         </page>
-                        <page string="Internal" name="internal" invisible="1">
+                        <page string="Internal" name="internal" invisible="True">
                             <group>
                                 <group>
                                     <field name="vessel_agent_name"/>
@@ -980,7 +980,7 @@
                                 </group>
                             </group>
                             <group>
-                                <field name="delivery_special_instructions" nolabel="1"
+                                <field name="delivery_special_instructions" nolabel="True"
                                        placeholder="Special instructions for the delivery..."/>
                             </group>
                         </page>
@@ -1016,6 +1016,10 @@
 
         <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
             <field name="mobile_view_mode">list</field>
+        </record>
+
+        <record id="sale.action_orders_to_invoice" model="ir.actions.act_window">
+            <field name="domain">[('invoice_status', '=', 'to invoice'), ('delivery_status', '=', 'full')]</field>
         </record>
 
         <record id="action_quotations_with_toll" model="ir.actions.act_window">

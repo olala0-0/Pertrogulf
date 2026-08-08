@@ -17,7 +17,7 @@
                 </group>
                 <br></br>
                 <div>
-                    <field name="new_order_line_ids" nolabel="1">
+                    <field name="new_order_line_ids" nolabel="True">
                         <list editable="bottom" create="false">
                             <field name="product_id" />
                             <field name="name" />

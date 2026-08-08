@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
-                    <page string="Dispatch Instructions">
+                    <page string="Dispatch Instructions" invisible="1">
                         <group>
                             <group>
                                 <field name="vessel_no" required="False"/>
@@ -44,7 +44,8 @@
                             </group>
                         </group>
                     </page> -->
-                    <page string="Driver Details" invisible="company_id != 9">
+                    <page string="Driver Details" invisible="1">
+                        <!-- invisible="company_id != 9" -->
                         <group string="Driver Details">
                             <group>
                                 <field name="driver_name"/>
@@ -55,7 +56,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Document Details" invisible="company_id != 9">
+                    <page string="Document Details" invisible="1">
                         <group string="Driver Details">
                             <group>
                                 <field name="prepared_by"/>

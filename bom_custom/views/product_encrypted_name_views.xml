@@ -5,8 +5,8 @@
         <field name="model">product.product</field>
         <field name="arch" type="xml">
             <list string="Product Encrypted Names" editable="bottom" create="0" delete="0">
-                <field name="name" string="Product Name" readonly="1"/>
-                <field name="default_code" string="Product Code" readonly="1"/>
+                <field name="name" string="Product Name" readonly="True"/>
+                <field name="default_code" string="Product Code" readonly="True"/>
                 <field name="encrypted_name"/>
             </list>
         </field>

@@ -19,9 +19,9 @@ print("Using Python executable:", python_exe)
 odoo_path = "/home/parth.dave/v19/odoo/odoo-bin"
 cmd = [
     python_exe, odoo_path,
-    "-d", "test_migration_db",
-    "-i", "helpdesk_mgmt,print_minutes_of_meeting,sale_order_enquiry,zilancer_customisation",
-    "--addons-path=/home/parth.dave/v19/odoo/addons,/home/parth.dave/v19/custom_modules/test_project",
+    "-d", "test_migration_db_v19",
+    "-i", "base_multi_company,partner_multi_company,product_multi_company,company_structure,division_company_structure,helpdesk_mgmt,print_minutes_of_meeting,sale_order_enquiry,zilancer_customisation,bom_custom,mrp_custom,mrp_approval_flow,stock_no_negative,custom_list_view,custom_sale_quotation_report,employee_purchase_requisition,hide_menu_user,mst_advanced_login_history,zilancer_reports,web_chatter_position_cr,bi_convert_purchase_from_sales",
+    "--addons-path=/home/parth.dave/v19/odoo/addons,/home/parth.dave/v19/odoo_enterprise,/home/parth.dave/v19/custom_modules/Pertrogulf",
     "--stop-after-init",
     "--log-level=warn"
 ]
