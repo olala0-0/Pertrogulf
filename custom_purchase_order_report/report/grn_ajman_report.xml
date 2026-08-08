@@ -1,0 +1,184 @@
+<odoo>
+    <template id="report_grn_ajman">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="font-size:13px;">
+
+                    <!-- ============ HEADER ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                        <tr>
+                            <td style="width:50%; vertical-align:middle; background-color:#d9d9d9; padding:15px;">
+                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                     style="max-height:70px;"/>
+                            </td>
+                            <td style="width:50%; vertical-align:middle; text-align:right; padding:15px;">
+                                <span style="font-size:24px; font-weight:bold;">GOODS RECEIPT NOTE</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:50%; vertical-align:top; font-size:12px;">
+                                <div>
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+                                <div>
+                                    <span t-field="o.company_id.street"/>
+                                </div>
+                                <div t-if="o.company_id.phone">
+                                    <span t-field="o.company_id.phone"/>
+                                </div>
+                                <div t-if="o.company_id.email">
+                                    <span t-field="o.company_id.email"/>
+                                </div>
+                                <div t-if="o.company_id.website">
+                                    <span t-field="o.company_id.website"/>
+                                </div>
+                            </td>
+                            <td style="width:50%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
+                                            <strong>GR No.</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Date</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-esc="o.date_done or o.scheduled_date"
+                                                  t-options="{'widget': 'date'}"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ SUPPLIER / DELIVERY DETAILS ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:48%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:45%;">Supplier Name</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.partner_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Despatch No.</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Mode of Transport</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Vessel Name</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.vessel_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Port of Loading</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:4%;"/>
+                            <td style="width:48%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:45%;">Address</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.partner_id.street"/>
+                                            <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Customers Name</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Despatch No.</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Sales Order</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.sale_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Port of Delivery</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ LINE ITEMS ============ -->
+                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background-color:#d9d9d9;">
+                                <th style="border:1px solid #ccc; padding:4px;">Sn</th>
+                                <th style="border:1px solid #ccc; padding:4px;">Description of Goods</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Qty</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Rate</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Per</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Disc. %</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sn" t-value="0"/>
+                            <t t-foreach="o.move_ids.filtered(lambda m: m.state != 'cancel')" t-as="move">
+                                <t t-set="sn" t-value="sn + 1"/>
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-esc="sn"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-field="move.product_id.name"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.quantity"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.purchase_line_id.price_unit"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.product_uom.name"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.purchase_line_id.discount"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.purchase_line_id.price_subtotal"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr style="background-color:#d9d9d9;">
+                                <td colspan="6" style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="sum(o.move_ids.filtered(lambda m: m.state != 'cancel').mapped('purchase_line_id.price_subtotal'))"
+                                          t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="text-align:right; margin-top:15px;">
+                        <strong>For <span t-field="o.company_id.name"/></strong>
+                    </div>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

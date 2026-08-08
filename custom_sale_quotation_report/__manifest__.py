@@ -15,7 +15,7 @@
         - Petrogulf Toll Blending (standard)
         - Petrogulf Toll Blending (ADNOC)
     """,
-    'depends': ['sale', 'sale_management'],
+    'depends': ['sale', 'sale_management', 'stock'],
     'data': [
         'report/report_actions.xml',
         'report/sale_report_main.xml',
@@ -24,8 +24,8 @@
         'report/template_petrogulf_aviation.xml',
         'report/template_toll_blending.xml',
         'report/template_petrogulf_marine.xml',
-        'report/template_pgm_lube_eu.xml',
         'report/template_golden.xml',
+        'report/template_delivery_note_power_x.xml',
         'report/header_labels.xml',
     ],
     'installable': True,

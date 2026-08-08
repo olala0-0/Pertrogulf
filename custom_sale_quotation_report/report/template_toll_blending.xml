@@ -2,16 +2,15 @@
 
     <!-- ============ STANDARD TOLL BLENDING ============ -->
     <template id="body_toll_blending">
-        <table class="table table-sm o_main_table mb-0" style="font-size:9px;">
-
+        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <th>Sn</th>
-                    <th>Product Description</th>
-                    <th>Selling Unit</th>
-                    <th>No of Units</th>
-                    <th>Unit Price (USD)</th>
-                    <th class="text-right">Amount (USD)</th>
+                    <th style="font-weight:bold">Sn</th>
+                    <th style="font-weight:bold">Product Description</th>
+                    <th style="font-weight:bold">Selling Unit</th>
+                    <th style="font-weight:bold">No of Units</th>
+                    <th style="font-weight:bold">Unit Price (USD)</th>
+                    <th class="text-right" style="font-weight:bold">Amount (USD)</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +32,7 @@
                                 <span t-field="line.product_uom_qty"/>
                             </td>
                             <td>
-                                <span t-field="line.price_unit"/>
+                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                             <td class="text-right">
                                 <span t-field="line.price_subtotal"/>
@@ -43,10 +42,10 @@
                 </t>
             </tbody>
         </table>
-        <table class="table table-sm o_main_table mb-0"
-               style="margin-top:0; font-size:9px;">
+        <table class="table table-sm o_main_table mb-0" t-if="o.show_total"
+               style="margin-top:0; font-size:15px; border-top:none;">
             <tr>
-                <td style="text-align:right;width:75%">
+                <td style="text-align:right;width:75%;border-top:none;">
                     <strong>Sub Total</strong>
                 </td>
                 <td colspan="3" style="text-align:right;">
@@ -80,7 +79,9 @@
             <strong>Terms &amp; Conditions:</strong>
             <div t-field="o.note"/>
             <strong>Payment terms:</strong>
+
             <span t-field="o.payment_term_id.name"/>
+
         </div>
 
     </template>
@@ -91,11 +92,11 @@
         <table class="table table-sm o_main_table">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <th>Sn</th>
-                    <th>Product Type</th>
-                    <th>Product Description</th>
-                    <th>Selling Unit</th>
-                    <th class="text-right">Unit Price</th>
+                    <th style="font-weight:bold">Sn</th>
+                    <th style="font-weight:bold">Product Type</th>
+                    <th style="font-weight:bold">Product Description</th>
+                    <th style="font-weight:bold">Selling Unit</th>
+                    <th class="text-right" style="font-weight:bold">Unit Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,7 +118,7 @@
                                 <span t-field="line.selling_unit"/>
                             </td>
                             <td class="text-right">
-                                <span t-field="line.price_unit"/>
+                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
                     </t>
@@ -133,7 +134,7 @@
         <div class="mt-3">
             <strong>Terms &amp; Conditions:</strong>
             <ul>
-                <div t-field="o.note"/>
+                <div t-field="o.port_note"/>
             </ul>
             <strong>Payment terms:</strong>
             <span t-field="o.payment_term_id.name"/>
