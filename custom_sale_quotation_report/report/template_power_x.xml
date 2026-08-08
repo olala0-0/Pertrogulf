@@ -78,12 +78,12 @@
                     <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted)"/>
                 </td>
             </tr>
-            <tr t-if="o.vat_selection and o.vat_selection != 'vat_not_applicable'">
+            <tr >
                 <td style="text-align: right; font-weight: bold; width: 68.4%;">
-                    <span t-if="o.vat_selection == 'vat_5'">VAT 5%</span>
-                    <span t-if="o.vat_selection == 'vat_0'">VAT 0%</span>
+                    <span >VAT 5%</span>
+<!--                    <span t-if="o.vat_selection == 'vat_0'">VAT 0%</span>-->
                 </td>
-                <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                <td style="text-align: right; font-weight: bold;">
                     <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(o.amount_tax)"/>
                 </td>
             </tr>
@@ -94,7 +94,7 @@
                     <td style="text-align: right; font-weight: bold;width: 68.4%;">
                         <t t-esc="line.product_id.name"/>
                     </td>
-                    <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                    <td style="text-align: right; font-weight: bold;">
                         <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(line.price_subtotal)"/>
                     </td>
                 </tr>
@@ -102,7 +102,7 @@
 
             <tr>
                 <td style="text-align: right; font-weight: bold;width: 68.4%;">Grand Total</td>
-                <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 0; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                <td style="text-align: right; font-weight: bold;">
                     <strong t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted + o.amount_tax + expense_total)"/>
                 </td>
             </tr>
