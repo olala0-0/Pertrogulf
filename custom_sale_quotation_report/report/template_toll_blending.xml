@@ -40,35 +40,33 @@
                         </tr>
                     </t>
                 </t>
+                <t t-if="o.show_total">
+                    <tr>
+                        <td colspan="5" style="text-align:right;">
+                            <strong>Sub Total</strong>
+                        </td>
+                        <td style="text-align:right;">
+                            <span t-field="o.amount_untaxed"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align:right;">
+                            <strong>Discount (Credit Note)</strong>
+                        </td>
+                        <td style="text-align:right;">
+                            <span t-field="o.amount_tax"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="text-align:right;">
+                            <strong>Total Amount</strong>
+                        </td>
+                        <td style="text-align:right;">
+                            <span t-field="o.amount_total"/>
+                        </td>
+                    </tr>
+                </t>
             </tbody>
-        </table>
-        <table class="table table-sm o_main_table mb-0" t-if="o.show_total"
-               style="margin-top:0; font-size:15px; border-top:none;">
-            <tr>
-                <td style="text-align:right;width:75%;border-top:none;">
-                    <strong>Sub Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
-                    <span t-field="o.amount_untaxed"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Discount (Credit Note)</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
-                    <span t-field="o.amount_tax"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Total Amount</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
-                    <span t-field="o.amount_total"/>
-                </td>
-            </tr>
-
         </table>
 
         <p>
