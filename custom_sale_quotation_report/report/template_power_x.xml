@@ -17,10 +17,10 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.name"/>
                                 <!-- Optional packing/weight info, only for Power X -->
                                 <t t-if="line.packing_type">
@@ -51,14 +51,14 @@
                                     </small>
                                 </t>
                             </td>
-                            <td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.price_unit"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
-                            <td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.product_uom_id.name"/>
                             </td>
-                            <td><span t-field="line.discount"/>%
+                            <td style="text-align:center; padding:8px; line-height:1.8;"><span t-field="line.discount"/>%
                             </td>
                             <td class="text-right">
                                 <span t-field="line.price_subtotal"/>
