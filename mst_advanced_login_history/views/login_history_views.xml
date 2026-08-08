@@ -70,11 +70,11 @@
                     </group>
 
                     <group string="Full Location">
-                        <field name="full_location" nolabel="1"/>
+                        <field name="full_location" nolabel="True"/>
                     </group>
 
                     <group string="User Agent">
-                        <field name="user_agent" nolabel="1"/>
+                        <field name="user_agent" nolabel="True"/>
                     </group>
                 </sheet>
             </form>
@@ -225,11 +225,11 @@
                     </group>
 
                     <group string="Full Location">
-                        <field name="full_location" nolabel="1"/>
+                        <field name="full_location" nolabel="True"/>
                     </group>
 
                     <group string="User Agent">
-                        <field name="user_agent" nolabel="1"/>
+                        <field name="user_agent" nolabel="True"/>
                     </group>
                 </sheet>
             </form>

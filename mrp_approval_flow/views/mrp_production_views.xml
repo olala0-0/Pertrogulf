@@ -28,13 +28,13 @@
 
             <!-- One statusbar only (hide standard MO state statusbar) -->
             <xpath expr="//header/field[@name='state']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//header/field[@name='state']" position="after">
                 <field name="mo_display_stage"
                        widget="statusbar"
                        statusbar_visible="pending_qc,pending_store,approved,confirmed,done"/>
-                <field name="mo_approval_state" invisible="1"/>
+                <field name="mo_approval_state" invisible="True"/>
             </xpath>
 
             <!-- Approval details -->
@@ -42,12 +42,12 @@
                 <page string="MO Approvals" name="mo_approvals" invisible="state == 'cancel'">
                     <group>
                         <group string="QC Approval">
-                            <field name="qc_approved_by" readonly="1"/>
-                            <field name="qc_approved_date" readonly="1"/>
+                            <field name="qc_approved_by" readonly="True"/>
+                            <field name="qc_approved_date" readonly="True"/>
                         </group>
                         <group string="Store In-ward Approval">
-                            <field name="store_approved_by" readonly="1"/>
-                            <field name="store_approved_date" readonly="1"/>
+                            <field name="store_approved_by" readonly="True"/>
+                            <field name="store_approved_date" readonly="True"/>
                         </group>
                     </group>
                     <div class="text-muted" colspan="2">
@@ -66,7 +66,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="attributes">
-                <attribute name="column_invisible">1</attribute>
+                <attribute name="column_invisible">True</attribute>
             </xpath>
             <xpath expr="//field[@name='state']" position="before">
                 <field name="mo_display_stage" optional="show"/>

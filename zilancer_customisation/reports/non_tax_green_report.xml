@@ -97,14 +97,14 @@
                     <div t-field="doc.create_uid">Mitchell Admin</div>
                 </div>
 
-                <!-- <div t-if="doc.vessel_no_id" class="col" name="vessel_no_id">
+                <div t-if="doc.vessel_no_id" class="col" name="vessel_no_id">
                     <strong>Vessel Name</strong>
                     <div t-field="doc.vessel_no_id"></div>
-                </div> -->
-                <div t-if="doc.vessel_no" class="col" name="vessel_no">
+                </div>
+                <!-- <div t-if="doc.vessel_no" class="col" name="vessel_no">
                     <strong>Vessel Name</strong>
                     <div t-field="doc.vessel_no"></div>
-                </div>
+                </div> -->
                 <!-- <div t-if="doc.imo_no_id" class="col" name="imo_no_id">
                     <strong>IMO No</strong>
                     <div t-field="doc.imo_no_id"></div>

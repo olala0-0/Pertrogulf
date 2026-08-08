@@ -10,6 +10,16 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     vessel_no = fields.Char(string="Vessel No", required=False)
+    picking_type_code = fields.Selection(
+        related="picking_type_id.code",
+        string="Picking Type Code",
+        readonly=True,
+    )
+    business_unit = fields.Selection(
+        related="company_id.business_unit",
+        string="Business Unit",
+        readonly=True,
+    )
     invoice_no = fields.Char(string="Invoice No", required=False)
     invoice_date = fields.Date(string="Invoice Date", required=False)
     expected_arrival_days = fields.Selection([

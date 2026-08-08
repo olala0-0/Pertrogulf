@@ -77,7 +77,7 @@
 
                     <notebook>
                         <page string="Changes">
-                            <field name="line_ids" nolabel="1">
+                            <field name="line_ids" nolabel="True">
                                 <list create="0" edit="0" delete="0">
                                     <field name="field_label"/>
                                     <field name="field_name"/>
@@ -90,7 +90,7 @@
 
                         <page string="Changes Views">
                             <field name="line_ids"
-                                   nolabel="1"
+                                   nolabel="True"
                                    domain="[('is_view_field','=',True)]">
                                 <list create="0" edit="0" delete="0">
                                     <field name="field_label"/>
@@ -221,7 +221,7 @@
             <xpath expr="//notebook" position="inside">
 
                 <page string="Sessions" groups="base.group_system">
-                    <field name="login_history_ids" readonly="1">
+                    <field name="login_history_ids" readonly="True">
                         <list create="0" edit="0" delete="0">
                             <field name="login_time"/>
                             <field name="logout_time"/>
@@ -238,7 +238,7 @@
                 </page>
 
                 <page string="Advanced Logs" groups="base.group_system">
-                    <field name="activity_log_ids" readonly="1">
+                    <field name="activity_log_ids" readonly="True">
                         <list create="0" edit="0" delete="0">
                             <field name="performed_date"/>
                             <field name="session_id"/>
