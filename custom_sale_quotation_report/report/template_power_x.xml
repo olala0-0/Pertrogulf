@@ -74,7 +74,7 @@
                t-value="sum(o.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal'))"/>
             <tr>
                 <td style="text-align: right; font-weight: bold;width: 68.4%;">Total</td>
-                <td style="text-align: right; border-left: 1px solid #ddd !important; border-top: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd;">
+                <td style="text-align: right; font-weight: bold;">
                     <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted)"/>
                 </td>
             </tr>
