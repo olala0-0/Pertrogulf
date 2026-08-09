@@ -698,7 +698,7 @@
             </xpath>
             <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
                 <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
-                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}" column_invisible="True"/>
+                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
             </xpath>
             <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_id']" position="after">
                 <field name="unit_qty" string="Quantity" optional="show" width="80px"/>
