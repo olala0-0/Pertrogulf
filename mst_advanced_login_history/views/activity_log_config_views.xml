@@ -38,8 +38,8 @@
                     <group>
                         <group>
                             <field name="active"/>
-                            <field name="name" readonly="1"/>
-                            <field name="model_count" readonly="1"/>
+                            <field name="name" readonly="True"/>
+                            <field name="model_count" readonly="True"/>
                             <field name="include_related_line_models"/>
                         </group>
 
@@ -58,20 +58,20 @@
 
                     <group>
                         <group string="Selected Model Names">
-                            <field name="model_names" readonly="1" nolabel="1"/>
+                            <field name="model_names" readonly="True" nolabel="True"/>
                         </group>
 
                         <group string="Technical Models">
-                            <field name="technical_model_names" readonly="1" nolabel="1"/>
+                            <field name="technical_model_names" readonly="True" nolabel="True"/>
                         </group>
                     </group>
 
                     <group string="Modules">
-                        <field name="module_names" readonly="1" nolabel="1"/>
+                        <field name="module_names" readonly="True" nolabel="True"/>
                     </group>
 
                     <group string="Notes">
-                        <field name="notes" nolabel="1"/>
+                        <field name="notes" nolabel="True"/>
                     </group>
                 </sheet>
             </form>

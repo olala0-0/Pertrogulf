@@ -64,32 +64,27 @@
                 </t>
             </tbody>
         </table>
-        <table class="table table-sm o_main_table mb-0"
-               style="margin-top:0; font-size:11px;">
+        <table class="table"
+               style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width:76.1%">SubTotal</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Vat 5%</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width:76.1%">Vat 5%</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Grand Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width:76.1%;">Grand Total</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_total"/>
                 </td>
             </tr>
+
         </table>
 
         <div class="mt-3">

@@ -189,8 +189,7 @@ class SaleOrder(models.Model):
     business_unit = fields.Selection(
         BUSINESS_UNIT_SELECTION,
         string="Business Unit",
-        default=lambda self: self.env.company.business_unit
-    )
+        default=lambda self: getattr(self.env.company, 'business_unit', False))
     # default=lambda self: self.env.company.business_unit
     master_brand = fields.Char(string="Master Brand")
     brand_type = fields.Char(string="Brand Type")
@@ -200,6 +199,7 @@ class SaleOrder(models.Model):
     brand_master_id = fields.Many2one("brand.master", string="Master Brand")
     port_master_id = fields.Many2one("port.master", string="Port Name")
     port_note = fields.Html("Notes")
+    incoterm = fields.Many2one("account.incoterms", string="Delivery Terms")
     vessel_agent_name = fields.Char(string="Vessel Agent Name")
     contact_details = fields.Char(string="Contact Details")
     delivery_special_instructions = fields.Html(
@@ -722,9 +722,23 @@ class SaleOrder(models.Model):
                     }
                 )
 
+    def _check_company(self, fnames=None):
+        if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
+            return
+        if any(getattr(rec, "auto_generated", False) for rec in self):
+            return
+        super()._check_company(fnames=fnames)
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    def _check_company(self, fnames=None):
+        if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
+            return
+        if any(getattr(rec.order_id, "auto_generated", False) for rec in self if rec.order_id):
+            return
+        super()._check_company(fnames=fnames)
 
     weight_per_unit = fields.Float(
         related="product_id.weight", string="Weight per Unit (kg)", store=True

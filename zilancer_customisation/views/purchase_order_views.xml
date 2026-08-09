@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_form_inherit_zilancer" model="ir.ui.view">
+            <field name="name">purchase.order.form.zilancer</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id'][1]" position="after">
+                    <field name="payment_term_id" options="{'no_create': True}"/>
+                    <field name="incoterm_id" string="Delivery Terms" options="{'no_open': True, 'no_create': True}"/>
+                </xpath>
+
+                <xpath expr="//notebook" position="inside">
+                    <field name="business_unit" invisible="1"/>
+                    <page string="Additional Details" name="additional_details" invisible="business_unit != 'pg_marine'">
+                        <group>
+                            <group>
+                                <field name="vessel_no_id"/>
+                                <field name="imo_number"/>
+                                <field name="port_master_id"/>
+                                <field name="country_port_id"/>
+                            </group>
+                            <group>
+                                <field name="payment_term_id" string="Payment Terms" invisible="1"/>
+                                <field name="incoterm_id" string="Delivery Terms" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

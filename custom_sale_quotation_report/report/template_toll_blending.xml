@@ -5,12 +5,12 @@
         <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <th style="font-weight:bold">Sn</th>
-                    <th style="font-weight:bold">Product Description</th>
-                    <th style="font-weight:bold">Selling Unit</th>
-                    <th style="font-weight:bold">No of Units</th>
-                    <th style="font-weight:bold">Unit Price (USD)</th>
-                    <th class="text-right" style="font-weight:bold">Amount (USD)</th>
+                    <th style="font-weight:bold; width:5%;">Sn</th>
+                    <th style="font-weight:bold; width:45%;">Product Description</th>
+                    <th style="font-weight:bold; width:15%;">Selling Unit</th>
+                    <th style="font-weight:bold; width:12%;">No of Units</th>
+                    <th style="font-weight:bold; width:11.5%;">Unit Price (USD)</th>
+                    <th class="text-right" style="font-weight:bold; width:11.5%;">Amount (USD)</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,33 +42,26 @@
                 </t>
             </tbody>
         </table>
-        <table class="table table-sm o_main_table mb-0" t-if="o.show_total"
-               style="margin-top:0; font-size:15px; border-top:none;">
+        <table t-if="o.show_total" class="table"
+               style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <tr>
-                <td style="text-align:right;width:75%;border-top:none;">
-                    <strong>Sub Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width: 77%;">Sub Total</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Discount (Credit Note)</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width: 77%;">Discount (Credit Note)</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Total Amount</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
+                <td style="text-align: right; font-weight: bold; width: 77%;">Total Amount</td>
+                <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_total"/>
                 </td>
             </tr>
-
         </table>
 
         <p>

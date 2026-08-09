@@ -1,16 +1,14 @@
 <odoo>
     <template id="body_power_x">
-        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
+        <table  class="table table-sm o_main_table mb-0" style="font-size:15px;">
             <thead>
-                <tr style="background-color:#e6e6e6;">
-                    <th >Sn</th>
-                    <th class="text-start">Description of Goods</th>
-                    <th class="text-start">Rate</th>
-                    <th class="text-start">Per</th>
-                    <th class="text-start">Discount</th>
-                    <th name="th_subtotal" class="text-end">
-                        <span>Amount</span>
-                    </th>
+                <tr>
+                    <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Sn</th>
+                    <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Rate</th>
+                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Per</th>
+                    <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Discount</th>
+                    <th style="text-align:right; width:15%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,65 +17,95 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td><span t-esc="sn"/></td>
-                            <td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-esc="sn"/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
                                 <span t-field="line.name"/>
                                 <!-- Optional packing/weight info, only for Power X -->
                                 <t t-if="line.packing_type">
                                     <br/>
                                     <small class="text-muted">
-                                        Packing: <span t-esc="line.packing_type"/>
+                                        Packing:
+                                        <span t-esc="line.packing_type"/>
                                         <t t-if="line.packing_type == 'drum'">
-                                            | Net Wt: <span t-field="line.net_weight"/> | Gross Wt: <span t-field="line.gross_weight"/>
+                                            | Net Wt:
+                                            <span t-field="line.net_weight"/>
+                                            | Gross Wt:
+                                            <span t-field="line.gross_weight"/>
                                         </t>
                                         <t t-elif="line.packing_type == 'ibc'">
-                                            | Gross Wt: <span t-field="line.gross_weight"/> | Net Wt: <span t-field="line.net_weight"/>
+                                            | Gross Wt:
+                                            <span t-field="line.gross_weight"/>
+                                            | Net Wt:
+                                            <span t-field="line.net_weight"/>
                                         </t>
                                         <t t-elif="line.packing_type == 'bulk'">
-                                            | Net Wt: <span t-field="line.net_weight"/>
+                                            | Net Wt:
+                                            <span t-field="line.net_weight"/>
                                         </t>
                                         <t t-elif="line.packing_type == 'flexi'">
-                                            | Net Wt: <span t-field="line.net_weight"/>
+                                            | Net Wt:
+                                            <span t-field="line.net_weight"/>
                                         </t>
                                     </small>
                                 </t>
                             </td>
-                            <td><span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
-                            <td><span t-field="line.product_uom_id.name"/></td>
-                            <td><span t-field="line.discount"/>%</td>
-                            <td class="text-right"><span t-field="line.price_subtotal"/></td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-field="line.price_unit"
+                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                                <span t-field="line.product_uom_id.name"/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8;"><span t-field="line.discount"/>%
+                            </td>
+                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                                <span t-field="line.price_subtotal"/>
+                            </td>
                         </tr>
                     </t>
                 </t>
             </tbody>
         </table>
-        <table class="table table-sm o_main_table mb-0"
-                   style="margin-top:0; font-size:11px; border-top:none;" >
+        <table class="table"
+               style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
+            <t t-set="total_discounted"
+               t-value="sum(o.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal'))"/>
+            <tr>
+                <td style="text-align: right; font-weight: bold;width: 68.4%;">Total</td>
+                <td style="text-align: right; font-weight: bold;">
+                    <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted)"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right; font-weight: bold; width: 68.4%;">
+                    <span >VAT 5%</span>
+<!--                    <span t-if="o.vat_selection == 'vat_0'">VAT 0%</span>-->
+                </td>
+                <td style="text-align: right; font-weight: bold;">
+                    <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(o.amount_tax)"/>
+                </td>
+            </tr>
+            <t t-set="expense_total"
+               t-value="sum(o.order_line.filtered(lambda l: l.product_id.is_expences).mapped('price_subtotal'))"/>
+            <t t-foreach="o.order_line.filtered(lambda l: l.product_id.is_expences)" t-as="line">
                 <tr>
-                    <td style="text-align:right;width:75%">
-                        <strong>Sub Total</strong>
+                    <td style="text-align: right; font-weight: bold;width: 68.4%;">
+                        <t t-esc="line.product_id.name"/>
                     </td>
-                    <td colspan="3" style="text-align:right;">
-                        <span t-field="o.amount_untaxed"/>
+                    <td style="text-align: right; font-weight: bold;">
+                        <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(line.price_subtotal)"/>
                     </td>
                 </tr>
-                <tr>
-                    <td style="text-align:right;width:75%">
-                        <strong>Vat 5%</strong>
-                    </td>
-                    <td colspan="3" style="text-align:right;">
-                        <span t-field="o.amount_tax"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align:right;width:75%">
-                        <strong>Grand Total</strong>
-                    </td>
-                    <td colspan="3" style="text-align:right;">
-                        <span t-field="o.amount_total"/>
-                    </td>
-                </tr>
-            </table>
+            </t>
+            <tr>
+                <td style="text-align: right; font-weight: bold;width: 68.4%;">Grand Total</td>
+                <td style="text-align: right; font-weight: bold;">
+                    <strong t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted + o.amount_tax + expense_total)"/>
+                </td>
+            </tr>
+        </table>
 
 
         <div class="mt-3">

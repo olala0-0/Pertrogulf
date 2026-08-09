@@ -25,14 +25,14 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
-                <field name="parent_mo_id" readonly="1" invisible="not parent_mo_id"/>
-                <field name="purchase_order_count" invisible="1"/>
+                <field name="delivery_picking_id" readonly="True" invisible="not delivery_picking_id"/>
+                <field name="parent_mo_id" readonly="True" invisible="not parent_mo_id"/>
+                <field name="purchase_order_count" invisible="True"/>
                 <!-- mo_approval_state is needed for the Create PO button visibility (#1) and QC tab (#2b) -->
-                <field name="mo_approval_state" invisible="1"/>
-                <field name="qc_controls_readonly" invisible="1"/>
+                <field name="mo_approval_state" invisible="True"/>
+                <field name="qc_controls_readonly" invisible="True"/>
                 <!-- BOM Version: read-only display, pulled from selected BOM (#8b) -->
-                <field name="bom_version" readonly="1"
+                <field name="bom_version" readonly="True"
                        invisible="not bom_id"
                        string="BOM Version"/>
                 <field name="delivery_instruction"
@@ -50,10 +50,10 @@
                       invisible="mo_approval_state in ('pending_qc', 'pending_store')">
                     <field name="qc_control_ids"
                             readonly="qc_controls_readonly"
-                            force_save="1">
+                            force_save="True">
                         <list editable="bottom" create="false" delete="false" open_form_view="false">
-                            <field name="sequence" column_invisible="1"/>
-                            <field name="name" readonly="1" force_save="1"/>
+                            <field name="sequence" column_invisible="True"/>
+                            <field name="name" readonly="True" force_save="True"/>
                             <button name="action_qc_pass"
                                     type="object"
                                     icon="fa-check"
@@ -69,8 +69,8 @@
                                     class="text-danger"
                                     invisible="parent.state == 'done'"/>
                             <field name="result"
-                                   readonly="1"
-                                   force_save="1"
+                                   readonly="True"
+                                   force_save="True"
                                    decoration-success="result == 'pass'"
                                    decoration-danger="result == 'fail'"/>
                             <field name="description"
@@ -86,10 +86,10 @@
                  the lot must be entered manually on the BOM and pulled into MRP.
                  The lot_producing_ids field itself remains visible/editable. -->
             <xpath expr="//div[button[@name='action_generate_serial']]" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">True</attribute>
             </xpath>
             <xpath expr="//label[@for='lot_producing_ids']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">True</attribute>
             </xpath>
         </field>
     </record>
@@ -100,8 +100,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
-                <field name="delivery_picking_id" readonly="1" invisible="not delivery_picking_id"/>
-                <field name="mrp_production_ids" widget="many2many_tags" readonly="1"
+                <field name="delivery_picking_id" readonly="True" invisible="not delivery_picking_id"/>
+                <field name="mrp_production_ids" widget="many2many_tags" readonly="True"
                          invisible="not mrp_production_ids"/>
             </xpath>
         </field>

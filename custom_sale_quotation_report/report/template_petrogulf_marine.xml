@@ -37,7 +37,7 @@
                                 <span t-field="line.product_template_id"/>
                             </td>
                             <td>
-                                <span t-field="line.pack_size_id"/>
+                                <span t-field="line.pack_size_id.name"/>
                             </td>
                             <td>
                                 <span t-field="line.product_uom_qty"/>

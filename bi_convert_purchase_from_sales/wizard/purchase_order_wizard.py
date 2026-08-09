@@ -37,19 +37,36 @@ class createpurchaseorder(models.TransientModel):
         res = self.env['purchase.order'].browse(self._context.get('id', []))
         value = []
         so = self.env['sale.order'].browse(self._context.get('active_id'))
-        sale_order_name = so.name
+        if not so and self._context.get('active_ids'):
+            so = self.env['sale.order'].browse(self._context.get('active_ids')[0])
+        sale_order_name = so.name if so else ''
         company_id = self.env.company
         if self.partner_id.property_purchase_currency_id :
             currency_id = self.partner_id.property_purchase_currency_id.id
         else:
             currency_id = self.env.company.currency_id.id
-        purchase_order = res.create({
+        po_vals = {
             'partner_id': self.partner_id.id,
             'date_order': str(self.date_order),
             'origin': sale_order_name,
             'partner_ref': sale_order_name,
             'currency_id': currency_id
-        })
+        }
+        if so:
+            if hasattr(so, 'vessel_no_id') and so.vessel_no_id:
+                po_vals['vessel_no_id'] = so.vessel_no_id.id
+            if hasattr(so, 'imo_number') and so.imo_number:
+                po_vals['imo_number'] = so.imo_number
+            if hasattr(so, 'port_master_id') and so.port_master_id:
+                po_vals['port_master_id'] = so.port_master_id.id
+            if hasattr(so, 'country_port_id') and so.country_port_id:
+                po_vals['country_port_id'] = so.country_port_id.id
+            if hasattr(so, 'payment_term_id') and so.payment_term_id:
+                po_vals['payment_term_id'] = so.payment_term_id.id
+            if hasattr(so, 'incoterm') and so.incoterm:
+                po_vals['incoterm_id'] = so.incoterm.id
+
+        purchase_order = res.create(po_vals)
         sale_order = self.env['sale.order'].browse(self._context.get('active_ids', []))
         message = "Purchase Order created "+ '@' + purchase_order.name
         sale_order.message_post(body=message)
@@ -95,7 +112,7 @@ class createpurchaseorder(models.TransientModel):
                                                                                                 taxes, company_id)
                     if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                         price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id,
-                                                                    purchase_order.company_id, fields.datetime.today())
+                                                                    purchase_order.company_id, fields.Date.today())
                 if self.partner_id.property_purchase_currency_id :
                     value.append({
                         'product_id': data.product_id.id,

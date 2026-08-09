@@ -93,8 +93,7 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_type" column_invisible="True"/>
-                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
-                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"/>
                                     <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
                                     <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
                                     <field name="product_id" widget="product_configurator" string="Offered Item" width="320px"
@@ -120,7 +119,7 @@
                                 <div class="clearfix"/> -->
                             </group>
                         </page>
-                        <page string="Additional Details - Auto" invisible="1">
+                        <page string="Additional Details - Auto" invisible="True">
                             <group>
                                 <group>
                                     <field name="sales_order_received"/>
@@ -456,8 +455,7 @@
                                     </control>
                                     <field name="sequence" widget="handle"/>
                                     <field name="display_type" column_invisible="True"/>
-                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
-                                           options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"/>
                                     <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
                                     <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
                                     <field name="product_id" widget="product_configurator" string="Offered Item" width="320px"
@@ -483,7 +481,7 @@
                                 <div class="clearfix"/> -->
                             </group>
                         </page>
-                        <page string="Additional Details - Auto" invisible="1">
+                        <page string="Additional Details - Auto" invisible="True">
                             <group>
                                 <group>
                                     <field name="sales_order_received"/>
@@ -670,7 +668,7 @@
                 <field name="destination" invisible="False"/>
             </xpath>
             <xpath expr="//group[@name='partner_details']/field[@name='partner_shipping_id']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">True</attribute>
             </xpath>
 
             <!-- Keep base Offered Item (product) fields; only relabel + block create -->
@@ -689,8 +687,7 @@
 
             <!-- Customer ref fields before Offered Item -->
             <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_template_id']" position="before">
-                <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"
-                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                <field name="customer_ref_id" string="Inquired Item" optional="show" width="140px"/>
                 <field name="customer_brand" string="Customer Brand" optional="show" width="120px"/>
                 <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
             </xpath>
@@ -701,7 +698,7 @@
             </xpath>
             <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
                 <field name="pack_size_id" string="Pack Size" optional="show" width="100px"
-                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}" column_invisible="1"/>
+                       options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}" column_invisible="True"/>
             </xpath>
             <xpath expr="//notebook/page/field[@name='order_line']/list/field[@name='product_uom_id']" position="after">
                 <field name="unit_qty" string="Quantity" optional="show" width="80px"/>
