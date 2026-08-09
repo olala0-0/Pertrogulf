@@ -17,6 +17,7 @@
     """,
     'depends': ['purchase', 'purchase_stock', 'stock', 'zilancer_customisation'],
     'data': [
+        'views/purchase_order_views.xml',
         'report/report_actions.xml',
         'report/purchase_order_ajman_report.xml',
         'report/despatch_note_report_actions.xml',

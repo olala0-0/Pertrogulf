@@ -96,14 +96,14 @@
                     <field name="remarks" string="Dispatch Instructions"/>
                 </xpath>
                 <xpath expr="//field[@name='location_id']" position="after">
-                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="company_id != 9"/>
-                    <field name="document_number" readonly="True" force_save="True" invisible="company_id != 9"/>
+                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="document_number" readonly="True" force_save="True" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="customer_lpo_no" invisible="company_id != 9"/>
-                    <field name="container_no" invisible="company_id != 9"/>
-                    <field name="seal_no" invisible="company_id != 9"/>
-                    <field name="vehicle_no" invisible="company_id != 9"/>
+                    <field name="customer_lpo_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="container_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="seal_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="vehicle_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
                 </xpath>
             </field>
         </record>

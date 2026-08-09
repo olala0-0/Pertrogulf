@@ -99,7 +99,7 @@
                                     </tr>
                                     <tr>
                                         <td style="padding:4px;">Place of supply</td>
-                                        <td style="padding:4px;">: </td>
+                                        <td style="padding:4px;">: <span t-field="o.place_of_supply"/></td>
                                     </tr>
                                 </table>
                             </td>
@@ -112,7 +112,7 @@
                                         <td style="padding:4px;">Mode/Terms of Payment</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="o.incoterm_id.name"/></td>
                                         <td style="padding:4px;"><span t-field="o.payment_term_id.name"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
@@ -120,8 +120,8 @@
                                         <td style="padding:4px;">Buyer's Order No.</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="o.voucher_no"/></td>
+                                        <td style="padding:4px;"><span t-field="o.buyer_order_no"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px;">Supplier's Ref./Order No.</td>
@@ -129,15 +129,15 @@
                                     </tr>
                                     <tr>
                                         <td style="padding:4px;"><span t-field="o.partner_ref"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="o.other_ref"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px;">Destination</td>
                                         <td style="padding:4px;">Despatch through</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="o.destination"/></td>
+                                        <td style="padding:4px;"><span t-field="o.despatch_through"/></td>
                                     </tr>
                                 </table>
                             </td>
