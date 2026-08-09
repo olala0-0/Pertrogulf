@@ -118,40 +118,40 @@ class QuotationLine(models.Model):
             else:
                 line.pack_size_id = False
 
-    @api.onchange("product_uom_qty", "product_uom", "product_id")
-    def _onchange_unit_qty_from_uom(self):
-        """
-        Compute unit_qty based on product_uom_qty and product_uom.
-        First checks if the UoM name contains a numeric value (e.g. '5Ltr' -> 5, '208Ltr' -> 208).
-        Example: product_uom_qty = 100, product_uom = '5Ltr' -> unit_qty = 100 * 5 = 500.
-        Fallbacks to UoM factor/factor_inv if no number in name.
-        """
-        for line in self:
-            if not line.product_uom_qty:
-                line.unit_qty = 0.0
-                continue
-            uom = line.product_uom
-            multiplier = 1.0
-            if uom and uom.name:
-                match = re.search(r'(\d+(?:\.\d+)?)', uom.name)
-                if match:
-                    try:
-                        val = float(match.group(1))
-                        if val > 0:
-                            multiplier = val
-                    except ValueError:
-                        pass
-                else:
-                    if getattr(uom, 'factor_inv', 0) and uom.factor_inv > 0:
-                        multiplier = uom.factor_inv
-                    elif getattr(uom, 'factor', 0) and uom.factor > 0:
-                        multiplier = 1.0 / uom.factor
-            elif uom:
-                if getattr(uom, 'factor_inv', 0) and uom.factor_inv > 0:
-                    multiplier = uom.factor_inv
-                elif getattr(uom, 'factor', 0) and uom.factor > 0:
-                    multiplier = 1.0 / uom.factor
-            line.unit_qty = line.product_uom_qty * multiplier
+    # @api.onchange("product_uom_qty", "product_uom", "product_id")
+    # def _onchange_unit_qty_from_uom(self):
+    #     """
+    #     Compute unit_qty based on product_uom_qty and product_uom.
+    #     First checks if the UoM name contains a numeric value (e.g. '5Ltr' -> 5, '208Ltr' -> 208).
+    #     Example: product_uom_qty = 100, product_uom = '5Ltr' -> unit_qty = 100 * 5 = 500.
+    #     Fallbacks to UoM factor/factor_inv if no number in name.
+    #     """
+    #     for line in self:
+    #         if not line.product_uom_qty:
+    #             line.unit_qty = 0.0
+    #             continue
+    #         uom = line.product_uom
+    #         multiplier = 1.0
+    #         if uom and uom.name:
+    #             match = re.search(r'(\d+(?:\.\d+)?)', uom.name)
+    #             if match:
+    #                 try:
+    #                     val = float(match.group(1))
+    #                     if val > 0:
+    #                         multiplier = val
+    #                 except ValueError:
+    #                     pass
+    #             else:
+    #                 if getattr(uom, 'factor_inv', 0) and uom.factor_inv > 0:
+    #                     multiplier = uom.factor_inv
+    #                 elif getattr(uom, 'factor', 0) and uom.factor > 0:
+    #                     multiplier = 1.0 / uom.factor
+    #         elif uom:
+    #             if getattr(uom, 'factor_inv', 0) and uom.factor_inv > 0:
+    #                 multiplier = uom.factor_inv
+    #             elif getattr(uom, 'factor', 0) and uom.factor > 0:
+    #                 multiplier = 1.0 / uom.factor
+    #         line.unit_qty = line.product_uom_qty * multiplier
 
 
 class SaleOrder(models.Model):
@@ -846,12 +846,12 @@ class SaleOrderLine(models.Model):
             line.total_weight = line.product_uom_qty * line.weight_per_unit
 
     # unit_qty = pack_size.conversion_factor * product_uom_qty
-    # @api.onchange('product_uom_qty', 'pack_size_id')
-    # def _onchange_product_uom_qty(self):
-    #     if self.product_uom_qty and self.pack_size_id and self.pack_size_id.conversion_factor:
-    #         self.unit_qty = self.product_uom_qty * self.pack_size_id.conversion_factor
-    #     else:
-    #         self.unit_qty = 0.0
+    @api.onchange('product_uom_qty', 'pack_size_id')
+    def _onchange_product_uom_qty(self):
+        if self.product_uom_qty and self.pack_size_id and self.pack_size_id.conversion_factor:
+            self.unit_qty = self.product_uom_qty * self.pack_size_id.conversion_factor
+        else:
+            self.unit_qty = 0.0
 
     @api.onchange("product_id")
     def _onchange_product_id_pack_size(self):
