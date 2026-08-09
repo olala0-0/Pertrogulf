@@ -2,11 +2,11 @@ from odoo import models, _
 from odoo.exceptions import UserError
 
 AJMAN_SCOPED_REPORTS = {
-    'custom_purchase_order_report.report_purchase_order_ajman': (
-        'purchase.order',
-        '_is_pg_ajman_scope',
-        "This purchase order layout is only available for Petro Gulf Ajman and its branch companies.",
-    ),
+    # 'custom_purchase_order_report.report_purchase_order_ajman': (
+    #     'purchase.order',
+    #     '_is_pg_ajman_scope',
+    #     "This purchase order layout is only available for Petro Gulf Ajman and its branch companies.",
+    # ),
     'custom_purchase_order_report.report_despatch_note_ajman': (
         'stock.picking',
         '_is_pg_ajman_scope',
