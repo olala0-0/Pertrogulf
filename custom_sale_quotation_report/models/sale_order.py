@@ -32,3 +32,12 @@ class SaleOrder(models.Model):
             return f"{words.title()} {self.currency_id.name} Only"
         except Exception:
             return ""
+
+    # --- Proforma Invoice (Petro Gulf Ajman) ---
+    def _is_pg_ajman_scope(self):
+        """True if this order's company is Petro Gulf Ajman or one of its branch companies."""
+        self.ensure_one()
+        company = self.company_id
+        if company.business_unit == 'pg_ajman':
+            return True
+        return bool(company.parent_id and company.parent_id.business_unit == 'pg_ajman')

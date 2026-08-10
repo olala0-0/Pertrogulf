@@ -7,8 +7,8 @@
         Adds "Print" options on Purchase Orders and stock pickings that
         render the Petro Gulf Ajman letterhead layouts: Purchase Order
         (Supplier box, PO Details box, line items, Amount in Words,
-        signatory footer), Despatch Note (sale deliveries), and Goods
-        Receipt Note (incoming receipts).
+        signatory footer), Despatch Note (sale deliveries), Delivery Note
+        (sale deliveries), and Goods Receipt Note (incoming receipts).
 
         All are only available for records whose company is Petro Gulf
         Ajman (business_unit = 'pg_ajman') or one of its direct branch
@@ -22,6 +22,8 @@
         'report/purchase_order_ajman_report.xml',
         'report/despatch_note_report_actions.xml',
         'report/despatch_note_ajman_report.xml',
+        'report/delivery_note_report_actions.xml',
+        'report/delivery_note_ajman_report.xml',
         'report/grn_report_actions.xml',
         'report/grn_ajman_report.xml',
     ],

@@ -2,27 +2,16 @@ from odoo import models, _
 from odoo.exceptions import UserError
 
 AJMAN_SCOPED_REPORTS = {
-    # 'custom_purchase_order_report.report_purchase_order_ajman': (
-    #     'purchase.order',
-    #     '_is_pg_ajman_scope',
-    #     "This purchase order layout is only available for Petro Gulf Ajman and its branch companies.",
-    # ),
-    'custom_purchase_order_report.report_despatch_note_ajman': (
-        'stock.picking',
+    'custom_sale_quotation_report.report_proforma_invoice_ajman': (
+        'sale.order',
         '_is_pg_ajman_scope',
-        "This despatch note layout is only available for sale deliveries of "
+        "This proforma invoice layout is only available for sale orders of "
         "Petro Gulf Ajman and its branch companies.",
     ),
-    'custom_purchase_order_report.report_delivery_note_ajman': (
-        'stock.picking',
+    'custom_sale_quotation_report.report_tax_invoice_ajman': (
+        'account.move',
         '_is_pg_ajman_scope',
-        "This delivery note layout is only available for sale deliveries of "
-        "Petro Gulf Ajman and its branch companies.",
-    ),
-    'custom_purchase_order_report.report_grn_ajman': (
-        'stock.picking',
-        '_is_pg_ajman_grn_scope',
-        "This goods receipt note layout is only available for incoming receipts of "
+        "This tax invoice layout is only available for invoices of "
         "Petro Gulf Ajman and its branch companies.",
     ),
 }

@@ -15,7 +15,7 @@
         - Petrogulf Toll Blending (standard)
         - Petrogulf Toll Blending (ADNOC)
     """,
-    'depends': ['sale', 'sale_management', 'stock'],
+    'depends': ['sale', 'sale_management', 'stock', 'sale_stock', 'account', 'zilancer_customisation'],
     'data': [
         'report/report_actions.xml',
         'report/sale_report_main.xml',
@@ -27,6 +27,8 @@
         'report/template_golden.xml',
         'report/template_delivery_note_power_x.xml',
         'report/header_labels.xml',
+        'report/proforma_invoice_ajman_report.xml',
+        'report/tax_invoice_ajman_report.xml',
     ],
     'installable': True,
     'application': False,
