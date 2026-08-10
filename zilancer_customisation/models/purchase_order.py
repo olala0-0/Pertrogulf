@@ -34,8 +34,25 @@ class PurchaseOrder(models.Model):
         return sale_order_data
 
     def inter_company_create_sale_order(self, company):
-        """Ensure products in PO lines are allowed in target company before creating inter-company SO."""
+        """Ensure products in PO lines are allowed in target company and pricelist currency matches before creating inter-company SO."""
+        intercompany_uid = company.intercompany_user_id.id if company.intercompany_user_id else False
         for po in self:
+            if intercompany_uid:
+                company_partner = po.company_id.partner_id.sudo()
+                pricelist = company_partner.property_product_pricelist
+                if pricelist and pricelist.currency_id != po.currency_id:
+                    matching_pricelist = self.env['product.pricelist'].sudo().search([
+                        ('currency_id', '=', po.currency_id.id),
+                        '|', ('company_id', '=', False), ('company_id', '=', company.id),
+                    ], limit=1)
+                    if not matching_pricelist:
+                        matching_pricelist = self.env['product.pricelist'].sudo().create({
+                            'name': f"Inter-Company Pricelist ({po.currency_id.name})",
+                            'currency_id': po.currency_id.id,
+                            'company_id': company.id,
+                        })
+                    company_partner.write({'property_product_pricelist': matching_pricelist.id})
+
             for line in po.order_line:
                 product = line.product_id
                 if not product:
@@ -51,5 +68,6 @@ class PurchaseOrder(models.Model):
             PurchaseOrder,
             self.with_context(skip_check_company=True, inter_company_create=True)
         ).inter_company_create_sale_order(company)
+
 
 
