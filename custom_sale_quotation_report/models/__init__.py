@@ -1,6 +1,7 @@
 from . import sale_order
 from . import sale_order_line
 from . import account_move
+from . import res_company
 from . import ir_actions_report
 
 # NOTE: `business_unit` already exists on res.company in this instance
