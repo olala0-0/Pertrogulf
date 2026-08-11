@@ -1,5 +1,5 @@
 <odoo>
-    <template id="report_despatch_note_ajman">
+    <template id="report_despatch_note">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
                 <div class="page" style="font-size:13px; padding:0; margin:0;">

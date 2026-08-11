@@ -7,12 +7,6 @@ AJMAN_SCOPED_REPORTS = {
     #     '_is_pg_ajman_scope',
     #     "This purchase order layout is only available for Petro Gulf Ajman and its branch companies.",
     # ),
-    'custom_purchase_order_report.report_despatch_note_ajman': (
-        'stock.picking',
-        '_is_pg_ajman_scope',
-        "This despatch note layout is only available for sale deliveries of "
-        "Petro Gulf Ajman and its branch companies.",
-    ),
     'custom_purchase_order_report.report_delivery_note_ajman': (
         'stock.picking',
         '_is_pg_ajman_scope',
