@@ -14,6 +14,10 @@
         Ajman (business_unit = 'pg_ajman') or one of its direct branch
         companies - printing them for any other company/document type
         raises an error instead of generating the PDF.
+
+        Also adds an RFQ (Request for Quotation) layout for Purchase
+        Orders, using the same letterhead but available for any company,
+        with no scope restriction.
     """,
     'depends': ['purchase', 'purchase_stock', 'stock', 'zilancer_customisation'],
     'data': [
@@ -26,6 +30,8 @@
         'report/delivery_note_ajman_report.xml',
         'report/grn_report_actions.xml',
         'report/grn_ajman_report.xml',
+        'report/rfq_report_actions.xml',
+        'report/rfq_report.xml',
     ],
     'installable': True,
     'application': False,
