@@ -21,3 +21,17 @@ class StockPicking(models.Model):
         """True for incoming receipts whose company is Petro Gulf Ajman or a direct branch."""
         self.ensure_one()
         return self.picking_type_id.code == 'incoming' and self._is_pg_ajman_company()
+
+    def _is_pg_powerx_company(self):
+        """True if this picking's company is Power X or a direct branch."""
+        self.ensure_one()
+        company = self.company_id
+        if company.business_unit == 'pg_powerx':
+            return True
+        return bool(company.parent_id and company.parent_id.business_unit == 'pg_powerx')
+
+    def _is_delivery_note_scope(self):
+        """The shared Delivery Note report renders an Ajman or a Power X
+        layout (toggled internally by business_unit) - allow either scope."""
+        self.ensure_one()
+        return bool(self.sale_id) and (self._is_pg_ajman_company() or self._is_pg_powerx_company())

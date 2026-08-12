@@ -25,7 +25,6 @@
         'report/template_toll_blending.xml',
         'report/template_petrogulf_marine.xml',
         'report/template_golden.xml',
-        'report/template_delivery_note_power_x.xml',
         'report/header_labels.xml',
         'report/proforma_invoice_ajman_report.xml',
         'report/tax_invoice_ajman_report.xml',

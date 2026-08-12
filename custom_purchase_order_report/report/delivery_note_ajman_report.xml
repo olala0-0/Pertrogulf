@@ -2,6 +2,7 @@
     <template id="report_delivery_note_ajman">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
+                <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
                 <div class="page" style="font-size:12px; padding:0; margin:0;">
 
                     <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
@@ -12,8 +13,8 @@
                             <col style="width:117mm;"/>
                         </colgroup>
                         <tr>
-                            <td style="padding:7mm 4mm; vertical-align:middle; text-align:center;">
-                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:28mm; max-width:100%;"/>
+                            <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
                             </td>
                             <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
                                 <span style="font-size:34px; font-weight:bold; color:#231f20;">DELIVERY NOTE</span>
@@ -31,12 +32,15 @@
                                 <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
                                 <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
                                 <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+                                <div t-if="is_powerx">TRN <span t-field="o.company_id.vat"/></div>
                                 <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:45%;">Delivery Note No.</td>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:45%;">
+                                            <span t-esc="'Delivery Order No.' if is_powerx else 'Delivery Note No.'"/>
+                                        </td>
                                         <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.name"/></td>
                                     </tr>
                                     <tr>
@@ -46,15 +50,27 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Mode/Terms of Payment</td>
-                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.sale_id.payment_term_id.name"/></td>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Invoice No.' if is_powerx else 'Mode/Terms of Payment'"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-if="is_powerx" t-field="o.invoice_no"/>
+                                            <span t-else="" t-field="o.sale_id.payment_term_id.name"/>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Supplier's Ref.</td>
-                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.sale_id.client_order_ref"/></td>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Order Reference:' if is_powerx else &quot;Supplier's Ref.&quot;"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-if="is_powerx" t-field="o.origin"/>
+                                            <span t-else="" t-field="o.sale_id.client_order_ref"/>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Other Reference(s)</td>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Terms of Delivery' if is_powerx else 'Other Reference(s)'"/>
+                                        </td>
                                         <td style="border:1px solid #ccc; padding:4px;"> </td>
                                     </tr>
                                 </table>
@@ -91,7 +107,63 @@
                             </td>
                             <td style="width:4%;"/>
                             <td style="width:48%; vertical-align:top;">
-                                <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2; width:25%;">DN No.</td>
+                                        <td style="padding:4px; width:25%;"><span t-field="o.document_number"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2; width:25%;">Date &amp; Time In</td>
+                                        <td style="padding:4px; width:25%;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Vehicle No.</td>
+                                        <td style="padding:4px;"><span t-field="o.vehicle_no"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Date &amp; Time Out</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Driver</td>
+                                        <td style="padding:4px;"><span t-field="o.driver_name"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">EID - No.</td>
+                                        <td style="padding:4px;"><span t-field="o.driver_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Customer</td>
+                                        <td style="padding:4px;"><span t-field="o.partner_id.name"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Container #1</td>
+                                        <td style="padding:4px;"><span t-field="o.container_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Material</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Container #2</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Loaded Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">TANK NO</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Empty Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Vat Amount</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Net Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Total Amount</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Operator</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"></td>
+                                        <td style="padding:4px;"></td>
+                                    </tr>
+                                </table>
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
                                     <tr>
                                         <td style="padding:4px; background-color:#f2f2f2; width:50%;">Buyer's Order No.</td>
                                         <td style="padding:4px;"><span t-field="o.sale_id.client_po_order_no"/></td>
@@ -157,19 +229,40 @@
                         </tbody>
                     </table>
 
-                    <div style="margin-top:6px;">
-                        <span>Received in Good Condition</span>
-                        <span style="float:right; font-style:italic;">E. &amp; O.E</span>
-                    </div>
+                    <t t-if="is_powerx">
+                        <div style="text-align:right; margin-top:20px; font-size:12px;">
+                            <div>for <span t-field="o.company_id.name"/></div>
+                            <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
+                        </div>
+                        <div style="color:#c0392b; font-style:italic; font-weight:bold; text-align:right; margin-top:8px;">
+                            Leave your Base Oil with us
+                        </div>
+                        <div style="margin-top:20px; font-size:11px;">
+                            <div style="text-decoration:underline; font-weight:bold;">Declaration</div>
+                            <div>
+                                We declare that this invoice shows the actual price of the goods
+                                described and that all particulars are true and correct
+                            </div>
+                        </div>
+                        <div style="text-align:center; font-size:10px; margin-top:15px;">
+                            This is a Computer Generated Invoice
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div style="margin-top:6px;">
+                            <span>Received in Good Condition</span>
+                            <span style="float:right; font-style:italic;">E. &amp; O.E</span>
+                        </div>
 
-                    <div style="text-align:right; margin-top:60px;">
-                        <strong>For <span t-field="o.company_id.name"/></strong>
-                    </div>
+                        <div style="text-align:right; margin-top:60px;">
+                            <strong>For <span t-field="o.company_id.name"/></strong>
+                        </div>
 
-                    <div style="margin-top:20px; font-size:10px;">
-                        <span>F-IM S-ACC-05</span>
-                        <span style="float:right;">This is a Computer Generated Invoice</span>
-                    </div>
+                        <div style="margin-top:20px; font-size:10px;">
+                            <span>F-IM S-ACC-05</span>
+                            <span style="float:right;">This is a Computer Generated Invoice</span>
+                        </div>
+                    </t>
 
                     </div>
                 </div>
