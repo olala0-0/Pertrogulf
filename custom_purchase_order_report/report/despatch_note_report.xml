@@ -12,8 +12,8 @@
                             <col style="width:117mm;"/>
                         </colgroup>
                         <tr>
-                            <td style="padding:7mm 4mm; vertical-align:middle; text-align:center;">
-                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:28mm; max-width:100%;"/>
+                            <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
                             </td>
                             <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
                                 <span style="font-size:34px; font-weight:bold; color:#231f20;">DESPATCH NOTE</span>
