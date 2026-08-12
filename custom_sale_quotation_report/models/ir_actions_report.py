@@ -4,9 +4,9 @@ from odoo.exceptions import UserError
 AJMAN_SCOPED_REPORTS = {
     'custom_sale_quotation_report.report_proforma_invoice_ajman': (
         'sale.order',
-        '_is_pg_ajman_scope',
+        '_is_proforma_invoice_scope',
         "This proforma invoice layout is only available for sale orders of "
-        "Petro Gulf Ajman and its branch companies.",
+        "Petro Gulf Ajman, Power X and their branch companies.",
     ),
     'custom_sale_quotation_report.report_tax_invoice_ajman': (
         'account.move',

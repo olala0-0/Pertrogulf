@@ -41,3 +41,18 @@ class SaleOrder(models.Model):
         if company.business_unit == 'pg_ajman':
             return True
         return bool(company.parent_id and company.parent_id.business_unit == 'pg_ajman')
+
+    # --- Proforma Invoice (Power X) ---
+    def _is_pg_powerx_scope(self):
+        """True if this order's company is Power X or one of its branch companies."""
+        self.ensure_one()
+        company = self.company_id
+        if company.business_unit == 'pg_powerx':
+            return True
+        return bool(company.parent_id and company.parent_id.business_unit == 'pg_powerx')
+
+    def _is_proforma_invoice_scope(self):
+        """The shared Proforma Invoice report renders an Ajman or a Power X
+        layout (toggled internally by business_unit) - allow either scope."""
+        self.ensure_one()
+        return self._is_pg_ajman_scope() or self._is_pg_powerx_scope()

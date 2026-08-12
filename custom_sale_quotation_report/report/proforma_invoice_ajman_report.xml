@@ -5,6 +5,7 @@
             <t t-foreach="docs" t-as="o">
                 <t t-set="bank" t-value="o.company_id.partner_id.bank_ids[:1]"/>
                 <t t-set="delivery" t-value="o.picking_ids.filtered(lambda p: p.picking_type_id.code == 'outgoing')[:1]"/>
+                <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
                 <div class="page" style="font-size:12px; padding:0; margin:0;">
 
                     <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
@@ -40,7 +41,7 @@
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
-                                            <strong>Invoice No</strong>
+                                            <strong><span t-esc="'Proforma Invoice No.' if is_powerx else 'Invoice No'"/></strong>
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px;">
                                             <span t-field="o.name"/>
@@ -48,7 +49,7 @@
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
-                                            <strong>Invoice Date</strong>
+                                            <strong><span t-esc="'Date' if is_powerx else 'Invoice Date'"/></strong>
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px;">
                                             <span t-field="o.date_order" t-options="{'widget': 'date'}"/>
@@ -56,11 +57,41 @@
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
-                                            <strong>TRN</strong>
+                                            <strong><span t-esc="'Seller TRN' if is_powerx else 'TRN'"/></strong>
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px;">
                                             <span t-field="o.company_id.vat"/>
                                         </td>
+                                    </tr>
+                                    <tr t-if="is_powerx">
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Purchase Order No. and Date</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.client_po_order_no"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="is_powerx">
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Sales Incharge</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.user_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="is_powerx">
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Payment Terms</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.payment_term_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr t-if="is_powerx">
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
+                                            <strong>Exchange Rate</strong>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
                                     </tr>
                                 </table>
                             </td>
@@ -89,19 +120,21 @@
                                         <td style="padding:4px;">Contact No.</td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                     </tr>
-                                    <tr>
-                                        <td style="padding:4px;">Emirate</td>
-                                        <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding:4px;">Country</td>
-                                        <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
-                                    </tr>
+                                    <t t-if="not is_powerx">
+                                        <tr>
+                                            <td style="padding:4px;">Emirate</td>
+                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:4px;">Country</td>
+                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                        </tr>
+                                    </t>
                                     <tr>
                                         <td style="padding:4px;">TRN</td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                     </tr>
-                                    <tr>
+                                    <tr t-if="not is_powerx">
                                         <td style="padding:4px;">Place of supply</td>
                                         <td style="padding:4px;">: </td>
                                     </tr>
@@ -109,8 +142,42 @@
                             </td>
                             <td style="width:4%;"/>
                             <td style="width:48%; vertical-align:top;">
-                                <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Invoice Details</div>
-                                <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">
+                                    <span t-esc="'Delivery Details' if is_powerx else 'Invoice Details'"/>
+                                </div>
+                                <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td style="padding:4px; width:50%;">Vehicle No.</td>
+                                        <td style="padding:4px;">Contact No.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"><span t-field="delivery.vehicle_no"/></td>
+                                        <td style="padding:4px;"><span t-field="o.partner_id.phone"/></td>
+                                    </tr>
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td style="padding:4px;">WS No.</td>
+                                        <td style="padding:4px;">Delivery Note No.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
+                                    </tr>
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td style="padding:4px;" colspan="2">Terms</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;" colspan="2"> </td>
+                                    </tr>
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td style="padding:4px;">Place of Supply</td>
+                                        <td style="padding:4px;">Place of Loading</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"><span t-field="o.port_master_id.name"/></td>
+                                    </tr>
+                                </table>
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; width:50%;">Delivery Note No.</td>
                                         <td style="padding:4px;">Delivery Note Date</td>
@@ -164,18 +231,26 @@
                         </tr>
                     </table>
 
+                    <div t-if="is_powerx" style="font-weight:bold; margin:-10px 0 15px 0;">FREE ZONE TO FREE ZONE</div>
+
                     <!-- ============ LINE ITEMS ============ -->
                     <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:11px;">
                         <thead>
                             <tr style="background-color:#d9d9d9;">
                                 <th style="border:1px solid #ccc; padding:4px;">Sn</th>
                                 <th style="border:1px solid #ccc; padding:4px;">Description of Goods</th>
-                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Packaging</th>
+                                <th t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Packaging</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Quantity</th>
-                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Rate</th>
-                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">Per</th>
-                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">VAT %</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'Rate Per Unit' if is_powerx else 'Rate'"/>
+                                </th>
+                                <th t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Per</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Amount</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'VAT Rate' if is_powerx else 'VAT %'"/>
+                                </th>
+                                <th t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Taxable Value</th>
+                                <th t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Tax Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,8 +266,12 @@
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px;">
                                             <span t-field="line.name"/>
+                                            <t t-if="is_powerx and line.packing_type">
+                                                <br/>
+                                                <small class="text-muted">Packing: <span t-esc="line.packing_type"/></small>
+                                            </t>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="line.pack_size_id.name"/>
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px; text-align:right;">
@@ -202,14 +281,22 @@
                                             <span t-field="line.price_unit"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="line.product_uom_id.name"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="line.price_subtotal"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                         <td style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-esc="vat_pct"/>%
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="line.price_subtotal"
+                                                  t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="line.price_tax"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
@@ -218,8 +305,66 @@
                         </tbody>
                     </table>
 
+                    <div t-if="is_powerx" style="display:flex; justify-content:space-between; background-color:#f2f2f2; padding:4px 6px; font-size:11px; border:1px solid #ccc; border-top:none;">
+                        <span>Gross Weight: <span t-esc="'{:,.2f}'.format(sum(o.order_line.mapped('gross_weight')))"/></span>
+                        <span>Net Weight: <span t-esc="'{:,.2f}'.format(sum(o.order_line.mapped('net_weight')))"/></span>
+                    </div>
+
+                    <table t-if="is_powerx" style="width:100%; border-collapse:collapse; font-size:11px; margin-top:4px;">
+                        <tr style="background-color:#d9d9d9; font-weight:bold;">
+                            <td style="border:1px solid #ccc; padding:4px;">Total AED</td>
+                            <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                            <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                            <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                <span t-field="o.amount_tax" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+
                     <!-- ============ TERMS / TOTALS ============ -->
-                    <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+                    <table t-if="is_powerx" style="width:100%; border-collapse:collapse; margin-top:10px;">
+                        <tr>
+                            <td style="width:55%; vertical-align:top; font-size:12px;">
+                                <div><strong>Amount Chargeable (in words)</strong></div>
+                                <div><span t-esc="o.currency_id.amount_to_text(o.amount_total)"/></div>
+                                <div style="margin-top:10px;"><strong>VAT Amount (in words)</strong></div>
+                                <div><span t-esc="o.currency_id.amount_to_text(o.amount_tax)"/></div>
+                            </td>
+                            <td style="width:45%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <tr style="background-color:#f2f2f2;">
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>VAT %</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;"><strong>Assessable Value</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;"><strong>Tax Amount</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;">5%</td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="o.amount_tax" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr style="font-weight:bold;">
+                                        <td style="border:1px solid #ccc; padding:4px;">Total</td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="o.amount_tax" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div style="text-align:right; font-size:10px; font-style:italic; margin-top:2px;">E. &amp; O.E</div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table t-else="" style="width:100%; border-collapse:collapse; margin-top:10px;">
                         <tr>
                             <td style="width:55%; vertical-align:top; font-size:12px;">
                                 <div><strong>Terms of Delivery</strong></div>
@@ -287,6 +432,14 @@
                                 <td style="padding:2px;">: <span t-field="bank.bank_bic"/></td>
                             </tr>
                         </table>
+                    </div>
+
+                    <!-- ============ SIGNATURE (Power X only) ============ -->
+                    <div t-if="is_powerx" style="text-align:right; margin-top:20px; font-size:12px;">
+                        for Power X freezone authourized signature
+                    </div>
+                    <div t-if="is_powerx" style="color:#c0392b; font-style:italic; font-weight:bold; text-align:right; margin-top:8px;">
+                        Leave your Base Oil with us
                     </div>
 
                     <!-- ============ DECLARATION ============ -->
