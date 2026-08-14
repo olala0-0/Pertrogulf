@@ -51,8 +51,18 @@ class SaleOrder(models.Model):
             return True
         return bool(company.parent_id and company.parent_id.business_unit == 'pg_powerx')
 
-    def _is_proforma_invoice_scope(self):
-        """The shared Proforma Invoice report renders an Ajman or a Power X
-        layout (toggled internally by business_unit) - allow either scope."""
+    # --- Proforma Invoice (Petrogulf Marine) ---
+    def _is_pg_marine_scope(self):
+        """True if this order's company is Petrogulf Marine or one of its branch companies."""
         self.ensure_one()
-        return self._is_pg_ajman_scope() or self._is_pg_powerx_scope()
+        company = self.company_id
+        if company.business_unit == 'pg_marine':
+            return True
+        return bool(company.parent_id and company.parent_id.business_unit == 'pg_marine')
+
+    def _is_proforma_invoice_scope(self):
+        """The shared Proforma Invoice report renders an Ajman/Marine or a
+        Power X layout (toggled internally by business_unit) - allow any of
+        these scopes."""
+        self.ensure_one()
+        return self._is_pg_ajman_scope() or self._is_pg_powerx_scope() or self._is_pg_marine_scope()

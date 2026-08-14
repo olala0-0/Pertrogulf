@@ -6,7 +6,7 @@ AJMAN_SCOPED_REPORTS = {
         'sale.order',
         '_is_proforma_invoice_scope',
         "This proforma invoice layout is only available for sale orders of "
-        "Petro Gulf Ajman, Power X and their branch companies.",
+        "Petro Gulf Ajman, Power X, Petrogulf Marine and their branch companies.",
     ),
     'custom_sale_quotation_report.report_tax_invoice_ajman': (
         'account.move',
