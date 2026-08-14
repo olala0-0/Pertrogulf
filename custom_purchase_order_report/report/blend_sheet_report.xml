@@ -1,0 +1,211 @@
+<odoo>
+    <template id="report_blend_sheet">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <!-- BOMs are often shared across companies with company_id left blank -
+                     fall back to the printing user's current company so the letterhead
+                     always shows something. -->
+                <t t-set="company" t-value="o.company_id or o.env.company"/>
+                <div class="page" style="font-size:12px; padding:0; margin:0;">
+
+                    <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
+                    <div style="width:100%; height:42mm; background-repeat:no-repeat; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTAgNDIiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxwb2x5Z29uIHBvaW50cz0iMCwwIDIxMCwwIDIxMCwxNC40IDk5LjMsMTQuNCA4Ny45LDQyIDAsNDIiIGZpbGw9IiNkMWQzZDQiLz48L3N2Zz4=');">
+                    <table style="width:100%; height:42mm; table-layout:fixed; border-collapse:collapse;">
+                        <colgroup>
+                            <col style="width:93mm;"/>
+                            <col style="width:117mm;"/>
+                        </colgroup>
+                        <tr>
+                            <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                <img t-if="company.logo" t-att-src="company.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                            </td>
+                            <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                                <span style="font-size:34px; font-weight:bold; color:#231f20;">BLEND SHEET</span>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+
+                    <div style="padding:3mm 7mm 0 7mm;">
+
+                    <div style="font-size:12px; margin-bottom:12px;">
+                        <div><strong t-field="company.name"/></div>
+                        <div t-if="company.street"><span t-field="company.street"/><span t-if="company.city">, <span t-field="company.city"/></span></div>
+                        <div t-if="company.phone"><span t-field="company.phone"/></div>
+                        <div t-if="company.email"><span t-field="company.email"/></div>
+                        <div t-if="company.website"><span t-field="company.website"/></div>
+                    </div>
+
+                    <!-- ============ HEADER FIELDS ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:48%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:50%;">Ketal No</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.ketal_no.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Previous Product</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.previous_product.display_name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Flushing Required</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-if="o.flushing_required == 'yes'">YES</span>
+                                            <span t-if="o.flushing_required == 'no'">NO</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Flushing Qty</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.flushing_qty"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:4%;"/>
+                            <td style="width:48%; vertical-align:top;">
+                                <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:50%;">Date Mfg</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Batch Number</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.lot_number"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Product Name</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.product_tmpl_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Packaging</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.product_uom_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Qty in kg</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.product_qty"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Density</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.density"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Customer</td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ FORMULATION ============ -->
+                    <div style="text-align:center; font-weight:bold; margin-bottom:4px;">FORMULATION</div>
+                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:11px;">
+                        <thead>
+                            <tr style="background-color:#d9d9d9;">
+                                <th style="border:1px solid #ccc; padding:4px; width:6%;">Sn</th>
+                                <th style="border:1px solid #ccc; padding:4px;"> </th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right; width:14%;">Percentage</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right; width:14%;">Qty in Kg</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right; width:14%;">Qty in Ltr</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right; width:16%;">Density@29.5</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sn" t-value="0"/>
+                            <t t-foreach="o.bom_line_ids" t-as="line">
+                                <t t-set="sn" t-value="sn + 1"/>
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:4px;"><span t-esc="sn"/></td>
+                                    <td style="border:1px solid #ccc; padding:4px;"><span t-field="line.product_id.display_name"/></td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-esc="'{:.2%}'.format(line.percentage)"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;"><span t-field="line.product_qty"/></td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;"><span t-field="line.qty_ltr"/></td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;"><span t-field="line.density"/></td>
+                                </tr>
+                            </t>
+                            <tr t-if="o.qc_control_ids">
+                                <td style="border:1px solid #ccc; padding:4px;" colspan="6"><strong>Test Parameters</strong></td>
+                            </tr>
+                            <t t-foreach="o.qc_control_ids" t-as="qc">
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    <td style="border:1px solid #ccc; padding:4px;"><span t-field="qc.name"/></td>
+                                    <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                </tr>
+                            </t>
+                            <tr style="background-color:#d9d9d9; font-weight:bold;">
+                                <td style="border:1px solid #ccc; padding:4px;" colspan="2">Total</td>
+                                <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'{:.2%}'.format(sum(o.bom_line_ids.mapped('percentage')))"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'{:,.2f}'.format(o.total_component_qty_kg)"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'{:,.2f}'.format(o.total_component_qty_ltr)"/>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:4px;"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- ============ BLENDING PROCESS ============ -->
+                    <div style="text-align:center; font-weight:bold; margin:10px 0 4px 0;">Blending Process</div>
+                    <table style="width:100%; border-collapse:collapse; font-size:11px; border:1px solid #ccc;">
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                        </tr>
+                        <tr style="background-color:#d9d9d9; font-weight:bold;">
+                            <td style="border:1px solid #ccc; padding:4px;">
+                                <table style="width:100%; border-collapse:collapse;">
+                                    <tr>
+                                        <td style="width:33%; text-align:center;">QA Approval</td>
+                                        <td style="width:34%; text-align:center;">Production</td>
+                                        <td style="width:33%; text-align:center;">Plant Manager</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ FILLING REPORT ============ -->
+                    <div style="text-align:center; font-weight:bold; margin:10px 0 4px 0;">Filling Report</div>
+                    <table style="width:100%; border-collapse:collapse; font-size:11px; border:1px solid #ccc;">
+                        <tr style="background-color:#d9d9d9; font-weight:bold; text-align:center;">
+                            <td style="border:1px solid #ccc; padding:4px; width:20%;">Drum</td>
+                            <td style="border:1px solid #ccc; padding:4px; width:20%;">Pail</td>
+                            <td style="border:1px solid #ccc; padding:4px; width:20%;">Carton</td>
+                            <td style="border:1px solid #ccc; padding:4px; width:20%;">IBC/Flexi</td>
+                            <td style="border:1px solid #ccc; padding:4px; width:20%;">Bulk</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                            <td style="border:1px solid #ccc; padding:10px;"> </td>
+                        </tr>
+                    </table>
+
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

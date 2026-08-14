@@ -22,8 +22,15 @@
         Also adds an RFQ (Request for Quotation) layout for Purchase
         Orders, using the same letterhead but available for any company,
         with no scope restriction.
+
+        Also adds a Blend Sheet layout for Bills of Materials / Production
+        Blend Sheets, using the same letterhead and pulling the Ketal No,
+        Previous Product, Flushing, Batch/Lot No, Density and component
+        formulation (percentage / qty kg / qty ltr / density) fields
+        already defined by bom_custom - available for any company, with
+        no scope restriction.
     """,
-    'depends': ['purchase', 'purchase_stock', 'stock', 'zilancer_customisation'],
+    'depends': ['purchase', 'purchase_stock', 'stock', 'zilancer_customisation', 'mrp', 'bom_custom'],
     'data': [
         'views/purchase_order_views.xml',
         'report/report_actions.xml',
@@ -36,6 +43,8 @@
         'report/grn_ajman_report.xml',
         'report/rfq_report_actions.xml',
         'report/rfq_report.xml',
+        'report/blend_sheet_report_actions.xml',
+        'report/blend_sheet_report.xml',
     ],
     'installable': True,
     'application': False,

@@ -11,7 +11,8 @@ AJMAN_SCOPED_REPORTS = {
         'stock.picking',
         '_is_delivery_note_scope',
         "This delivery note layout is only available for sale deliveries of "
-        "Petro Gulf Ajman, Power X and their branch companies.",
+        "Petro Gulf Ajman, Power X, Petrogulf Marine and their branch companies, "
+        "or deliveries sold to Petrogulf Marine itself.",
     ),
     'custom_purchase_order_report.report_grn_ajman': (
         'stock.picking',
