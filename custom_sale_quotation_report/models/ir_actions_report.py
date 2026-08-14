@@ -12,7 +12,7 @@ AJMAN_SCOPED_REPORTS = {
         'account.move',
         '_is_tax_invoice_scope',
         "This tax invoice layout is only available for invoices of "
-        "Petro Gulf Ajman, Power X and their branch companies.",
+        "Petro Gulf Ajman, Power X, Petrogulf Marine and their branch companies.",
     ),
 }
 

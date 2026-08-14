@@ -261,10 +261,9 @@
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Quantity</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Rate</th>
                                 <th t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Per</th>
+                                <th t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">VAT %</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Amount</th>
-                                <th style="border:1px solid #ccc; padding:4px; text-align:right;">
-                                    <span t-esc="'VAT Rate' if is_powerx else 'VAT %'"/>
-                                </th>
+                                <th t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">VAT Rate</th>
                                 <th t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Taxable Value</th>
                                 <th t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">Tax Amount</th>
                             </tr>
@@ -300,11 +299,14 @@
                                         <td t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="line.product_uom_id.name"/>
                                         </td>
+                                        <td t-if="not is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-esc="vat_pct"/>%
+                                        </td>
                                         <td style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="line.price_subtotal"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-esc="vat_pct"/>%
                                         </td>
                                         <td t-if="is_powerx" style="border:1px solid #ccc; padding:4px; text-align:right;">
