@@ -254,6 +254,15 @@ class StockPicking(models.Model):
             'location_dest_id': picking_type.default_location_dest_id.id,
             'delivery_instruction': self._mrp_custom_get_delivery_instruction(move_dest),
         }
+        if self.company_id.business_unit == 'pg_marine':
+            if getattr(self, 'vessel_no_id', False):
+                vals['vessel_no_id'] = self.vessel_no_id.id
+            if getattr(self, 'imo_number', False):
+                vals['imo_number'] = self.imo_number
+            if getattr(self, 'port_master_id', False):
+                vals['port_master_id'] = self.port_master_id.id
+            if getattr(self, 'country_port_id', False):
+                vals['country_port_id'] = self.country_port_id.id
         if move_dest:
             vals['move_dest_ids'] = [Command.link(move_dest.id)]
 

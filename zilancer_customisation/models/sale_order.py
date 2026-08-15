@@ -61,6 +61,23 @@ class QuotationLine(models.Model):
     )
     pack_size_id = fields.Many2one("pack.size.master", string="Pack Size")
 
+    hs_code = fields.Char(
+        related="product_id.hs_code", string="HS Code", store=True, readonly=False
+    )
+    net_weight = fields.Float(
+        string="Net Weight (kg)", compute="_compute_weights", store=True
+    )
+    gross_weight = fields.Float(
+        string="Gross Weight (kg)", compute="_compute_weights", store=True
+    )
+
+    @api.depends("product_id", "product_id.net_weight", "product_id.gross_weight", "unit_qty", "product_uom_qty")
+    def _compute_weights(self):
+        for line in self:
+            qty = line.unit_qty or line.product_uom_qty or 0.0
+            line.net_weight = qty * (line.product_id.net_weight or 0.0)
+            line.gross_weight = qty * (line.product_id.gross_weight or 0.0)
+
     @api.onchange("product_id")
     def _onchange_product_id_set_values(self):
         for line in self:
@@ -284,6 +301,27 @@ class SaleOrder(models.Model):
 
     show_total = fields.Boolean(string="Show Total", default=True)
 
+    # Toll Blending Report Settings
+    tb_show_net_weight = fields.Boolean(string="Net weight", default=True)
+    tb_show_gross_weight = fields.Boolean(string="Gross Weight", default=True)
+    tb_show_pack_type = fields.Boolean(string="Pack Type", default=True)
+    tb_show_no_of_units = fields.Boolean(string="No of units", default=True)
+    tb_show_unit_price = fields.Boolean(string="Unit Price", default=True)
+    tb_show_amount = fields.Boolean(string="Amount", default=True)
+    tb_show_hs_code = fields.Boolean(string="HS Code", default=True)
+    tb_show_discount = fields.Boolean(string="Discount / Credit Note", default=True)
+
+    # Automotive Report Settings
+    auto_show_net_weight = fields.Boolean(string="Net weight", default=True)
+    auto_show_gross_weight = fields.Boolean(string="Gross Weight", default=True)
+    auto_show_pack_type = fields.Boolean(string="Pack Type", default=True)
+    auto_show_no_of_units = fields.Boolean(string="No of units", default=True)
+    auto_show_unit_price = fields.Boolean(string="Unit Price", default=True)
+    auto_show_amount = fields.Boolean(string="Amount", default=True)
+    auto_show_hs_code = fields.Boolean(string="HS Code", default=True)
+    auto_show_discount = fields.Boolean(string="Discount / Credit Note", default=True)
+
+
     def action_confirm(self):
         for order in self:
             if order.company_id.id == 9:
@@ -316,6 +354,8 @@ class SaleOrder(models.Model):
                     "cust_ref_pro_category": qline.cust_ref_pro_category,
                     "customer_ref_id": qline.customer_ref_id.id,
                     "pack_size_id": qline.pack_size_id.id,
+                    "hs_code": qline.hs_code,
+
                 }
 
                 self.env["sale.order.line"].create(vals)
@@ -722,6 +762,19 @@ class SaleOrder(models.Model):
                     }
                 )
 
+    def _prepare_purchase_order_data(self, company, company_partner):
+        po_vals = super()._prepare_purchase_order_data(company, company_partner)
+        if company.business_unit == 'pg_marine' or self.company_id.business_unit == 'pg_marine':
+            if self.vessel_no_id:
+                po_vals['vessel_no_id'] = self.vessel_no_id.id
+            if self.imo_number:
+                po_vals['imo_number'] = self.imo_number
+            if self.port_master_id:
+                po_vals['port_master_id'] = self.port_master_id.id
+            if self.country_port_id:
+                po_vals['country_port_id'] = self.country_port_id.id
+        return po_vals
+
     def _check_company(self, fnames=None):
         if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
             return
@@ -746,6 +799,20 @@ class SaleOrderLine(models.Model):
     total_weight = fields.Float(
         string="Total Weight", compute="_compute_total_weight", store=True
     )
+    net_weight = fields.Float(
+        string="Net Weight (kg)", compute="_compute_line_weights", store=True
+    )
+    gross_weight = fields.Float(
+        string="Gross Weight (kg)", compute="_compute_line_weights", store=True
+    )
+
+    @api.depends("product_id", "product_id.net_weight", "product_id.gross_weight", "unit_qty", "product_uom_qty")
+    def _compute_line_weights(self):
+        for line in self:
+            qty = line.unit_qty or line.product_uom_qty or 0.0
+            line.net_weight = qty * (line.product_id.net_weight or 0.0)
+            line.gross_weight = qty * (line.product_id.gross_weight or 0.0)
+
 
     offered_price = fields.Float("Offered Price")
     # discount_rate = fields.Float("Discount")

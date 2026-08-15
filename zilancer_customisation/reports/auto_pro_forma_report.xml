@@ -53,31 +53,41 @@
             </div>
 
             <!-- Is there a discount on at least one line? -->
-            <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+            <t t-set="lines_to_report" t-value="doc.quotation_lines.filtered(lambda l: l.product_id.name != 'Discount') if doc.quotation_lines else doc.order_line.filtered(lambda l: not l.display_type and l.product_id.name != 'Discount')"/>
             <t t-set="display_discount" t-value="any(l.discount for l in lines_to_report)"/>
 
             <div class="oe_structure"></div>
             <div class="col-12">
-                <t t-set="show_hs_code" t-value="any(line.hs_code for line in lines_to_report.filtered(lambda l: not l.display_type))"/>
-
                 <table class="mt-4 o_has_total_table table o_main_table table-borderless" style="border: 1px solid #000; border-collapse: collapse; width: 100%;">
                     <thead style="display: table-row-group; border: 1px solid #000;">
                         <tr style="border: 1px solid #000;">
                             <th name="th_sl" class="text-end text-nowrap" style="text-transform: none; border: 1px solid #000;">Sl No.</th>
 
-                            <!-- <t t-if="show_hs_code">
+                            <t t-if="doc.auto_show_hs_code != False">
                                 <th name="th_hs_code" class="text-end text-nowrap" style="text-transform: none; border: 1px solid #000;">HS Code</th>
-                            </t> -->
+                            </t>
 
                             <th name="th_description" class="text-start" style="text-transform: none; border: 1px solid #000;">Offered Items</th>
-                            <th name="th_quantity" class="text-end text-nowrap" style="text-transform: none; border: 1px solid #000;">Pack Size</th>
-                            <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_no_units" class="text-end text-nowrap">No. Of Units</th>
-                            <!-- <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_net" class="text-end text-nowrap">Net Wt. (Kg)</th> -->
-                            <!-- <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_gross" class="text-end text-nowrap">Gross Wt. (Kg)</th> -->
-                            <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_priceunit" class="text-end text-nowrap">Unit Price (<span t-esc="doc.currency_id.name"/>)</th>
-                            <th name="th_subtotal" class="text-end" style="text-transform: none; border: 1px solid #000;">
-                                <span>Amount (<span t-esc="doc.currency_id.name"/>)</span>
-                            </th>
+                            <t t-if="doc.auto_show_pack_type != False">
+                                <th name="th_quantity" class="text-end text-nowrap" style="text-transform: none; border: 1px solid #000;">Pack Size</th>
+                            </t>
+                            <t t-if="doc.auto_show_no_of_units != False">
+                                <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_no_units" class="text-end text-nowrap">No. Of Units</th>
+                            </t>
+                            <t t-if="doc.auto_show_net_weight != False">
+                                <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_net" class="text-end text-nowrap">Net Wt. (Kg)</th>
+                            </t>
+                            <t t-if="doc.auto_show_gross_weight != False">
+                                <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_gross" class="text-end text-nowrap">Gross Wt. (Kg)</th>
+                            </t>
+                            <t t-if="doc.auto_show_unit_price != False">
+                                <th style="width:5% !important; text-transform: none; border: 1px solid #000;" name="th_priceunit" class="text-end text-nowrap">Unit Price (<span t-esc="doc.currency_id.name"/>)</th>
+                            </t>
+                            <t t-if="doc.auto_show_amount != False">
+                                <th name="th_subtotal" class="text-end" style="text-transform: none; border: 1px solid #000;">
+                                    <span>Amount (<span t-esc="doc.currency_id.name"/>)</span>
+                                </th>
+                            </t>
                         </tr>
                     </thead>
 
@@ -85,7 +95,7 @@
                         <t t-set="current_subtotal" t-value="0"/>
                         <t t-set="counter" t-value="0"/>
 
-                        <t t-foreach="lines_to_report.filtered(lambda l: l.product_id.name != 'Discount')" t-as="line">
+                        <t t-foreach="lines_to_report" t-as="line">
                             <t t-set="counter" t-value="counter + 1"/>
                             <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
 
@@ -96,47 +106,59 @@
                                         <span t-out="counter"/>
                                     </td>
 
-                                    <!-- HS Code (only visible if exists) -->
-                                    <!-- <t t-if="show_hs_code">
+                                    <!-- HS Code -->
+                                    <t t-if="doc.auto_show_hs_code != False">
                                         <td class="text-end" style="border: 1px solid #000;">
                                             <span t-field="line.hs_code"/>
                                         </td>
-                                    </t> -->
+                                    </t>
 
                                     <!-- Product Description -->
                                     <td class="text-start" style="border: 1px solid #000;">
                                         <span t-field="line.name"/>
                                     </td>
 
-                                    <!-- Selling Unit -->
-                                    <td class="text-end" style="border: 1px solid #000;">
-                                        <span t-field="line.pack_size_id.name"/>
-                                    </td>
+                                    <!-- Pack Size -->
+                                    <t t-if="doc.auto_show_pack_type != False">
+                                        <td class="text-end" style="border: 1px solid #000;">
+                                            <span t-field="line.pack_size_id.name"/>
+                                        </td>
+                                    </t>
 
                                     <!-- No. Of Units -->
-                                    <td class="text-end" style="border: 1px solid #000;">
-                                        <span t-field="line.product_uom_qty"/>
-                                    </td>
+                                    <t t-if="doc.auto_show_no_of_units != False">
+                                        <td class="text-end" style="border: 1px solid #000;">
+                                            <span t-esc="line.unit_qty or line.product_uom_qty"/>
+                                        </td>
+                                    </t>
 
                                     <!-- Net Weight -->
-                                    <!-- <td class="text-end" style="border: 1px solid #000;">
-                                        <span t-esc="'%.2f' % (line.unit_qty * line.product_id.net_weight)"/>
-                                    </td> -->
+                                    <t t-if="doc.auto_show_net_weight != False">
+                                        <td class="text-end" style="border: 1px solid #000;">
+                                            <span t-esc="'%.2f' % (line.net_weight or ((line.unit_qty or line.product_uom_qty or 0) * (line.product_id.net_weight or 0)))"/>
+                                        </td>
+                                    </t>
 
                                     <!-- Gross Weight -->
-                                    <!-- <td class="text-end" style="border: 1px solid #000;">
-                                        <span t-esc="'%.2f' % (line.unit_qty * line.product_id.gross_weight)"/>
-                                    </td> -->
+                                    <t t-if="doc.auto_show_gross_weight != False">
+                                        <td class="text-end" style="border: 1px solid #000;">
+                                            <span t-esc="'%.2f' % (line.gross_weight or ((line.unit_qty or line.product_uom_qty or 0) * (line.product_id.gross_weight or 0)))"/>
+                                        </td>
+                                    </t>
 
                                     <!-- Unit Price -->
-                                    <td class="text-end text-nowrap" style="border: 1px solid #000;">
-                                        <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                    </td>
+                                    <t t-if="doc.auto_show_unit_price != False">
+                                        <td class="text-end text-nowrap" style="border: 1px solid #000;">
+                                            <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </t>
 
                                     <!-- Amount -->
-                                    <td class="text-end" style="border: 1px solid #000;">
-                                        <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
-                                    </td>
+                                    <t t-if="doc.auto_show_amount != False">
+                                        <td class="text-end" style="border: 1px solid #000;">
+                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </t>
                                 </t>
 
                                 <!-- Section line -->
@@ -178,19 +200,21 @@
 
             </div>
             <!-- <t t-if="is_proforma"> -->
+            <t t-set="all_lines" t-value="doc.quotation_lines if doc.quotation_lines else doc.order_line.filtered(lambda l: not l.display_type)"/>
             <t t-set="subtotal" t-value="0.0"/>
             <t t-set="discount_total" t-value="0.0"/>
             <t t-set="additional_discount" t-value="0.0"/>
 
             <!-- Calculate subtotal and percent-based discount -->
-            <t t-foreach="doc.order_line" t-as="line">
-                <t t-set="subtotal" t-value="subtotal + (line.price_unit * line.product_uom_qty)"/>
-                <t t-set="discount_total" t-value="discount_total + (line.price_unit * line.product_uom_qty * (line.discount / 100.0))"/>
+            <t t-foreach="all_lines" t-as="line">
+                <t t-set="l_qty" t-value="line.unit_qty or line.product_uom_qty"/>
+                <t t-set="subtotal" t-value="subtotal + (line.price_unit * l_qty)"/>
+                <t t-set="discount_total" t-value="discount_total + (line.price_unit * l_qty * (line.discount / 100.0))"/>
             </t>
 
-            <!--  Get additional discount from "Discount" product line (if any) -->
+            <!-- Get additional discount from "Discount" product line (if any) -->
             <t t-set="additional_discount"
-               t-value="abs(sum(doc.order_line.filtered(lambda l: l.product_id.name == 'Discount').mapped('price_subtotal')))"/>
+               t-value="abs(sum(all_lines.filtered(lambda l: l.product_id.name == 'Discount').mapped('price_subtotal')))"/>
 
             <!-- Calculate final totals -->
             <t t-set="total_discount" t-value="discount_total + additional_discount"/>
@@ -200,25 +224,34 @@
             <!-- Display table -->
             <div class="clearfix" name="so_total_summary">
                 <div id="total" class="row mt-n3" name="total">
-                    <div class="col-6 ms-auto">
-                        <table class="o_total_table table table-borderless" style="width: 47%; float: right;">
+                    <div class="col-4 ms-auto">
+                        <table class="o_total_table table table-borderless" style="width: 100%;">
                             <tbody>
                                 <!-- SUBTOTAL -->
                                 <tr>
-                                    <td class="text-end"><strong>Sub Total:</strong></td>
-                                    <td class="text-end">
-                                        <span t-esc="'{:,.2f}'.format(net_total)"/>
+                                    <td class="text-end text-nowrap"><strong>Sub Total:</strong></td>
+                                    <td class="text-end text-nowrap">
+                                        <span t-esc="'{:,.2f}'.format(subtotal + total_discount)"/>
+                                        <span t-field="doc.currency_id"/>
+                                    </td>
+                                </tr>
+
+                                <!-- DISCOUNT (Credit Note + Line %) -->
+                                <tr t-if="doc.auto_show_discount != False">
+                                    <td class="text-end text-nowrap"><strong>Discount (Credit Note):</strong></td>
+                                    <td class="text-end text-nowrap">
+                                        (-) <span t-esc="'{:,.2f}'.format(total_discount)"/>
                                         <span t-field="doc.currency_id"/>
                                     </td>
                                 </tr>
 
                                 <!-- VAT -->
                                 <tr t-if="doc.vat_selection and doc.vat_selection != 'vat_not_applicable'">
-                                    <td class="text-end" style="font-weight: bold;">
+                                    <td class="text-end text-nowrap" style="font-weight: bold;">
                                         <span t-if="doc.vat_selection == 'vat_5'">VAT 5%</span>
                                         <span t-if="doc.vat_selection == 'vat_0'">VAT 0%</span>
                                     </td>
-                                    <td class="text-end">
+                                    <td class="text-end text-nowrap">
                                         <t t-if="doc.currency_id">
                                             <span t-esc="'{:,.2f}'.format(doc.amount_tax)"/>
                                             <span t-esc="doc.currency_id.symbol"/>
@@ -228,8 +261,8 @@
 
                                 <!-- TOTAL -->
                                 <tr>
-                                    <td class="text-end"><strong>Total Amount:</strong></td>
-                                    <td class="text-end">
+                                    <td class="text-end text-nowrap"><strong>Total Amount:</strong></td>
+                                    <td class="text-end text-nowrap">
                                         <span t-esc="'{:,.2f}'.format(grand_total)"/>
                                         <span t-field="doc.currency_id"/>
                                     </td>

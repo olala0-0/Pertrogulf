@@ -70,6 +70,22 @@ class StockPicking(models.Model):
     receiver_name = fields.Char(string='Receiver Name')
     receiver_sign = fields.Char(string='Receiver Sign (Print Only)')
 
+    # Marine Additional Details fields
+    vessel_no_id = fields.Many2one("vessel.no", string="Vessel Name")
+    imo_number = fields.Char(string="IMO Number")
+    port_master_id = fields.Many2one("port.master", string="Port Name")
+    country_port_id = fields.Many2one("res.country", string="Country of Supply")
+
+    @api.onchange("vessel_no_id")
+    def _onchange_vessel_no_id(self):
+        if self.vessel_no_id and self.vessel_no_id.imo_number:
+            self.imo_number = self.vessel_no_id.imo_number
+
+    @api.onchange("port_master_id")
+    def _onchange_port_master_id(self):
+        if self.port_master_id:
+            self.country_port_id = self.port_master_id.country_id.id
+
     @api.model_create_multi
     def create(self, vals_list):
         # Handle structural conversion for multi-record creation loops in modern Odoo
@@ -77,6 +93,34 @@ class StockPicking(models.Model):
             # Generate document number only if document_type is set
             if vals.get('document_type') and not vals.get('document_number'):
                 vals['document_number'] = self._generate_document_number_simple(vals['document_type'])
+
+            # Data propagation for Marine company (pg_marine)
+            company_id = vals.get('company_id') or self.env.company.id
+            company = self.env['res.company'].browse(company_id)
+            if company.business_unit == 'pg_marine':
+                sale_id = vals.get('sale_id')
+                if sale_id:
+                    sale = self.env['sale.order'].browse(sale_id)
+                    if not vals.get('vessel_no_id') and sale.vessel_no_id:
+                        vals['vessel_no_id'] = sale.vessel_no_id.id
+                    if not vals.get('imo_number') and sale.imo_number:
+                        vals['imo_number'] = sale.imo_number
+                    if not vals.get('port_master_id') and sale.port_master_id:
+                        vals['port_master_id'] = sale.port_master_id.id
+                    if not vals.get('country_port_id') and sale.country_port_id:
+                        vals['country_port_id'] = sale.country_port_id.id
+
+                purchase_id = vals.get('purchase_id')
+                if purchase_id:
+                    po = self.env['purchase.order'].browse(purchase_id)
+                    if not vals.get('vessel_no_id') and po.vessel_no_id:
+                        vals['vessel_no_id'] = po.vessel_no_id.id
+                    if not vals.get('imo_number') and po.imo_number:
+                        vals['imo_number'] = po.imo_number
+                    if not vals.get('port_master_id') and po.port_master_id:
+                        vals['port_master_id'] = po.port_master_id.id
+                    if not vals.get('country_port_id') and po.country_port_id:
+                        vals['country_port_id'] = po.country_port_id.id
         return super(StockPicking, self).create(vals_list)
     
     def write(self, vals):

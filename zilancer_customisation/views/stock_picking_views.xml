@@ -6,9 +6,11 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook" position="inside">
+                <xpath expr="//sheet" position="inside">
                     <field name="picking_type_code" invisible="1"/>
                     <field name="business_unit" invisible="1"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
                     <page string="Dispatch Instructions" invisible="1">
                         <group>
                             <group>
@@ -71,6 +73,18 @@
                             </group>
                         </group>
                     </page>
+                    <page string="Additional Details" name="additional_details" invisible="business_unit != 'pg_marine'">
+                        <group>
+                            <group>
+                                <field name="vessel_no_id"/>
+                                <field name="imo_number"/>
+                                <field name="port_master_id"/>
+                                <field name="country_port_id"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
                 <xpath expr="//page[@name='note']" position="attributes">
                     <attribute name="string">Delivery Instruction</attribute>
@@ -104,6 +118,20 @@
                     <field name="container_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
                     <field name="seal_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
                     <field name="vehicle_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="vpicktree_inherit_marine" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit.marine</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="vessel_no_id" optional="show"/>
+                    <field name="imo_number" optional="show"/>
+                    <field name="port_master_id" optional="show"/>
+                    <field name="country_port_id" optional="show"/>
                 </xpath>
             </field>
         </record>

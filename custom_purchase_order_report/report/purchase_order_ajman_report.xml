@@ -26,12 +26,32 @@
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
-                            <td style="width:55%; vertical-align:top; font-size:12px;">
-                                <div><strong t-field="o.company_id.name"/></div>
-                                <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
-                                <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
-                                <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
-                                <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+                            <td style="width:50%; vertical-align:top; font-size:12px;">
+                                <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">
+                                    <div>
+                                        Petro Gulf Oil Manufacturing LLC<br/>
+                                        Al Hail Industrial Area, Fujairah<br/>
+                                        United Arab Emirates<br/>
+                                        www.petrogulfmarine.com
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div>
+                                        <span t-field="o.company_id.name"/>
+                                    </div>
+                                    <div>
+                                        <span t-field="o.company_id.street"/>
+                                    </div>
+                                    <div t-if="o.company_id.phone">
+                                        <span t-field="o.company_id.phone"/>
+                                    </div>
+                                    <div t-if="o.company_id.email">
+                                        <span t-field="o.company_id.email"/>
+                                    </div>
+                                    <div t-if="o.company_id.website">
+                                        <span t-field="o.company_id.website"/>
+                                    </div>
+                                </t>
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
@@ -83,7 +103,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">Emirate</td>
+                                        <td style="padding:4px;">
+                                            <t t-if="o.partner_id and o.partner_id.country_id and o.partner_id.country_id.code == 'AE'">
+                                                Emirate
+                                            </t>
+                                            <t t-else="">
+                                                State
+                                            </t>
+                                            
+                                        </td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                     </tr>
                                     <tr>
@@ -91,7 +119,14 @@
                                         <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">TRN</td>
+                                        <td style="padding:4px;">
+                                            <t t-if="o.partner_id and o.partner_id.country_id and o.partner_id.country_id.code == 'AE'">
+                                                TRN
+                                            </t>
+                                            <t t-else="">
+                                                GST No
+                                            </t>
+                                        </td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                     </tr>
                                     <tr>
@@ -207,7 +242,9 @@
 
                     <div style="margin-top:15px;">
                         <strong>Amount in Words:</strong>
-                        <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        <t t-if="o.currency_id">
+                            <span t-esc="o.currency_id.currency_unit_label"/>&#160;<span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        </t>
                     </div>
 
                     <!-- ============ SIGNATORY ============ -->
@@ -215,7 +252,7 @@
                         <tr>
                             <td style="width:60%;"/>
                             <td style="width:40%; text-align:center; background-color:#d9d9d9; padding:10px;">
-                                <div>for <span t-field="o.company_id.name"/></div>
+                                <div>for   <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">Petro Gulf Oil Manufacturing LLC</t><t t-else=""><span t-field="o.company_id.name"/></t></div>  
                                 <div style="margin-top:40px;"><strong>Authorised Signatory</strong></div>
                             </td>
                         </tr>

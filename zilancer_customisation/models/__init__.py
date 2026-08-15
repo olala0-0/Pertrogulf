@@ -18,3 +18,4 @@ from . import conclusion_point
 from . import event
 from . import sale_custom_dashboard
 from . import res_company
+from . import mrp_production

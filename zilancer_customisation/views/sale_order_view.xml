@@ -89,15 +89,15 @@
                     <attribute name="required">True</attribute>
                 </xpath>
                 <xpath expr="//page[@name='order_lines']" position="before">
-                    <page string="Additional Details - Marine" invisible="company_id != 3">
+                    <page string="Additional Details" name="additional_details" invisible="business_unit != 'pg_marine'">
                         <group>
                             <group>
-                                <field name="vessel_no_id" required="company_id == 3"/>
+                                <field name="vessel_no_id" required="business_unit == 'pg_marine'"/>
                                 <field name="vessel_eta"/>
                                 <!-- <field name="imo_no_id" required="company_id == 3"/> -->
-                                <field name="imo_number" required="company_id == 3"/>
+                                <field name="imo_number" required="business_unit == 'pg_marine'"/>
                                 <field name="delivery_by_id"/>
-                                <field name="port_master_id" required="company_id == 3"/>
+                                <field name="port_master_id" required="business_unit == 'pg_marine'"/>
                                 <field name="country_port_id"/>
                                 <field name="port_note"/>
                                 <field name="delivery_type_id"/>
@@ -188,11 +188,44 @@
                                    placeholder="Special instructions for the delivery..."/>
                         </group>
                     </page>
+                    <page string="Report Settings" name="report_settings">
+                        <group string="Toll Blending Settings" name="toll_blending_settings">
+                            <group>
+                                <field name="tb_show_net_weight"/>
+                                <field name="tb_show_gross_weight"/>
+                                <field name="tb_show_pack_type"/>
+                                <field name="tb_show_no_of_units"/>
+                            </group>
+                            <group>
+                                <field name="tb_show_unit_price"/>
+                                <field name="tb_show_amount"/>
+                                <field name="tb_show_hs_code"/>
+                                <field name="tb_show_discount"/>
+                            </group>
+                        </group>
+                        <group string="Automotive Settings" name="automotive_settings">
+                            <group>
+                                <field name="auto_show_net_weight"/>
+                                <field name="auto_show_gross_weight"/>
+                                <field name="auto_show_pack_type"/>
+                                <field name="auto_show_no_of_units"/>
+                            </group>
+                            <group>
+                                <field name="auto_show_unit_price"/>
+                                <field name="auto_show_amount"/>
+                                <field name="auto_show_hs_code"/>
+                                <field name="auto_show_discount"/>
+                            </group>
+                        </group>
+                    </page>
                 </notebook>
                 <xpath expr="//field[@name='order_line']//list" position="inside">
                     <field name="weight_per_unit" optional="hide"/>
                     <field name="total_weight" optional="hide"/>
+                    <field name="net_weight" optional="hide"/>
+                    <field name="gross_weight" optional="hide"/>
                 </xpath>
+
 
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_unit']" position="after">
                     <field name="offered_price" optional="show" column_invisible="parent.sale_type != 'local_sale'"/>
@@ -502,12 +535,16 @@
                                     <field name="cust_ref_pro_category" string="Cust Ref Product Category" optional="show" width="140px"/>
                                     <field name="product_id" string="Offered Item" width="320px"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
+                                    <field name="hs_code" optional="show"/>
                                     <field name="product_uom_qty" string="Qty in Units" width="90px"/>
-                                    <field name="pack_size_id" string="Pack Size" column_invisible="True"
+                                    <field name="pack_size_id" string="Pack Size" optional="show"
                                              options="{'no_create': True, 'no_create_edit': True, 'no_quick_create': True}"/>
                                     <field name="product_uom" string="UoM" width="70px"/>
                                     <field name="unit_qty" string="Qty (Base UoM)" width="90px"/>
+                                    <field name="net_weight" string="Net Wt." optional="show"/>
+                                    <field name="gross_weight" string="Gross Wt." optional="show"/>
                                     <field name="price_unit" width="90px"/>
+
                                     <field name="tax_id"
                                            widget="many2many_tags"
                                            optional="show"/>
