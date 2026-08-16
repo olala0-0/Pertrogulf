@@ -8,11 +8,7 @@
         render the Petro Gulf letterhead layouts: Purchase Order
         (Supplier box, PO Details box, line items, Amount in Words,
         signatory footer), Delivery Note (sale deliveries), and Goods
-        Receipt Note (incoming receipts) - scoped to records whose
-        company is Petro Gulf Ajman (business_unit = 'pg_ajman') or one
-        of its direct branch companies; printing them for any other
-        company/document type raises an error instead of generating the
-        PDF.
+        Receipt Note (incoming receipts).
 
         Despatch Note (sale deliveries) uses the same letterhead but
         pulls company name/logo/address dynamically, so it is available
