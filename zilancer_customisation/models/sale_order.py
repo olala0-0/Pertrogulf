@@ -267,7 +267,7 @@ class SaleOrder(models.Model):
         string="VAT",
     )
     sale_type = fields.Selection(
-        [("local_sale", "Local Sales"), ("out_of_scope", "Out of Scope")],
+        [("local_sale", "Local Sales"), ("out_of_scope", "Out of Scope"), ("export", "Export"),],
         string="Sale Type",
     )
     customer_user_id = fields.Many2one(
@@ -752,7 +752,7 @@ class SaleOrder(models.Model):
                         "margin_value": 0.0,
                     }
                 )
-            elif order.sale_type == "local_sale":
+            elif order.sale_type in ("local_sale", "export"):
                 # Reset offered price and discount fields on all lines
                 order.order_line.update(
                     {
@@ -761,6 +761,12 @@ class SaleOrder(models.Model):
                         "discount_value": 0.0,
                     }
                 )
+
+    def _prepare_invoice(self):
+        invoice_vals = super()._prepare_invoice()
+        if self.sale_type:
+            invoice_vals["sale_type"] = self.sale_type
+        return invoice_vals
 
     def _prepare_purchase_order_data(self, company, company_partner):
         po_vals = super()._prepare_purchase_order_data(company, company_partner)
@@ -785,6 +791,14 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line(**optional_values)
+        if self.order_id.sale_type and self.product_id and self.product_id.categ_id:
+            acc = self.product_id.categ_id.with_company(self.company_id)._get_sale_type_income_account(self.order_id.sale_type)
+            if acc:
+                res["account_id"] = acc.id
+        return res
 
     def _check_company(self, fnames=None):
         if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):

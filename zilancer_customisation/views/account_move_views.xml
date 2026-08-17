@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_form_inherit_sale_type" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.sale.type</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='header_left_group']/div[hasclass('o_col')]" position="after">
+                <field name="sale_type" widget="radio" options="{'horizontal': true}" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

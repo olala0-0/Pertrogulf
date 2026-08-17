@@ -228,13 +228,13 @@
 
 
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_unit']" position="after">
-                    <field name="offered_price" optional="show" column_invisible="parent.sale_type != 'local_sale'"/>
+                    <field name="offered_price" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
                     <field name="hs_code" optional="hide"/>
                     <field name="leads_time" optional="show"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_subtotal']" position="after">
-                    <field name="discount_rate" optional="show" column_invisible="parent.sale_type != 'local_sale'"/>
-                    <field name="discount_value" optional="show" column_invisible="parent.sale_type != 'local_sale'"/>
+                    <field name="discount_rate" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
+                    <field name="discount_value" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_unit']" position="before">

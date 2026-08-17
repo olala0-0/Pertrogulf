@@ -30,6 +30,8 @@
         'views/event_event_view.xml',
         'views/sales_person_dashboard_view.xml',
         'views/res_company_views.xml',
+        'views/product_category_views.xml',
+        'views/account_move_views.xml',
         'reports/ir_actions_report.xml',
         'reports/ir_actions_report_templates.xml',
         'reports/non_tax_green_report.xml',
