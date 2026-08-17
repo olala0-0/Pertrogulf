@@ -94,33 +94,46 @@ class StockPicking(models.Model):
             if vals.get('document_type') and not vals.get('document_number'):
                 vals['document_number'] = self._generate_document_number_simple(vals['document_type'])
 
-            # Data propagation for Marine company (pg_marine)
-            company_id = vals.get('company_id') or self.env.company.id
-            company = self.env['res.company'].browse(company_id)
-            if company.business_unit == 'pg_marine':
-                sale_id = vals.get('sale_id')
-                if sale_id:
-                    sale = self.env['sale.order'].browse(sale_id)
-                    if not vals.get('vessel_no_id') and sale.vessel_no_id:
-                        vals['vessel_no_id'] = sale.vessel_no_id.id
-                    if not vals.get('imo_number') and sale.imo_number:
-                        vals['imo_number'] = sale.imo_number
-                    if not vals.get('port_master_id') and sale.port_master_id:
-                        vals['port_master_id'] = sale.port_master_id.id
-                    if not vals.get('country_port_id') and sale.country_port_id:
-                        vals['country_port_id'] = sale.country_port_id.id
+            # Data propagation for Marine additional details
+            sale = False
+            sale_id = vals.get('sale_id')
+            if sale_id:
+                sale = self.env['sale.order'].browse(sale_id)
+            elif vals.get('group_id'):
+                group = self.env['procurement.group'].browse(vals['group_id'])
+                if getattr(group, 'sale_id', False):
+                    sale = group.sale_id
+            elif vals.get('origin'):
+                sale = self.env['sale.order'].search([('name', '=', vals['origin'])], limit=1)
 
-                purchase_id = vals.get('purchase_id')
-                if purchase_id:
-                    po = self.env['purchase.order'].browse(purchase_id)
-                    if not vals.get('vessel_no_id') and po.vessel_no_id:
-                        vals['vessel_no_id'] = po.vessel_no_id.id
-                    if not vals.get('imo_number') and po.imo_number:
-                        vals['imo_number'] = po.imo_number
-                    if not vals.get('port_master_id') and po.port_master_id:
-                        vals['port_master_id'] = po.port_master_id.id
-                    if not vals.get('country_port_id') and po.country_port_id:
-                        vals['country_port_id'] = po.country_port_id.id
+            if sale:
+                if not vals.get('vessel_no_id') and getattr(sale, 'vessel_no_id', False):
+                    vals['vessel_no_id'] = sale.vessel_no_id.id
+                if not vals.get('vessel_no') and getattr(sale, 'vessel_no', False):
+                    vals['vessel_no'] = sale.vessel_no
+                if not vals.get('imo_number') and getattr(sale, 'imo_number', False):
+                    vals['imo_number'] = sale.imo_number
+                if not vals.get('port_master_id') and getattr(sale, 'port_master_id', False):
+                    vals['port_master_id'] = sale.port_master_id.id
+                if not vals.get('country_port_id') and getattr(sale, 'country_port_id', False):
+                    vals['country_port_id'] = sale.country_port_id.id
+
+            po = False
+            purchase_id = vals.get('purchase_id')
+            if purchase_id:
+                po = self.env['purchase.order'].browse(purchase_id)
+            elif vals.get('origin'):
+                po = self.env['purchase.order'].search([('name', '=', vals['origin'])], limit=1)
+
+            if po:
+                if not vals.get('vessel_no_id') and getattr(po, 'vessel_no_id', False):
+                    vals['vessel_no_id'] = po.vessel_no_id.id
+                if not vals.get('imo_number') and getattr(po, 'imo_number', False):
+                    vals['imo_number'] = po.imo_number
+                if not vals.get('port_master_id') and getattr(po, 'port_master_id', False):
+                    vals['port_master_id'] = po.port_master_id.id
+                if not vals.get('country_port_id') and getattr(po, 'country_port_id', False):
+                    vals['country_port_id'] = po.country_port_id.id
         return super(StockPicking, self).create(vals_list)
     
     def write(self, vals):

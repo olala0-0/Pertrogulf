@@ -327,7 +327,24 @@ class SaleOrder(models.Model):
             if order.company_id.id == 9:
                 order._create_sale_lines_from_quotation()
 
-        return super(SaleOrder, self).action_confirm()
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if order.picking_ids:
+                for picking in order.picking_ids:
+                    picking_vals = {}
+                    if not getattr(picking, 'vessel_no_id', False) and getattr(order, 'vessel_no_id', False):
+                        picking_vals['vessel_no_id'] = order.vessel_no_id.id
+                    if not getattr(picking, 'vessel_no', False) and getattr(order, 'vessel_no', False):
+                        picking_vals['vessel_no'] = order.vessel_no
+                    if not getattr(picking, 'imo_number', False) and getattr(order, 'imo_number', False):
+                        picking_vals['imo_number'] = order.imo_number
+                    if not getattr(picking, 'port_master_id', False) and getattr(order, 'port_master_id', False):
+                        picking_vals['port_master_id'] = order.port_master_id.id
+                    if not getattr(picking, 'country_port_id', False) and getattr(order, 'country_port_id', False):
+                        picking_vals['country_port_id'] = order.country_port_id.id
+                    if picking_vals:
+                        picking.write(picking_vals)
+        return res
 
     def _create_sale_lines_from_quotation(self):
         for order in self:
@@ -766,6 +783,16 @@ class SaleOrder(models.Model):
         invoice_vals = super()._prepare_invoice()
         if self.sale_type:
             invoice_vals["sale_type"] = self.sale_type
+        if getattr(self, 'vessel_no_id', False) and 'vessel_no_id' in self.env['account.move']._fields:
+            invoice_vals['vessel_no_id'] = self.vessel_no_id.id
+        if getattr(self, 'vessel_no', False) and 'vessel_no' in self.env['account.move']._fields:
+            invoice_vals['vessel_no'] = self.vessel_no
+        if getattr(self, 'imo_number', False) and 'imo_number' in self.env['account.move']._fields:
+            invoice_vals['imo_number'] = self.imo_number
+        if getattr(self, 'port_master_id', False) and 'port_master_id' in self.env['account.move']._fields:
+            invoice_vals['port_master_id'] = self.port_master_id.id
+        if getattr(self, 'country_port_id', False) and 'country_port_id' in self.env['account.move']._fields:
+            invoice_vals['country_port_id'] = self.country_port_id.id
         return invoice_vals
 
     def _prepare_purchase_order_data(self, company, company_partner):
