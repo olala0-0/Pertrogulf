@@ -5,12 +5,12 @@
         <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <th style="font-weight:bold; width:5%; border:1px solid #ccc;">Sn</th>
-                    <th style="font-weight:bold; width:45%; border:1px solid #ccc;">Product Description</th>
-                    <th style="font-weight:bold; width:15%; border:1px solid #ccc;">Selling Unit</th>
-                    <th style="font-weight:bold; width:12%; border:1px solid #ccc;">No of Units</th>
-                    <th style="font-weight:bold; width:11.5%; border:1px solid #ccc;">Unit Price (USD)</th>
-                    <th class="text-right" style="font-weight:bold; width:11.5%; border:1px solid #ccc;">Amount (USD)</th>
+                    <th style="font-weight:bold; width:5%; border:1px solid #6c757d !important;">Sn</th>
+                    <th style="font-weight:bold; width:45%; border:1px solid #6c757d !important;">Product Description</th>
+                    <th style="font-weight:bold; width:15%; border:1px solid #6c757d !important;">Selling Unit</th>
+                    <th style="font-weight:bold; width:12%; border:1px solid #6c757d !important;">No of Units</th>
+                    <th style="font-weight:bold; width:11.5%; border:1px solid #6c757d !important;">Unit Price (USD)</th>
+                    <th class="text-right" style="font-weight:bold; width:11.5%; border:1px solid #6c757d !important;">Amount (USD)</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,22 +19,22 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_id.name"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_qty"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
-                            <td class="text-right" style="border:1px solid #ccc;">
+                            <td class="text-right" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
@@ -85,11 +85,11 @@
         <table class="table table-sm o_main_table" style="border-collapse:collapse;">
             <thead>
                 <tr style="background-color:#f4b6bb;">
-                    <th style="font-weight:bold; border:1px solid #ccc;">Sn</th>
-                    <th style="font-weight:bold; border:1px solid #ccc;">Product Type</th>
-                    <th style="font-weight:bold; border:1px solid #ccc;">Product Description</th>
-                    <th style="font-weight:bold; border:1px solid #ccc;">Selling Unit</th>
-                    <th class="text-right" style="font-weight:bold; border:1px solid #ccc;">Unit Price</th>
+                    <th style="font-weight:bold; border:1px solid #6c757d !important;">Sn</th>
+                    <th style="font-weight:bold; border:1px solid #6c757d !important;">Product Type</th>
+                    <th style="font-weight:bold; border:1px solid #6c757d !important;">Product Description</th>
+                    <th style="font-weight:bold; border:1px solid #6c757d !important;">Selling Unit</th>
+                    <th class="text-right" style="font-weight:bold; border:1px solid #6c757d !important;">Unit Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,19 +98,19 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_type"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
                             </td>
-                            <td style="border:1px solid #ccc;">
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_id.name"/>
                             </td>
-                            <td class="text-right" style="border:1px solid #ccc;">
+                            <td class="text-right" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
