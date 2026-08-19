@@ -8,14 +8,14 @@
         </style>
         <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <thead>
-                <tr style="background-color:#619FAF;">
-                    <th style="border:1px solid #6c757d !important;">Sn</th>
-                    <th class="text-start" style="border:1px solid #6c757d !important;">Inquired Item</th>
-                    <th class="text-start" style="border:1px solid #6c757d !important;">Offered Item</th>
-                    <th class="text-start" style="border:1px solid #6c757d !important;">Pack Size</th>
-                    <th class="text-start" style="border:1px solid #6c757d !important;">No of Units</th>
-                    <th class="text-start" style="border:1px solid #6c757d !important;">Unit Price</th>
-                    <th name="th_subtotal" class="text-end" style="border:1px solid #6c757d !important;">
+                <tr>
+                    <th style="border:1px solid #6c757d !important; background-color:#619FAF; border-radius:8px 0 0 0;">Sn</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Inquired Item</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Offered Item</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Pack Size</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">No of Units</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Unit Price</th>
+                    <th name="th_subtotal" class="text-end" style="border:1px solid #6c757d !important; background-color:#619FAF; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </th>
 
