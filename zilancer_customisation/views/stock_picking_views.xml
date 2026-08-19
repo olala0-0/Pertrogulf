@@ -48,7 +48,8 @@
                             </group>
                         </group>
                     </page> -->
-                    <page string="Driver Details" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'">
+                    <page string="Driver Details" invisible="picking_type_code != 'outgoing'">
+                        <!-- invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'" -->
                         <!-- invisible="company_id != 9" -->
                         <group string="Driver Details">
                             <group>
@@ -60,7 +61,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Document Details" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'">
+                    <page string="Document Details" invisible="picking_type_code != 'outgoing'">
                         <group string="Driver Details">
                             <group>
                                 <field name="prepared_by"/>
@@ -110,14 +111,14 @@
                     <field name="remarks" string="Dispatch Instructions"/>
                 </xpath>
                 <xpath expr="//field[@name='location_id']" position="after">
-                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="document_number" readonly="True" force_save="True" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="document_number" readonly="True" force_save="True" invisible="picking_type_code != 'outgoing'"/>
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="customer_lpo_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="container_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="seal_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="vehicle_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="customer_lpo_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="container_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="seal_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="vehicle_no" invisible="picking_type_code != 'outgoing'"/>
                 </xpath>
             </field>
         </record>
