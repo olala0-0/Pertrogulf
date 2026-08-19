@@ -3,7 +3,7 @@
     <template id="report_tax_invoice_ajman">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <t t-set="bank" t-value="o.company_id.partner_id.bank_ids[:1]"/>
+                <t t-set="bank" t-value="o.partner_bank_id"/>
                 <t t-set="so" t-value="o._get_related_sale_order()"/>
                 <t t-set="delivery" t-value="o._get_related_delivery()"/>
                 <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
