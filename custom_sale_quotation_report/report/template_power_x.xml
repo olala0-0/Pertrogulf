@@ -3,12 +3,12 @@
         <table  class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <thead>
                 <tr>
-                    <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Sn</th>
+                    <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:8px 0 0 0;">Sn</th>
                     <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Rate</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Per</th>
                     <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Discount</th>
-                    <th style="text-align:right; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Amount</th>
+                    <th style="text-align:right; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:0 8px 0 0;">Amount</th>
                 </tr>
             </thead>
             <tbody>
