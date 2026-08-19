@@ -2,20 +2,27 @@
     <template id="report_grn_ajman">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <div class="page" style="font-size:13px;">
+                <div class="page" style="font-size:13px; padding:0; margin:0;">
 
-                    <!-- ============ HEADER ============ -->
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                    <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
+                    <div style="width:100%; height:42mm; background-repeat:no-repeat; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTAgNDIiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxwb2x5Z29uIHBvaW50cz0iMCwwIDIxMCwwIDIxMCwxNC40IDk5LjMsMTQuNCA4Ny45LDQyIDAsNDIiIGZpbGw9IiNkMWQzZDQiLz48L3N2Zz4=');">
+                    <table style="width:100%; height:42mm; table-layout:fixed; border-collapse:collapse;">
+                        <colgroup>
+                            <col style="width:93mm;"/>
+                            <col style="width:117mm;"/>
+                        </colgroup>
                         <tr>
-                            <td style="width:50%; vertical-align:middle; background-color:#d9d9d9; padding:15px;">
-                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
-                                     style="max-height:70px;"/>
+                            <td style="padding:7mm 4mm; vertical-align:middle; text-align:center;">
+                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:28mm; max-width:100%;"/>
                             </td>
-                            <td style="width:50%; vertical-align:middle; text-align:right; padding:15px;">
-                                <span style="font-size:24px; font-weight:bold;">GOODS RECEIPT NOTE</span>
+                            <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                                <span style="font-size:34px; font-weight:bold; color:#231f20;">GOODS RECEIPT NOTE</span>
                             </td>
                         </tr>
                     </table>
+                    </div>
+
+                    <div style="padding:3mm 7mm 0 7mm;">
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
@@ -71,7 +78,7 @@
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Despatch No.</td>
-                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.document_number"/></td>
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Mode of Transport</td>
@@ -103,7 +110,7 @@
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Despatch No.</td>
-                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.document_number"/></td>
                                     </tr>
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Sales Order</td>
@@ -177,6 +184,7 @@
                         <strong>For <span t-field="o.company_id.name"/></strong>
                     </div>
 
+                    </div>
                 </div>
             </t>
         </t>

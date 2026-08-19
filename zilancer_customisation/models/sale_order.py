@@ -61,6 +61,23 @@ class QuotationLine(models.Model):
     )
     pack_size_id = fields.Many2one("pack.size.master", string="Pack Size")
 
+    hs_code = fields.Char(
+        related="product_id.hs_code", string="HS Code", store=True, readonly=False
+    )
+    net_weight = fields.Float(
+        string="Net Weight (kg)", compute="_compute_weights", store=True
+    )
+    gross_weight = fields.Float(
+        string="Gross Weight (kg)", compute="_compute_weights", store=True
+    )
+
+    @api.depends("product_id", "product_id.net_weight", "product_id.gross_weight", "unit_qty", "product_uom_qty")
+    def _compute_weights(self):
+        for line in self:
+            qty = line.unit_qty or line.product_uom_qty or 0.0
+            line.net_weight = qty * (line.product_id.net_weight or 0.0)
+            line.gross_weight = qty * (line.product_id.gross_weight or 0.0)
+
     @api.onchange("product_id")
     def _onchange_product_id_set_values(self):
         for line in self:
@@ -250,7 +267,7 @@ class SaleOrder(models.Model):
         string="VAT",
     )
     sale_type = fields.Selection(
-        [("local_sale", "Local Sales"), ("out_of_scope", "Out of Scope")],
+        [("local_sale", "Local Sales"), ("out_of_scope", "Out of Scope"), ("export", "Export"),],
         string="Sale Type",
     )
     customer_user_id = fields.Many2one(
@@ -284,12 +301,50 @@ class SaleOrder(models.Model):
 
     show_total = fields.Boolean(string="Show Total", default=True)
 
+    # Toll Blending Report Settings
+    tb_show_net_weight = fields.Boolean(string="Net weight", default=True)
+    tb_show_gross_weight = fields.Boolean(string="Gross Weight", default=True)
+    tb_show_pack_type = fields.Boolean(string="Pack Type", default=True)
+    tb_show_no_of_units = fields.Boolean(string="No of units", default=True)
+    tb_show_unit_price = fields.Boolean(string="Unit Price", default=True)
+    tb_show_amount = fields.Boolean(string="Amount", default=True)
+    tb_show_hs_code = fields.Boolean(string="HS Code", default=True)
+    tb_show_discount = fields.Boolean(string="Discount / Credit Note", default=True)
+
+    # Automotive Report Settings
+    auto_show_net_weight = fields.Boolean(string="Net weight", default=True)
+    auto_show_gross_weight = fields.Boolean(string="Gross Weight", default=True)
+    auto_show_pack_type = fields.Boolean(string="Pack Type", default=True)
+    auto_show_no_of_units = fields.Boolean(string="No of units", default=True)
+    auto_show_unit_price = fields.Boolean(string="Unit Price", default=True)
+    auto_show_amount = fields.Boolean(string="Amount", default=True)
+    auto_show_hs_code = fields.Boolean(string="HS Code", default=True)
+    auto_show_discount = fields.Boolean(string="Discount / Credit Note", default=True)
+
+
     def action_confirm(self):
         for order in self:
             if order.company_id.id == 9:
                 order._create_sale_lines_from_quotation()
 
-        return super(SaleOrder, self).action_confirm()
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if order.picking_ids:
+                for picking in order.picking_ids:
+                    picking_vals = {}
+                    if not getattr(picking, 'vessel_no_id', False) and getattr(order, 'vessel_no_id', False):
+                        picking_vals['vessel_no_id'] = order.vessel_no_id.id
+                    if not getattr(picking, 'vessel_no', False) and getattr(order, 'vessel_no', False):
+                        picking_vals['vessel_no'] = order.vessel_no
+                    if not getattr(picking, 'imo_number', False) and getattr(order, 'imo_number', False):
+                        picking_vals['imo_number'] = order.imo_number
+                    if not getattr(picking, 'port_master_id', False) and getattr(order, 'port_master_id', False):
+                        picking_vals['port_master_id'] = order.port_master_id.id
+                    if not getattr(picking, 'country_port_id', False) and getattr(order, 'country_port_id', False):
+                        picking_vals['country_port_id'] = order.country_port_id.id
+                    if picking_vals:
+                        picking.write(picking_vals)
+        return res
 
     def _create_sale_lines_from_quotation(self):
         for order in self:
@@ -316,6 +371,8 @@ class SaleOrder(models.Model):
                     "cust_ref_pro_category": qline.cust_ref_pro_category,
                     "customer_ref_id": qline.customer_ref_id.id,
                     "pack_size_id": qline.pack_size_id.id,
+                    "hs_code": qline.hs_code,
+
                 }
 
                 self.env["sale.order.line"].create(vals)
@@ -712,7 +769,7 @@ class SaleOrder(models.Model):
                         "margin_value": 0.0,
                     }
                 )
-            elif order.sale_type == "local_sale":
+            elif order.sale_type in ("local_sale", "export"):
                 # Reset offered price and discount fields on all lines
                 order.order_line.update(
                     {
@@ -721,6 +778,35 @@ class SaleOrder(models.Model):
                         "discount_value": 0.0,
                     }
                 )
+
+    def _prepare_invoice(self):
+        invoice_vals = super()._prepare_invoice()
+        if self.sale_type:
+            invoice_vals["sale_type"] = self.sale_type
+        if getattr(self, 'vessel_no_id', False) and 'vessel_no_id' in self.env['account.move']._fields:
+            invoice_vals['vessel_no_id'] = self.vessel_no_id.id
+        if getattr(self, 'vessel_no', False) and 'vessel_no' in self.env['account.move']._fields:
+            invoice_vals['vessel_no'] = self.vessel_no
+        if getattr(self, 'imo_number', False) and 'imo_number' in self.env['account.move']._fields:
+            invoice_vals['imo_number'] = self.imo_number
+        if getattr(self, 'port_master_id', False) and 'port_master_id' in self.env['account.move']._fields:
+            invoice_vals['port_master_id'] = self.port_master_id.id
+        if getattr(self, 'country_port_id', False) and 'country_port_id' in self.env['account.move']._fields:
+            invoice_vals['country_port_id'] = self.country_port_id.id
+        return invoice_vals
+
+    def _prepare_purchase_order_data(self, company, company_partner):
+        po_vals = super()._prepare_purchase_order_data(company, company_partner)
+        if company.business_unit == 'pg_marine' or self.company_id.business_unit == 'pg_marine':
+            if self.vessel_no_id:
+                po_vals['vessel_no_id'] = self.vessel_no_id.id
+            if self.imo_number:
+                po_vals['imo_number'] = self.imo_number
+            if self.port_master_id:
+                po_vals['port_master_id'] = self.port_master_id.id
+            if self.country_port_id:
+                po_vals['country_port_id'] = self.country_port_id.id
+        return po_vals
 
     def _check_company(self, fnames=None):
         if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
@@ -732,6 +818,14 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line(**optional_values)
+        if self.order_id.sale_type and self.product_id and self.product_id.categ_id:
+            acc = self.product_id.categ_id.with_company(self.company_id)._get_sale_type_income_account(self.order_id.sale_type)
+            if acc:
+                res["account_id"] = acc.id
+        return res
 
     def _check_company(self, fnames=None):
         if self.env.context.get("skip_check_company") or self.env.context.get("inter_company_create"):
@@ -746,6 +840,20 @@ class SaleOrderLine(models.Model):
     total_weight = fields.Float(
         string="Total Weight", compute="_compute_total_weight", store=True
     )
+    net_weight = fields.Float(
+        string="Net Weight (kg)", compute="_compute_line_weights", store=True
+    )
+    gross_weight = fields.Float(
+        string="Gross Weight (kg)", compute="_compute_line_weights", store=True
+    )
+
+    @api.depends("product_id", "product_id.net_weight", "product_id.gross_weight", "unit_qty", "product_uom_qty")
+    def _compute_line_weights(self):
+        for line in self:
+            qty = line.unit_qty or line.product_uom_qty or 0.0
+            line.net_weight = qty * (line.product_id.net_weight or 0.0)
+            line.gross_weight = qty * (line.product_id.gross_weight or 0.0)
+
 
     offered_price = fields.Float("Offered Price")
     # discount_rate = fields.Float("Discount")

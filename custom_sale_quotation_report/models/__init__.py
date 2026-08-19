@@ -1,5 +1,8 @@
 from . import sale_order
 from . import sale_order_line
+from . import account_move
+from . import res_company
+
 
 # NOTE: `business_unit` already exists on res.company in this instance
 # (confirmed by the client) — this module does NOT redefine it, it only

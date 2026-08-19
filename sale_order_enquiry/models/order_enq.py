@@ -687,8 +687,7 @@ class OrderEnquiry(models.Model):
         field_mappings = [
             ("order_enquirey_id", self.id),
             ("date_order", getattr(self, "date_order", None)),
-            # ('vessel_no_id', getattr(self, 'vessel_no_id', None)),
-            # ("vessel_no", getattr(self, "vessel_no", None)),
+            ("vessel_no", getattr(self, "vessel_no", None)),
             ("toll_sale_type", getattr(self, "toll_sale_type", None)),
             ("imo_number", getattr(self, "imo_number", None)),
             ("brand_type", getattr(self, "brand_type", None)),
@@ -696,10 +695,14 @@ class OrderEnquiry(models.Model):
             ("inquiry_rec_from", getattr(self, "inquiry_rec_from", None)),
             ("port_note", getattr(self, "port_note", None)),
             ("new_existing", getattr(self, "new_existing", None)),
+            ("delivery_by_barge", getattr(self, "delivery_by_barge", None)),
+            ("outside_anchorside", getattr(self, "outside_anchorside", None)),
         ]
 
         # Add Many2one fields
         many2one_fields = [
+            "vessel_no_id",
+            "imo_no_id",
             "delivery_by_id",
             "country_port_id",
             "country_id",
@@ -709,7 +712,6 @@ class OrderEnquiry(models.Model):
             "reason_id",
             "Source_of_inquiry_id",
             "process_stage_id",
-            "vessel_no_id"
         ]
 
         for field_name in many2one_fields:

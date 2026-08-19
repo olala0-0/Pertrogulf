@@ -2,41 +2,58 @@
     <template id="report_purchase_order_ajman">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <div class="page" style="font-size:13px;">
+                <div class="page" style="font-size:12px; padding:0; margin:0;">
 
-                    <!-- ============ HEADER ============ -->
-                    <table style="width:100%; border-collapse:collapse; margin-bottom:10px;">
+                    <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
+                    <div style="width:100%; height:42mm; background-repeat:no-repeat; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTAgNDIiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxwb2x5Z29uIHBvaW50cz0iMCwwIDIxMCwwIDIxMCwxNC40IDk5LjMsMTQuNCA4Ny45LDQyIDAsNDIiIGZpbGw9IiNkMWQzZDQiLz48L3N2Zz4=');">
+                    <table style="width:100%; height:42mm; table-layout:fixed; border-collapse:collapse;">
+                        <colgroup>
+                            <col style="width:93mm;"/>
+                            <col style="width:117mm;"/>
+                        </colgroup>
                         <tr>
-                            <td style="width:50%; vertical-align:middle; background-color:#d9d9d9; padding:15px;">
-                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
-                                     style="max-height:70px;"/>
+                            <td style="padding:7mm 4mm; vertical-align:middle; text-align:center;">
+                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:28mm; max-width:100%;"/>
                             </td>
-                            <td style="width:50%; vertical-align:middle; text-align:right; padding:15px;">
-                                <span style="font-size:24px; font-weight:bold;">PURCHASE ORDER</span>
+                            <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                                <span style="font-size:34px; font-weight:bold; color:#231f20;">PURCHASE ORDER</span>
                             </td>
                         </tr>
                     </table>
+                    </div>
+
+                    <div style="padding:3mm 7mm 0 7mm;">
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
                             <td style="width:50%; vertical-align:top; font-size:12px;">
-                                <div>
-                                    <span t-field="o.company_id.name"/>
-                                </div>
-                                <div>
-                                    <span t-field="o.company_id.street"/>
-                                </div>
-                                <div t-if="o.company_id.phone">
-                                    <span t-field="o.company_id.phone"/>
-                                </div>
-                                <div t-if="o.company_id.email">
-                                    <span t-field="o.company_id.email"/>
-                                </div>
-                                <div t-if="o.company_id.website">
-                                    <span t-field="o.company_id.website"/>
-                                </div>
+                                <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">
+                                    <div>
+                                        Petro Gulf Oil Manufacturing LLC<br/>
+                                        Al Hail Industrial Area, Fujairah<br/>
+                                        United Arab Emirates<br/>
+                                        www.petrogulfmarine.com
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div>
+                                        <span t-field="o.company_id.name"/>
+                                    </div>
+                                    <div>
+                                        <span t-field="o.company_id.street"/>
+                                    </div>
+                                    <div t-if="o.company_id.phone">
+                                        <span t-field="o.company_id.phone"/>
+                                    </div>
+                                    <div t-if="o.company_id.email">
+                                        <span t-field="o.company_id.email"/>
+                                    </div>
+                                    <div t-if="o.company_id.website">
+                                        <span t-field="o.company_id.website"/>
+                                    </div>
+                                </t>
                             </td>
-                            <td style="width:50%; vertical-align:top;">
+                            <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr>
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
@@ -86,7 +103,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">Emirate</td>
+                                        <td style="padding:4px;">
+                                            <t t-if="o.partner_id and o.partner_id.country_id and o.partner_id.country_id.code == 'AE'">
+                                                Emirate
+                                            </t>
+                                            <t t-else="">
+                                                State
+                                            </t>
+                                            
+                                        </td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                     </tr>
                                     <tr>
@@ -94,7 +119,14 @@
                                         <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">TRN</td>
+                                        <td style="padding:4px;">
+                                            <t t-if="o.partner_id and o.partner_id.country_id and o.partner_id.country_id.code == 'AE'">
+                                                TRN
+                                            </t>
+                                            <t t-else="">
+                                                GST No
+                                            </t>
+                                        </td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                     </tr>
                                     <tr>
@@ -145,7 +177,7 @@
                     </table>
 
                     <!-- ============ LINE ITEMS ============ -->
-                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:11px;">
                         <thead>
                             <tr style="background-color:#d9d9d9;">
                                 <th style="border:1px solid #ccc; padding:4px;">Sn</th>
@@ -210,7 +242,9 @@
 
                     <div style="margin-top:15px;">
                         <strong>Amount in Words:</strong>
-                        <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        <t t-if="o.currency_id">
+                            <span t-esc="o.currency_id.currency_unit_label"/>&#160;<span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        </t>
                     </div>
 
                     <!-- ============ SIGNATORY ============ -->
@@ -218,12 +252,13 @@
                         <tr>
                             <td style="width:60%;"/>
                             <td style="width:40%; text-align:center; background-color:#d9d9d9; padding:10px;">
-                                <div>for <span t-field="o.company_id.name"/></div>
+                                <div>for   <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">Petro Gulf Oil Manufacturing LLC</t><t t-else=""><span t-field="o.company_id.name"/></t></div>  
                                 <div style="margin-top:40px;"><strong>Authorised Signatory</strong></div>
                             </td>
                         </tr>
                     </table>
 
+                    </div>
                 </div>
             </t>
         </t>

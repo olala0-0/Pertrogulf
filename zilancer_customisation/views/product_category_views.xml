@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_category_form_view_inherit_sale_type_account" model="ir.ui.view">
+        <field name="name">product.category.form.inherit.sale.type.account</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='account_property']" position="inside">
+                <group string="Sale Type Account Properties" groups="account.group_account_readonly">
+                    <field name="property_account_income_local_categ_id"/>
+                    <field name="property_account_income_export_categ_id"/>
+                    <field name="property_account_income_out_scope_categ_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -9,7 +9,7 @@ class PurchaseOrder(models.Model):
     vessel_no_id = fields.Many2one("vessel.no", string="Vessel Name")
     imo_number = fields.Char(string="IMO No")
     port_master_id = fields.Many2one("port.master", string="Port of Delivery")
-    country_port_id = fields.Many2one("res.country", string="Country - linked to the Port")
+    country_port_id = fields.Many2one("res.country", string="Country")
     incoterm_id = fields.Many2one("account.incoterms", string="Delivery Terms")
     business_unit = fields.Selection(related="company_id.business_unit", string="Business Unit", readonly=True)
 
@@ -23,6 +23,19 @@ class PurchaseOrder(models.Model):
         if self.port_master_id:
             self.country_port_id = self.port_master_id.country_id.id
 
+    def _prepare_picking(self):
+        res = super()._prepare_picking()
+        if self.company_id.business_unit == 'pg_marine':
+            if self.vessel_no_id:
+                res['vessel_no_id'] = self.vessel_no_id.id
+            if self.imo_number:
+                res['imo_number'] = self.imo_number
+            if self.port_master_id:
+                res['port_master_id'] = self.port_master_id.id
+            if self.country_port_id:
+                res['country_port_id'] = self.country_port_id.id
+        return res
+
     def _prepare_sale_order_data(self, name, partner, company, direct_delivery_address):
         """Use business-unit sale order numbering for inter-company SO creation."""
         sale_order_data = super()._prepare_sale_order_data(
@@ -31,7 +44,36 @@ class PurchaseOrder(models.Model):
         business_unit = company.business_unit
         sale_order_data["business_unit"] = business_unit
         sale_order_data["name"] = _("New")
+        if company.business_unit == 'pg_marine' or self.company_id.business_unit == 'pg_marine':
+            if self.vessel_no_id:
+                sale_order_data['vessel_no_id'] = self.vessel_no_id.id
+            if self.imo_number:
+                sale_order_data['imo_number'] = self.imo_number
+            if self.port_master_id:
+                sale_order_data['port_master_id'] = self.port_master_id.id
+            if self.country_port_id:
+                sale_order_data['country_port_id'] = self.country_port_id.id
         return sale_order_data
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            company_id = vals.get('company_id') or self.env.company.id
+            company = self.env['res.company'].browse(company_id)
+            if company.business_unit == 'pg_marine':
+                origin = vals.get('origin')
+                if origin:
+                    sale = self.env['sale.order'].search([('name', '=', origin)], limit=1)
+                    if sale:
+                        if not vals.get('vessel_no_id') and sale.vessel_no_id:
+                            vals['vessel_no_id'] = sale.vessel_no_id.id
+                        if not vals.get('imo_number') and sale.imo_number:
+                            vals['imo_number'] = sale.imo_number
+                        if not vals.get('port_master_id') and sale.port_master_id:
+                            vals['port_master_id'] = sale.port_master_id.id
+                        if not vals.get('country_port_id') and sale.country_port_id:
+                            vals['country_port_id'] = sale.country_port_id.id
+        return super().create(vals_list)
 
     def inter_company_create_sale_order(self, company):
         """Ensure products in PO lines are allowed in target company and pricelist currency matches before creating inter-company SO."""

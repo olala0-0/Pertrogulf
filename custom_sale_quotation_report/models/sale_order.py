@@ -32,3 +32,4 @@ class SaleOrder(models.Model):
             return f"{words.title()} {self.currency_id.name} Only"
         except Exception:
             return ""
+

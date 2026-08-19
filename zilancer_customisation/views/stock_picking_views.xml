@@ -6,9 +6,11 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook" position="inside">
+                <xpath expr="//sheet" position="inside">
                     <field name="picking_type_code" invisible="1"/>
                     <field name="business_unit" invisible="1"/>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
                     <page string="Dispatch Instructions" invisible="1">
                         <group>
                             <group>
@@ -46,7 +48,8 @@
                             </group>
                         </group>
                     </page> -->
-                    <page string="Driver Details" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'">
+                    <page string="Driver Details" invisible="picking_type_code != 'outgoing'">
+                        <!-- invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'" -->
                         <!-- invisible="company_id != 9" -->
                         <group string="Driver Details">
                             <group>
@@ -58,7 +61,7 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Document Details" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'">
+                    <page string="Document Details" invisible="picking_type_code != 'outgoing'">
                         <group string="Driver Details">
                             <group>
                                 <field name="prepared_by"/>
@@ -68,6 +71,18 @@
                                 <field name="approved_by"/>
                                 <field name="receiver_name"/>
                                 <field name="receiver_sign" invisible="receiver_sign == False" />
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Additional Details" name="additional_details" invisible="business_unit != 'pg_marine'">
+                        <group>
+                            <group>
+                                <field name="vessel_no_id"/>
+                                <field name="imo_number"/>
+                                <field name="port_master_id"/>
+                                <field name="country_port_id"/>
+                            </group>
+                            <group>
                             </group>
                         </group>
                     </page>
@@ -96,14 +111,28 @@
                     <field name="remarks" string="Dispatch Instructions"/>
                 </xpath>
                 <xpath expr="//field[@name='location_id']" position="after">
-                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="document_number" readonly="True" force_save="True" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="document_type" widget="radio" options="{'horizontal': true}" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="document_number" readonly="True" force_save="True" invisible="picking_type_code != 'outgoing'"/>
                 </xpath>
                 <xpath expr="//field[@name='origin']" position="after">
-                    <field name="customer_lpo_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="container_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="seal_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
-                    <field name="vehicle_no" invisible="picking_type_code != 'outgoing' or business_unit != 'pg_marine'"/>
+                    <field name="customer_lpo_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="container_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="seal_no" invisible="picking_type_code != 'outgoing'"/>
+                    <field name="vehicle_no" invisible="picking_type_code != 'outgoing'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="vpicktree_inherit_marine" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit.marine</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//list" position="inside">
+                    <field name="vessel_no_id" optional="show"/>
+                    <field name="imo_number" optional="show"/>
+                    <field name="port_master_id" optional="show"/>
+                    <field name="country_port_id" optional="show"/>
                 </xpath>
             </field>
         </record>

@@ -1,0 +1,488 @@
+<odoo>
+    <template id="report_delivery_note_ajman">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
+                <t t-set="is_ajman_company" t-value="o._is_pg_ajman_company()"/>
+                <t t-set="is_marine_company" t-value="o.company_id.business_unit == 'pg_marine' or (o.company_id.parent_id and o.company_id.parent_id.business_unit == 'pg_marine')"/>
+                <!-- Manufacturer -> Marine handoff: only kicks in for companies that don't
+                     already have their own dedicated layout (Ajman/Power X/Marine itself) -
+                     e.g. Fujairah, Automotive, Aviation selling to Marine as the customer.
+                     Swaps which logo is the header vs. the box (PGM "Vessel" format). -->
+                <t t-set="is_marine_partner" t-value="not is_powerx and not is_ajman_company and not is_marine_company and o._is_pg_marine_partner()"/>
+                <t t-set="is_marine" t-value="is_marine_company or is_marine_partner"/>
+                <t t-set="second_logo_is_marine" t-value="is_marine_partner"/>
+                <div class="page" style="font-size:12px; padding:0; margin:0;">
+
+                    <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
+                    <div style="width:100%; height:42mm; background-repeat:no-repeat; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTAgNDIiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxwb2x5Z29uIHBvaW50cz0iMCwwIDIxMCwwIDIxMCwxNC40IDk5LjMsMTQuNCA4Ny45LDQyIDAsNDIiIGZpbGw9IiNkMWQzZDQiLz48L3N2Zz4=');">
+                    <table style="width:100%; height:42mm; table-layout:fixed; border-collapse:collapse;">
+                        <colgroup>
+                            <col style="width:93mm;"/>
+                            <col style="width:117mm;"/>
+                        </colgroup>
+                        <tr>
+                            <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                <img t-if="not second_logo_is_marine and o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                <img t-if="second_logo_is_marine" t-att-src="'/custom_purchase_order_report/static/src/img/petrogulf_logo_plain.png'" style="max-height:36mm; max-width:100%;"/>
+                            </td>
+                            <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                                <span style="font-size:34px; font-weight:bold; color:#231f20;">DELIVERY NOTE</span>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+
+                    <div style="padding:3mm 7mm 0 7mm;">
+
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:55%; vertical-align:top; font-size:12px;">
+                                <div><strong t-field="o.company_id.name"/></div>
+                                <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
+                                <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+                                <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+                                <div t-if="is_powerx">TRN <span t-field="o.company_id.vat"/></div>
+                                <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+                            </td>
+                            <td style="width:45%; vertical-align:top;">
+                                <table t-if="not is_marine" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9; width:45%;">
+                                            <span t-esc="'Delivery Order No.' if is_powerx else 'Delivery Note No.'"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">Date</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="o.date_done" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Invoice No.' if is_powerx else 'Mode/Terms of Payment'"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-if="is_powerx" t-field="o.invoice_no"/>
+                                            <span t-else="" t-field="o.sale_id.payment_term_id.name"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Order Reference:' if is_powerx else &quot;Supplier's Ref.&quot;"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-if="is_powerx" t-field="o.origin"/>
+                                            <span t-else="" t-field="o.sale_id.client_order_ref"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#d9d9d9;">
+                                            <span t-esc="'Terms of Delivery' if is_powerx else 'Other Reference(s)'"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ BUYER / REFERENCES ============ -->
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
+                        <tr>
+                            <td style="width:48%; vertical-align:top;">
+                                <div t-if="is_marine" style="height:34mm;"/>
+                                <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
+                                <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr>
+                                        <td style="padding:4px; width:40%;">Company Name</td>
+                                        <td style="padding:4px;">: <span t-field="o.partner_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;">Address</td>
+                                        <td style="padding:4px;">:
+                                            <span t-field="o.partner_id.street"/>
+                                            <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;">Contact No.</td>
+                                        <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;">TRN</td>
+                                        <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width:4%;"/>
+                            <td style="width:48%; vertical-align:top;">
+                                <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2; width:25%;">DN No.</td>
+                                        <td style="padding:4px; width:25%;"><span t-field="o.document_number"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2; width:25%;">Date &amp; Time In</td>
+                                        <td style="padding:4px; width:25%;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Vehicle No.</td>
+                                        <td style="padding:4px;"><span t-field="o.vehicle_no"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Date &amp; Time Out</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Driver</td>
+                                        <td style="padding:4px;"><span t-field="o.driver_name"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">EID - No.</td>
+                                        <td style="padding:4px;"><span t-field="o.driver_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Customer</td>
+                                        <td style="padding:4px;"><span t-field="o.partner_id.name"/></td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Container #1</td>
+                                        <td style="padding:4px;"><span t-field="o.container_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Material</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Container #2</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Loaded Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">TANK NO</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Empty Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Vat Amount</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Net Weight</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Total Amount</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Operator</td>
+                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"></td>
+                                        <td style="padding:4px;"></td>
+                                    </tr>
+                                </table>
+                                <table t-elif="is_marine" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                    <tr>
+                                        <td colspan="2" style="border:1px solid #ccc; padding:8px; text-align:left;">
+                                            <img t-if="not second_logo_is_marine" t-att-src="'/custom_purchase_order_report/static/src/img/petrogulf_logo_plain.png'" style="max-height:28mm; max-width:100%;"/>
+                                            <img t-if="second_logo_is_marine and o._get_partner_company().logo" t-att-src="o._get_partner_company().get_logo_on_background()" style="max-height:28mm; max-width:100%;"/>
+                                        </td>
+                                    </tr>
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td style="border:1px solid #ccc; padding:4px; width:50%;"><strong>Delivery Note No.</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Delivery Note Date</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.name"/></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.date_done" t-options="{'widget': 'date'}"/></td>
+                                    </tr>
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Vessel Name</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>IMO No</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-if="o.sale_id" t-field="o.sale_id.vessel_no_id.name"/></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-if="o.sale_id" t-field="o.sale_id.imo_number"/></td>
+                                    </tr>
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Port of Delivery</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Country of Delivery</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                        <td style="border:1px solid #ccc; padding:4px;"> </td>
+                                    </tr>
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Buyer's Order No. &amp; Date</strong></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Supplier Ref No.</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.sale_id.client_po_order_no"/></td>
+                                        <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.document_number"/></td>
+                                    </tr>
+                                </table>
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2; width:50%;">Buyer's Order No.</td>
+                                        <td style="padding:4px;"><span t-field="o.sale_id.client_po_order_no"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Dated</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Despatch Document No.</td>
+                                        <td style="padding:4px;"><span t-field="o.document_number"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Despatched through</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Destination</td>
+                                        <td style="padding:4px;"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; background-color:#f2f2f2;">Terms of Delivery</td>
+                                        <td style="padding:4px;"><span t-field="o.sale_id.incoterm.name"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ============ LINE ITEMS ============ -->
+                    <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background-color:#d9d9d9;">
+                                <th style="border:1px solid #ccc; padding:4px; width:8%;">Sn</th>
+                                <th style="border:1px solid #ccc; padding:4px;">Description of Goods</th>
+                                <th t-if="is_marine" style="border:1px solid #ccc; padding:4px; text-align:right; width:18%;">Packing</th>
+                                <th style="border:1px solid #ccc; padding:4px; text-align:right; width:20%;">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="sn" t-value="0"/>
+                            <t t-foreach="o.move_ids.filtered(lambda m: m.state != 'cancel')" t-as="move">
+                                <t t-set="sn" t-value="sn + 1"/>
+                                <tr>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-esc="sn"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px;">
+                                        <span t-field="move.product_id.name"/>
+                                    </td>
+                                    <td t-if="is_marine" style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.pack"/>
+                                    </td>
+                                    <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <span t-field="move.quantity"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr style="background-color:#d9d9d9;">
+                                <td t-att-colspan="3 if is_marine else 2" style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <strong>Total</strong>
+                                </td>
+                                <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <span t-esc="'{:,.2f}'.format(sum(o.move_ids.filtered(lambda m: m.state != 'cancel').mapped('quantity')))"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <t t-if="is_powerx">
+                        <div style="text-align:right; margin-top:20px; font-size:12px;">
+                            <div>for <span t-field="o.company_id.name"/></div>
+                            <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
+                        </div>
+                        <div style="color:#c0392b; font-style:italic; font-weight:bold; text-align:right; margin-top:8px;">
+                            Leave your Base Oil with us
+                        </div>
+                        <div style="margin-top:20px; font-size:11px;">
+                            <div style="text-decoration:underline; font-weight:bold;">Declaration</div>
+                            <div>
+                                We declare that this invoice shows the actual price of the goods
+                                described and that all particulars are true and correct
+                            </div>
+                        </div>
+                        <div style="text-align:center; font-size:10px; margin-top:15px;">
+                            This is a Computer Generated Invoice
+                        </div>
+                    </t>
+                    <t t-elif="is_marine">
+                        <div style="text-align:right; font-size:10px; font-style:italic;">E. &amp; O.E</div>
+
+                        <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #ccc; font-size:11px;">
+                            <tr>
+                                <td style="width:50%; vertical-align:top; padding:4px; border-right:1px solid #ccc;">
+                                    <strong>Received in Good Condition</strong>
+                                    <div style="height:14mm;"/>
+                                    <div style="font-size:9px;">(Master/CE Name, Signature &amp; Stamp of the Vessel)</div>
+                                </td>
+                                <td style="width:50%; vertical-align:top; padding:4px;">
+                                    <div style="text-align:center;"><strong>Supplier Signature and Stamp</strong></div>
+                                    <div style="height:10mm;"/>
+                                    <div style="text-align:center;"><strong>Authorised Signatory</strong></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-top:1px solid #ccc; border-right:1px solid #ccc;">
+                                    Delivery Method:
+                                    Barge <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                    &#160;&#160;Road <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                </td>
+                                <td style="padding:4px; border-top:1px solid #ccc;">
+                                    Time of arrival: _____________ Hrs
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-right:1px solid #ccc;">
+                                    Weekend Delivery Charge:
+                                    Yes <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                    &#160;&#160;No <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                </td>
+                                <td style="padding:4px;">Delivery start: _____________ Hrs</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-right:1px solid #ccc;">
+                                    Extra Hose:
+                                    Yes <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                    &#160;&#160;No <span style="border:1px solid #666; display:inline-block; width:10px; height:10px;"/>
+                                </td>
+                                <td style="padding:4px;">Delivery completed: _____________ Hrs</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px;" colspan="2">Remarks:</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; font-size:9px;" colspan="2">
+                                    Note: Master/Chief Engineer to ensure before and after delivery that the correct grade and quantity has been supplied.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="background-color:#2a9fa8; color:#fff; text-align:center; font-weight:bold; padding:5px; margin-top:8px; font-size:11px;">
+                            Note: Print 4 copies (1 copy for vessel and remaining 3 to be returned to office)
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div style="margin-top:6px;">
+                            <span>Received in Good Condition</span>
+                            <span style="float:right; font-style:italic;">E. &amp; O.E</span>
+                        </div>
+
+                        <div style="text-align:right; margin-top:60px;">
+                            <strong>For <span t-field="o.company_id.name"/></strong>
+                        </div>
+
+                        <div style="margin-top:20px; font-size:10px;">
+                            <span>F-IM S-ACC-05</span>
+                            <span style="float:right;">This is a Computer Generated Invoice</span>
+                        </div>
+                    </t>
+
+                    </div>
+                </div>
+
+                <!-- ============ PAGE 2 (Marine only): VAT zero-rating declaration ============ -->
+                <div t-if="is_marine" class="page" style="font-size:11px; padding:0; margin:0; page-break-before:always;">
+                    <div style="padding:10mm 7mm 0 7mm;">
+                        <div style="font-weight:bold;">DECLARATION FOR INTERNATIONAL TRANSPORTATION / FOREIGN TRADE</div>
+                        <div style="text-decoration:underline; margin-top:10px;">To the MASTER/Chief Engineer,</div>
+                        <div style="margin-top:6px;">Please fill-up this form completely.</div>
+
+                        <table style="width:100%; border-collapse:collapse; margin-top:10px; border:1px solid #ccc;">
+                            <tr>
+                                <td style="padding:4px; width:40%; border-bottom:1px solid #ccc;">Delivery Note No.</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"><span t-field="o.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Name of Vessel</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"><span t-if="o.sale_id" t-field="o.sale_id.vessel_no_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">IMO Number</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"><span t-if="o.sale_id" t-field="o.sale_id.imo_number"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Port of Supply</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Date of Supply</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Arrival Date</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Last Port of Call</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px; border-bottom:1px solid #ccc;">Next Port of Call</td>
+                                <td style="padding:4px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:4px;">Destination Port outside UAE<br/>(if next port above is in UAE)</td>
+                                <td style="padding:4px; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                        </table>
+
+                        <div style="margin-top:10px;">
+                            This declaration is pursuant to Article (45) of the Federal Decree - Law No. (8) of 2017 on Value Added Tax
+                            and Article (33) of the Cabinet Decision No. (52) of 2017 on the Executive Regulations of the Federal
+                            Decree-Law No (8) of 2017 on Value Added Tax, which allows supply of goods and services to ships engaged
+                            in the international transportation services for passengers and goods to be zero-rated for VAT.
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            I hereby declare that the vessel transportation service is in one of the following categories
+                            (tick as appropriate):
+                        </div>
+
+                        <table style="width:100%; border-collapse:collapse; margin-top:6px; border:1px solid #ccc;">
+                            <tr>
+                                <td style="padding:6px; width:85%; border-bottom:1px solid #ccc;">
+                                    a) Vessel arriving at a port in United Arab Emirates for operations and/or bunkering
+                                    operations and/or repairs and ultimately leaves for a port outside the United Arab Emirates
+                                </td>
+                                <td style="padding:6px; border-bottom:1px solid #ccc; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px;">
+                                    b) Vessel sailing/running operations within the territorial waters of United Arab Emirates
+                                </td>
+                                <td style="padding:6px; border-left:1px solid #ccc;"> </td>
+                            </tr>
+                        </table>
+
+                        <table style="width:100%; border-collapse:collapse; margin-top:14px;">
+                            <tr>
+                                <td style="width:55%; vertical-align:top;">
+                                    <table style="width:100%; border-collapse:collapse;">
+                                        <tr>
+                                            <td style="padding:4px; width:35%;">Name of Master</td>
+                                            <td style="padding:4px; border-bottom:1px solid #666;"> </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:4px;">Signature</td>
+                                            <td style="padding:4px; border-bottom:1px solid #666;"> </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:4px;">Date</td>
+                                            <td style="padding:4px; border-bottom:1px solid #666;"> </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td style="width:45%; vertical-align:top; text-align:center;">
+                                    <div>Vessel Stamp</div>
+                                    <div style="border:1px solid #666; height:25mm; margin-top:4px;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div style="text-align:center; margin-top:20px;">
+                            Must be returned to bunker supplier along with the bunker delivery note.
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

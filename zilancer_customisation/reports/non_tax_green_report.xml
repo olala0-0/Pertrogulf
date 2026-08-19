@@ -336,7 +336,7 @@
                     </td>
                 </tr>
             </table> -->
-            <t t-if="doc.sale_type == 'local_sale'">
+            <t t-if="doc.sale_type in ['local_sale', 'export']">
                 <table class="table" style="width: 100%; margin-top: -17px;; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
                     <tr>
                         <td style="text-align: right; font-weight: bold;width: 75.9%;">Total</td>
