@@ -3,7 +3,7 @@
     <template id="report_tax_invoice_ajman">
         <t t-call="web.basic_layout">
             <t t-foreach="docs" t-as="o">
-                <t t-set="bank" t-value="o.reconciled_payment_ids[:1].partner_bank_id"/>
+                <t t-set="banks" t-value="o.reconciled_payment_ids.mapped('partner_bank_id')"/>
                 <t t-set="so" t-value="o._get_related_sale_order()"/>
                 <t t-set="delivery" t-value="o._get_related_delivery()"/>
                 <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
@@ -438,24 +438,26 @@
                     <!-- ============ BANK DETAILS ============ -->
                     <div style="background-color:#f2f2f2; padding:10px; margin-top:20px; font-size:12px;">
                         <div style="font-weight:bold; margin-bottom:6px;">BANK DETAILS</div>
-                        <table style="width:60%; border-collapse:collapse;">
-                            <tr>
-                                <td style="padding:2px; width:40%;">Bank Name</td>
-                                <td style="padding:2px;">: <span t-field="bank.bank_id.name"/></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:2px;">A/C No.</td>
-                                <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:2px;">IBAN</td>
-                                <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:2px;">Branch &amp; SWIFT Code</td>
-                                <td style="padding:2px;">: <span t-field="bank.bank_bic"/></td>
-                            </tr>
-                        </table>
+                        <t t-foreach="banks" t-as="bank">
+                            <table t-attf-style="width:60%; border-collapse:collapse;#{'' if bank_last else ' margin-bottom:10px;'}">
+                                <tr>
+                                    <td style="padding:2px; width:40%;">Bank Name</td>
+                                    <td style="padding:2px;">: <span t-field="bank.bank_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;">A/C No.</td>
+                                    <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;">IBAN</td>
+                                    <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;">Branch &amp; SWIFT Code</td>
+                                    <td style="padding:2px;">: <span t-field="bank.bank_bic"/></td>
+                                </tr>
+                            </table>
+                        </t>
                     </div>
 
                     <!-- ============ SIGNATURE (Power X only) ============ -->
