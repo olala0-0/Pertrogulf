@@ -5,19 +5,19 @@
         <t t-set="show_pack_type" t-value="any(l.pack_type for l in o.order_line if not l.display_type)"/>
         <t t-set="show_hs_code" t-value="any(l.hs_code for l in o.order_line if not l.display_type)"/>
         <t t-set="show_discount" t-value="any(l.discount for l in o.order_line if not l.display_type)"/>
-        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
+        <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <tr style="background-color:#f4b6bb;">
-                <th style="font-weight:bold">Sn</th>
-                <th style="font-weight:bold">Offered Items</th>
-                <th style="font-weight:bold">Pack Size</th>
-                <th style="font-weight:bold">No of Units</th>
-                <th style="font-weight:bold">Unit Price</th>
-                <th t-if="show_net_weight" style="font-weight:bold">Net Weight</th>
-                <th t-if="show_gross_weight" style="font-weight:bold">Gross Weight</th>
-                <th t-if="show_pack_type" style="font-weight:bold">Pack Type</th>
-                <th t-if="show_hs_code" style="font-weight:bold">HS Code</th>
-                <th t-if="show_discount" style="font-weight:bold">Discount/Credit Note</th>
-                <th class="text-right" style="font-weight:bold">Amount</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important;">Sn</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important;">Offered Items</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important;">Pack Size</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important;">No of Units</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important;">Unit Price</th>
+                <th t-if="show_net_weight" style="font-weight:bold; border:1px solid #6c757d !important;">Net Weight</th>
+                <th t-if="show_gross_weight" style="font-weight:bold; border:1px solid #6c757d !important;">Gross Weight</th>
+                <th t-if="show_pack_type" style="font-weight:bold; border:1px solid #6c757d !important;">Pack Type</th>
+                <th t-if="show_hs_code" style="font-weight:bold; border:1px solid #6c757d !important;">HS Code</th>
+                <th t-if="show_discount" style="font-weight:bold; border:1px solid #6c757d !important;">Discount/Credit Note</th>
+                <th class="text-right" style="font-weight:bold; border:1px solid #6c757d !important;">Amount</th>
 
             </tr>
             <tbody>
@@ -26,37 +26,37 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.pack_size_id"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_qty"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
-                            <td t-if="show_net_weight">
+                            <td t-if="show_net_weight" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.net_weight"/>
                             </td>
-                            <td t-if="show_gross_weight">
+                            <td t-if="show_gross_weight" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.gross_weight"/>
                             </td>
-                            <td t-if="show_pack_type">
+                            <td t-if="show_pack_type" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.pack_type"/>
                             </td>
-                            <td t-if="show_hs_code">
+                            <td t-if="show_hs_code" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.hs_code"/>
                             </td>
-                            <td t-if="show_discount">
+                            <td t-if="show_discount" style="border:1px solid #6c757d !important;">
                                 <t t-if="line.discount"><span t-field="line.discount"/>%</t>
                             </td>
-                            <td class="text-right">
+                            <td class="text-right" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
