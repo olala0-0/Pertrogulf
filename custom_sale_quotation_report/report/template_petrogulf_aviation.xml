@@ -10,8 +10,8 @@
                     <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Lead Time</td>
                     <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Pkg Type</td>
                     <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Requested Qty</td>
-                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Kgs per Pkg Type</td>
-                    <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Total Kgs</td>
+                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Kgs per Pkg Type</td>
+                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Total Kgs</td>
                     <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Rate per Pack</td>
                     <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">
                         <span>Amount</span>
@@ -67,19 +67,19 @@
         <table class="table"
                style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <tr>
-                <td style="text-align: right; font-weight: bold; width:78%">SubTotal</td>
+                <td style="text-align: right; font-weight: bold; width:77.7%">SubTotal</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:78%">Vat 5%</td>
+                <td style="text-align: right; font-weight: bold; width:77.7%">Vat 5%</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:78%;">Total Amount</td>
+                <td style="text-align: right; font-weight: bold; width:77.7%;">Total Amount</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_total"/>
                 </td>
