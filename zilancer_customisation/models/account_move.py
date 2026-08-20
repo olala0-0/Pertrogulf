@@ -21,19 +21,20 @@ class AccountMove(models.Model):
         self.ensure_one()
         sale_type = self.sale_type or 'local_sale'
 
-        # Map sale_type to sequence prefix and code key
+        # Map sale_type to sequence prefix base and code key
         if sale_type == 'out_of_scope':
-            prefix_type = "PGM/OOS/"
+            prefix_base = "PGM/OOS/"
             type_code = "out_of_scope"
         elif sale_type == 'export':
-            prefix_type = "PGM/E/"
+            prefix_base = "PGM/E/"
             type_code = "export"
         else:  # local_sale or default
-            prefix_type = "PGM/"
+            prefix_base = "PGM/"
             type_code = "local_sale"
 
         ref_date = self.invoice_date or self.date or fields.Date.context_today(self)
         year_str = ref_date.strftime("%Y")
+        prefix_type = f"{prefix_base}{year_str}/"
 
         sequence_code = f"account.move.sale_type.{type_code}.{year_str}"
 
@@ -45,7 +46,7 @@ class AccountMove(models.Model):
                     "name": seq_name,
                     "code": sequence_code,
                     "prefix": prefix_type,
-                    "suffix": f"/{year_str}",
+                    "suffix": "",
                     "padding": 4,
                     "number_next": 1,
                     "number_increment": 1,
@@ -55,6 +56,17 @@ class AccountMove(models.Model):
                 self.env.cr.commit()
             except Exception as e:
                 print(f"Error creating sequence {sequence_code}: {e}")
+        else:
+            # Ensure existing sequence prefix/suffix match the new format PGM/OOS/2026/0001
+            if seq.prefix != prefix_type or seq.suffix:
+                try:
+                    seq.sudo().write({
+                        "prefix": prefix_type,
+                        "suffix": "",
+                    })
+                    self.env.cr.commit()
+                except Exception as e:
+                    print(f"Error updating sequence prefix {sequence_code}: {e}")
 
         next_name = False
         try:
@@ -66,7 +78,7 @@ class AccountMove(models.Model):
             print(f"Error fetching sequence for {sequence_code}: {e}")
 
         if not next_name:
-            pattern = f"{prefix_type}%/{year_str}"
+            pattern = f"{prefix_type}%"
             last_move = self.sudo().search(
                 [("name", "like", pattern), ("move_type", "in", ["out_invoice", "out_refund"])],
                 order="id desc",
@@ -77,11 +89,11 @@ class AccountMove(models.Model):
                 try:
                     parts = last_move.name.split("/")
                     if len(parts) >= 3:
-                        num_part = parts[-2]
+                        num_part = parts[-1]
                         next_num = int(num_part) + 1
                 except (ValueError, IndexError):
                     next_num = 1
-            next_name = f"{prefix_type}{next_num:04d}/{year_str}"
+            next_name = f"{prefix_type}{next_num:04d}"
 
         return next_name
 

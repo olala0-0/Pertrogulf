@@ -6,16 +6,16 @@
             padding-right: 0 !important;
             }
         </style>
-        <table class="table table-sm o_main_table mb-0" style="font-size:15px;">
+        <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <thead>
-                <tr style="background-color:#619FAF;">
-                    <th>Sn</th>
-                    <th class="text-start">Inquired Item</th>
-                    <th class="text-start">Offered Item</th>
-                    <th class="text-start">Pack Size</th>
-                    <th class="text-start">No of Units</th>
-                    <th class="text-start">Unit Price</th>
-                    <th name="th_subtotal" class="text-end">
+                <tr>
+                    <th style="border:1px solid #6c757d !important; background-color:#619FAF; border-radius:8px 0 0 0;">Sn</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Inquired Item</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Offered Item</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Pack Size</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">No of Units</th>
+                    <th class="text-start" style="border:1px solid #6c757d !important; background-color:#619FAF;">Unit Price</th>
+                    <th name="th_subtotal" class="text-end" style="border:1px solid #6c757d !important; background-color:#619FAF; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </th>
 
@@ -27,25 +27,25 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.customer_ref_id.name"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_template_id"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.pack_size_id.name"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_qty"/>
                             </td>
-                            <td>
+                            <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
-                            <td class="text-end">
+                            <td class="text-end" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>

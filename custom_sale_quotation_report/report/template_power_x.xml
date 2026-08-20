@@ -1,14 +1,14 @@
 <odoo>
     <template id="body_power_x">
-        <table  class="table table-sm o_main_table mb-0" style="font-size:15px;">
+        <table  class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <thead>
                 <tr>
-                    <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Sn</th>
-                    <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Description of Goods</th>
-                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Rate</th>
-                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Per</th>
-                    <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Discount</th>
-                    <th style="text-align:right; width:15%; padding:8px; line-height:1.8; border:1px solid #000;font-weight: bold">Amount</th>
+                    <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:8px 0 0 0;">Sn</th>
+                    <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Rate</th>
+                    <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Per</th>
+                    <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Discount</th>
+                    <th style="text-align:right; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:0 8px 0 0;">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -17,10 +17,10 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
                                 <!-- Optional packing/weight info, only for Power X -->
                                 <t t-if="line.packing_type">
@@ -51,16 +51,16 @@
                                     </small>
                                 </t>
                             </td>
-                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
-                            <td style="text-align:center; padding:8px; line-height:1.8;">
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_id.name"/>
                             </td>
-                            <td style="text-align:center; padding:8px; line-height:1.8;"><span t-field="line.discount"/>%
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;"><span t-field="line.discount"/>%
                             </td>
-                            <td style="text-align:right; padding:8px; line-height:1.8;">
+                            <td style="text-align:right; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
