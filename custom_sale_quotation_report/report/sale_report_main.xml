@@ -105,7 +105,7 @@
                             <t t-call="custom_sale_quotation_report.body_petrogulf_aviation"/>
                         </t>
 
-                        <t t-elif="o.company_id.business_unit == 'pg_tblnd' and o.is_adnoc">
+                        <t t-elif="o.company_id.business_unit == 'pg_tblnd' and o.partner_id.is_adnoc">
                             <t t-call="custom_sale_quotation_report.body_toll_blending_adnoc"/>
                         </t>
 

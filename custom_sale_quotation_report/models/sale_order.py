@@ -21,10 +21,6 @@ class SaleOrder(models.Model):
         string="Show VAT on Quotation", default=True)
     show_credit_note = fields.Boolean(
         string="Show Discount/Credit Note on Quotation", default=False)
-    is_adnoc = fields.Boolean(
-        string="ADNOC Toll Blending Layout", default=False,
-        help="Print the simplified ADNOC quotation layout instead of the "
-             "standard Toll Blending layout.")
 
     def _get_amount_in_words(self):
         """Used by Toll Blending report: 'Total Amount in words'."""
