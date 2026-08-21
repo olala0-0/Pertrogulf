@@ -28,9 +28,7 @@
                                 <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
                                 <span style="font-size:20px !important;"
                                       t-field="o.partner_id.country_id.name"></span>
-                                <br/>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')">
-                                    <br/>
                                     <span style="font-size:20px !important; ">Contact No:</span>
                                     <span style="font-size:20px;" t-field="o.partner_id.phone"/>
                                 </t>

@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="view_order_form_toll_report_toggles" model="ir.ui.view">
+        <field name="name">sale.order.form.toll.report.toggles</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="zilancer_customisation.view_order_form_toll"/>
+        <field name="arch" type="xml">
+            <field name="show_total" position="after">
+                <field name="show_vat"/>
+                <field name="show_credit_note"/>
+                <field name="show_bank_details"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
