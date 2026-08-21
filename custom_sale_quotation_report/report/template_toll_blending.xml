@@ -51,7 +51,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width: 77%;">Discount (Credit Note)</td>
+                <td style="text-align: right; font-weight: bold; width: 77%;">Vat</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
