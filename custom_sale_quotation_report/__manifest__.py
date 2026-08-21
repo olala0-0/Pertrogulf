@@ -17,6 +17,8 @@
     """,
     'depends': ['sale', 'sale_management', 'stock', 'sale_stock', 'account', 'zilancer_customisation'],
     'data': [
+        'views/res_partner_view.xml',
+        'views/sale_order_view.xml',
         'report/report_actions.xml',
         'report/sale_report_main.xml',
         'report/template_power_x.xml',
