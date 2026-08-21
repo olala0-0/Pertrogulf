@@ -93,8 +93,10 @@
                         <tr>
                             <td style="width:48%; vertical-align:top;">
                                 <div t-if="is_marine" style="height:34mm;"/>
-                                <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td colspan="2" style="padding:4px 6px; font-weight:bold;">Buyer</td>
+                                    </tr>
                                     <tr>
                                         <td style="padding:4px; width:40%;">Company Name</td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.name"/></td>
@@ -224,7 +226,10 @@
                                         <td style="border:1px solid #ccc; padding:4px;"><span t-field="o.document_number"/></td>
                                     </tr>
                                 </table>
-                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; margin-top:19px;">
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                    <tr style="background-color:#d9d9d9;">
+                                        <td colspan="2" style="padding:4px 6px;"> </td>
+                                    </tr>
                                     <tr>
                                         <td style="padding:4px; background-color:#f2f2f2; width:50%;">Buyer's Order No.</td>
                                         <td style="padding:4px;"><span t-field="o.sale_id.client_po_order_no"/></td>
