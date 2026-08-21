@@ -114,6 +114,16 @@
                                         <td style="padding:4px;">TRN</td>
                                         <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                     </tr>
+                                    <t t-if="not is_powerx and not is_marine">
+                                        <tr>
+                                            <td style="padding:4px;"> </td>
+                                            <td style="padding:4px;"> </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:4px;"> </td>
+                                            <td style="padding:4px;"> </td>
+                                        </tr>
+                                    </t>
                                 </table>
                             </td>
                             <td style="width:4%;"/>
