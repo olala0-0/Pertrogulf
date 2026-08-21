@@ -17,7 +17,7 @@
                                 <span style="font-size:20px;" t-field="o.name"/>
                                 <br/>
                                 <span style="font-size:20px !important; font-weight:bold;">Kind Attn:</span>
-                                <span style="font-size:20px; font-weight:bold;" t-field="o.inquiry_rec_from"/>
+                                <span style="font-size:20px;" t-field="o.inquiry_rec_from"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Name:</span>
                                 <span style="font-size:20px;" t-field="o.partner_id.name"/>
