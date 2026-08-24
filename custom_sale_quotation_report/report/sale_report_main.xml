@@ -89,55 +89,6 @@
                             </t>
                         </div>
 
-                        <div class="row mb-4 mt32" id="informations">
-                            <div t-if="o.client_order_ref" class="col" name="informations_reference">
-                                <strong>Your Reference</strong>
-                                <div t-field="o.client_order_ref">SO0000</div>
-                            </div>
-                            <div t-if="o.date_order" class="col" name="informations_date">
-                                <strong t-if="o.state in ['draft', 'sent']">Quotation Date</strong>
-                                <strong t-else="">Order Date</strong>
-                                <div t-field="o.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
-                            </div>
-                            <div class="col" name="expiration_date">
-                                <strong>Quote Valid Till Date</strong>
-                                <div t-field="o.validity_date">2023-12-31</div>
-                            </div>
-                            <div t-if="o.create_uid.name" class="col">
-                                <strong>Quoted by</strong>
-                                <div t-field="o.create_uid">Mitchell Admin</div>
-                            </div>
-                            <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_greece','pg_sing')">
-                                <div t-if="o.vessel_no_id" class="col" name="vessel_no">
-                                    <strong>Vessel Name</strong>
-                                    <div t-field="o.vessel_no_id.name"></div>
-                                </div>
-                                <div t-if="o.imo_number" class="col" name="imo_number">
-                                    <strong>IMO No</strong>
-                                    <div t-field="o.imo_number"></div>
-                                </div>
-                                <div t-if="o.port_master_id" class="col" name="port_master_id">
-                                    <strong>Port Name</strong>
-                                    <div t-field="o.port_master_id.name"></div>
-                                </div>
-                            </t>
-                            <!-- Aviation-only extra header fields -->
-                            <t t-if="o.company_id.business_unit == 'pg_aviation'">
-                                <div class="col" name="aircraft_reg_details">
-                                    <strong>Aircraft Reg Details</strong>
-                                    <div t-field="o.aircraft_reg_details"></div>
-                                </div>
-                                <div class="col" name="aircraft_type">
-                                    <strong>Aircraft Type</strong>
-                                    <div t-field="o.aircraft_type"></div>
-                                </div>
-                                <div class="col" name="country_of_origin">
-                                    <strong>Country of Origin</strong>
-                                    <div t-field="o.country_of_origin"></div>
-                                </div>
-                            </t>
-                        </div>
-
                         <!-- ============ BUSINESS UNIT DISPATCH ============ -->
 
                         <t t-if="o.company_id.business_unit == 'pg_powerx'">
