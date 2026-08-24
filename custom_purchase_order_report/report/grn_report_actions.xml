@@ -22,5 +22,6 @@
         <field name="paperformat_id" ref="paperformat_grn_ajman"/>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="binding_type">report</field>
+        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
     </record>
 </odoo>

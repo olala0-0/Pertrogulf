@@ -325,7 +325,7 @@
             </t>
 
             <!-- OPTIONAL FEATURES (yellow reference table) -->
-            <div style="margin-top: 20px; width: 320px;">
+            <!-- <div style="margin-top: 20px; width: 320px;">
                 <table style="width:100%; border-collapse: collapse; border: 1px solid #000;">
                     <thead>
                         <tr>
@@ -350,7 +350,7 @@
                         <tr><td style="background-color:#FFFDE0; border:1px solid #000; padding:4px;">Discount / Credit Note</td></tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
 
             <!-- Note below the table -->
             <div style="margin-top: 10px; font-style: italic;">

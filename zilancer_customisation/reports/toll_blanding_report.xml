@@ -321,13 +321,13 @@
             </t>
 
             <!-- Bank Details Note - OPTIONAL -->
-            <div class="row" style="margin-top:10px;">
+            <!-- <div class="row" style="margin-top:10px;">
                 <div class="col-4">
                     <div style="background-color:#FFF9C4; color:#000000; font-weight:bold; text-transform:uppercase; padding:6px; display:block; box-sizing:border-box; width:100%; word-wrap:break-word;">
                         [Bank Details Should Be Optional]
                     </div>
                 </div>
-            </div>
+            </div> -->
             <div class="oe_structure"/>
         </div>
     </t>

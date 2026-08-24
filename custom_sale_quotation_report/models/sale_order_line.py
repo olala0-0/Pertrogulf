@@ -25,7 +25,6 @@ class SaleOrderLine(models.Model):
     inquired_item = fields.Char(string="Inquired Item")
     offered_product = fields.Char(string="Offered Product")
     category = fields.Char(string="Category")
-    lead_time = fields.Char(string="Lead Time")
     pkg_type = fields.Char(string="Pkg Type")
     kgs_per_pkg_type = fields.Float(string="Kgs per Pkg Type")
     total_kgs = fields.Float(string="Total Kgs", compute='_compute_total_kgs', store=True)

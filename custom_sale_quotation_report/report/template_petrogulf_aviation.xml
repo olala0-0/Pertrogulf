@@ -1,7 +1,8 @@
 <odoo>
     <template id="body_petrogulf_aviation">
-        <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
-                <tr>
+       <table class="o_has_total_table table o_main_table table-borderless mb-0" style="border-collapse:collapse;">
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group;text-transform: none !important;">
                     <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</td>
                     <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Inquired Items</td>
                     <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>
@@ -16,7 +17,8 @@
                     <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </td>
-                </tr>
+
+                </thead>
             <tbody>
                 <t t-set="sn" t-value="0"/>
                 <t t-foreach="o.order_line" t-as="line">
@@ -27,7 +29,7 @@
                                 <span t-esc="sn"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.inquired_item"/>
+                                <span t-field="line.customer_ref_id.name"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
@@ -39,7 +41,7 @@
                                 <span t-field="line.category"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.lead_time"/>
+                                <span t-field="line.leads_time"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.pkg_type"/>
@@ -64,7 +66,7 @@
                 </t>
             </tbody>
         </table>
-        <table class="table"
+        <table class="table mt-0"
                style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <tr>
                 <td style="text-align: right; font-weight: bold; width:77.7%">SubTotal</td>
@@ -73,7 +75,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:77.7%">Vat 5%</td>
+                <td style="text-align: right; font-weight: bold; width:77.7%">VAT 5%</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>

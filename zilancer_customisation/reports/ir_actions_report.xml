@@ -352,7 +352,12 @@
                                     <div t-field="company.company_details"/>
                                 </t>
                                 <t t-else="">
-                                    <div t-if="docs.company_id" class="o_company_tagline fw-bold" style="color: black !important;">
+                                    <div t-if="docs.company_id and docs.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd')" class="o_company_tagline fw-bold" style="color: black !important;">
+                                        <div style="white-space: nowrap; display: inline-block;">Petro Gulf Oil Manufacturing LLC</div>
+                                        <div>New Industrial Area 1,</div>
+                                        <div>Ajman, United Arab Emirates</div>
+                                    </div>
+                                    <div t-if="docs.company_id and docs.company_id.business_unit not in ('pg_aviation', 'pg_auto', 'pg_tblnd')" class="o_company_tagline fw-bold" style="color: black !important;">
                                         <!--<span><t t-esc="docs.company_id.name"/></span>-->
                                         <div t-field="docs.company_id" style="white-space: nowrap; display: inline-block;"/>
                                         <div t-if="docs.company_id.street"><t t-esc="docs.company_id.street"/></div>
@@ -365,10 +370,10 @@
                                         <div t-if="docs.company_id.country_id"><t t-esc="docs.company_id.country_id.name"/></div>
                                     </div>
                                 </t>
-                                
+
                                 <!--<div t-field="company.company_details"/>-->
                             </t>
-                            
+
                             <t t-else="">
                                 <!-- <div t-if="o.company_id" class="o_company_tagline fw-bold">
                                     <div><t t-esc="o.company_id.name"/></div>
