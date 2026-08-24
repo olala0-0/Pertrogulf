@@ -1,8 +1,10 @@
 <odoo>
     <template id="body_petrogulf_aviation">
-        <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
-                <tr>
-                    <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</td>
+       <table class="o_has_total_table table o_main_table table-borderless">
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group;text-transform: none !important;">
+                    <tr>
+                    <th style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</th>
                     <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Inquired Items</td>
                     <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>
                     <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Offered Product</td>
@@ -17,6 +19,7 @@
                         <span>Amount</span>
                     </td>
                 </tr>
+                </thead>
             <tbody>
                 <t t-set="sn" t-value="0"/>
                 <t t-foreach="o.order_line" t-as="line">
