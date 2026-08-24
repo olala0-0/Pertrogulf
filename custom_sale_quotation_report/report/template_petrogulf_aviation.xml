@@ -1,7 +1,7 @@
 <odoo>
     <template id="body_petrogulf_aviation">
         <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
-                <tr>
+                <th>
                     <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</td>
                     <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Inquired Items</td>
                     <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>
@@ -16,7 +16,7 @@
                     <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </td>
-                </tr>
+                </th>
             <tbody>
                 <t t-set="sn" t-value="0"/>
                 <t t-foreach="o.order_line" t-as="line">
