@@ -73,7 +73,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:76.1%">Vat 5%</td>
+                <td style="text-align: right; font-weight: bold; width:76.1%">VAT 5%</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
