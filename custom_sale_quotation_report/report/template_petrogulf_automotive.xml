@@ -67,19 +67,19 @@
         <table class="table"
                style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <tr>
-                <td style="text-align: right; font-weight: bold; width:76%">SubTotal</td>
+                <td style="text-align: right; font-weight: bold; width:70.8%">SubTotal</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:76%">VAT 5%</td>
+                <td style="text-align: right; font-weight: bold; width:70.8%">VAT 5%</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
-                <td style="text-align: right; font-weight: bold; width:76%;">Grand Total</td>
+                <td style="text-align: right; font-weight: bold; width:70.8%;">Grand Total</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_total"/>
                 </td>
