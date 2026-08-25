@@ -124,7 +124,7 @@
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine">
-                                        <td colspan="2" style="padding:4px; font-size:10px; font-style:italic;">
+                                        <td colspan="2" style="padding:4px; font-size:12px; font-style:italic;">
                                             Master and/or Owner(s) and/or Managing Director(s) and/or Operator(s) and/or Charterer(s) and/or Buyer(s) for Vessel
                                         </td>
                                     </tr>
@@ -221,38 +221,50 @@
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; width:25%; white-space:nowrap;">Delivery Note No.</td>
-                                        <td style="padding:4px; width:25%;"><span t-field="delivery.name"/></td>
                                         <td style="padding:4px; width:25%; white-space:nowrap;">Date</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px; width:25%;"><span t-field="delivery.name"/></td>
                                         <td style="padding:4px; width:25%;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/></td>
                                     </tr>
                                     <tr>
                                         <td style="padding:4px; white-space:nowrap;">Vessel Name</td>
-                                        <td style="padding:4px;"><span t-field="so.vessel_no_id.name"/></td>
                                         <td style="padding:4px; white-space:nowrap;">IMO No</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"><span t-field="so.vessel_no_id.name"/></td>
                                         <td style="padding:4px;"><span t-field="so.imo_number"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; white-space:nowrap;">Buyer's Order No.</td>
-                                        <td style="padding:4px;"><span t-field="so.client_po_order_no"/></td>
                                         <td style="padding:4px; white-space:nowrap;">Date</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"><span t-field="so.client_po_order_no"/></td>
                                         <td style="padding:4px;"> </td>
                                     </tr>
                                     <tr>
                                         <td style="padding:4px; white-space:nowrap;">Dispatch Note No.</td>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
                                         <td style="padding:4px; white-space:nowrap;">Date</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
                                         <td style="padding:4px;"> </td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; white-space:nowrap;">Dispatched through</td>
-                                        <td style="padding:4px;"> </td>
                                         <td style="padding:4px; white-space:nowrap;">Port</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"> </td>
                                         <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
                                     </tr>
                                     <tr>
                                         <td style="padding:4px; white-space:nowrap;">Payment Terms</td>
-                                        <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
                                         <td style="padding:4px; white-space:nowrap;">Terms of Delivery</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
                                         <td style="padding:4px;"> </td>
                                     </tr>
                                 </table>
