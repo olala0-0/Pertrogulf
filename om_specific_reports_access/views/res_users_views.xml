@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="res_users_hide_specific_reports_view_form" model="ir.ui.view">
+        <field name="name">res.users.hide.specific.reports.view.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='page_security']" position="after">
+                <page string="Hide Specific Print Reports" name="hide_specific_reports">
+                    <field name="hide_report_ids">
+                        <list editable="top">
+                            <field name="model_id" required="1"/>
+                            <field name="report_ids" widget="many2many_tags" required="1"/>
+                            <field name="user_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
