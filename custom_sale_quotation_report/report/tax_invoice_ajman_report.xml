@@ -406,6 +406,7 @@
                     </table>
                     <table t-else="" style="width:100%; border-collapse:collapse; margin-top:10px;">
                         <tr>
+                            <td style="width:52%; vertical-align:top;"/>
                             <td style="width:48%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr>
@@ -443,7 +444,6 @@
                                     </tr>
                                 </table>
                             </td>
-                            <td style="width:52%; vertical-align:top;"/>
                         </tr>
                     </table>
                     <div t-if="not is_powerx" style="margin-top:8px; font-size:12px;">
