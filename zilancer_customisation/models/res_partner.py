@@ -78,6 +78,69 @@ class ResPartner(models.Model):
         compute='_compute_total_revenue',
     )
 
+    quotation_count = fields.Integer(
+        string="Quotation Count",
+        groups='sales_team.group_sale_salesman',
+        compute='_compute_quotation_count',
+    )
+
+    def _compute_sale_order_count(self):
+        self.sale_order_count = 0
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return
+
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        sale_order_groups = self.env['sale.order']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids), ('state', '=', 'sale')],
+            groupby=['partner_id'], aggregates=['__count']
+        )
+        self_ids = set(self._ids)
+
+        for partner, count in sale_order_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.sale_order_count += count
+                partner = partner.parent_id
+
+    def _compute_quotation_count(self):
+        self.quotation_count = 0
+        if not self.env.user.has_group('sales_team.group_sale_salesman'):
+            return
+
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        quotation_groups = self.env['sale.order']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids), ('state', 'in', ['draft', 'sent'])],
+            groupby=['partner_id'], aggregates=['__count']
+        )
+        self_ids = set(self._ids)
+
+        for partner, count in quotation_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.quotation_count += count
+                partner = partner.parent_id
+
+    def action_view_sale_orders(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
+        action['domain'] = [('partner_id', 'child_of', self.id), ('state', '=', 'sale')]
+        action['context'] = {'default_partner_id': self.id}
+        return action
+
+    def action_view_quotations(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
+        action['name'] = self.env._('Quotations')
+        action['domain'] = [('partner_id', 'child_of', self.id), ('state', 'in', ['draft', 'sent'])]
+        action['context'] = {'default_partner_id': self.id}
+        return action
+
     def _compute_total_revenue(self):
         for partner in self:
             print("---partner.total_revenue--------------------", partner.total_revenue)
