@@ -5,20 +5,19 @@
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group;text-transform: none !important;">
                     <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap; border-radius:8px 0 0 0;">Sn</td>
-                    <td t-if="show_inquired_item" class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Inquired Items</td>
+                    <td t-if="show_inquired_item" class="text-start" style=" width:14%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Inquired Items</td>
 <!--                    <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>-->
-                    <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Offered Product</td>
+                    <td class="text-start" style=" width:14%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Offered Product</td>
                     <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Category</td>
                     <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Lead Time</td>
                     <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">PKG Type</td>
-                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Requested Qty</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">KGS Per PKG Type</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Total KGS</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Rate Per Pack</td>
-                    <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap; border-radius:0 8px 0 0;">
+                    <td class="text-start" style=" width:6%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Requested Qty</td>
+                    <td class="text-start" style=" width:6%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">KGS Per PKG Type</td>
+                    <td class="text-start" style=" width:6%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Total KGS</td>
+                    <td class="text-start" style=" width:6%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Rate Per Pack</td>
+                    <td name="th_subtotal" class="text-end" style=" width:6%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </td>
-
                 </thead>
             <tbody>
                 <t t-set="sn" t-value="0"/>
@@ -32,10 +31,10 @@
 <!--                            <td style="border:1px solid #6c757d !important;">-->
 <!--                                <span t-field="line.customer_ref_id.name"/>-->
 <!--                            </td>-->
-                            <td t-if="show_inquired_item" style="border:1px solid #6c757d !important;">
+                            <td t-if="show_inquired_item" style="border:1px solid #6c757d !important; white-space:nowrap;">
                                 <span t-field="line.customer_ref_id.name"/>
                             </td>
-                            <td style="border:1px solid #6c757d !important;">
+                            <td style="border:1px solid #6c757d !important; white-space:nowrap;">
                                 <span t-field="line.product_id"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
@@ -70,36 +69,36 @@
         <table class="table mt-0"
                style="width: 100%; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
             <colgroup>
-                <col style="width:4%;"/>
-                <col t-if="show_inquired_item" style="width:10%;"/>
-                <col style="width:10%;"/>
-                <col style="width:8%;"/>
-                <col style="width:7%;"/>
-                <col style="width:7%;"/>
-                <col style="width:8%;"/>
-                <col style="width:7.5%;"/>
-                <col style="width:7.5%;"/>
-                <col style="width:7.5%;"/>
-                <col style="width:7.5%;"/>
+                <col style="width:4%; border:none;"/>
+                <col t-if="show_inquired_item" style="width:14%; border:none;"/>
+                <col style="width:14%; border:none;"/>
+                <col style="width:8%; border:none;"/>
+                <col style="width:7%; border:none;"/>
+                <col style="width:7%; border:none;"/>
+                <col style="width:6%; border:none;"/>
+                <col style="width:6%; border:none;"/>
+                <col style="width:6%; border:none;"/>
+                <col style="width:6%; border:none;"/>
+                <col style="width:6%; border:none;"/>
             </colgroup>
             <tr>
-                <td t-attf-colspan="#{9 if show_inquired_item else 8}"></td>
-                <td style="text-align: right; font-weight: bold;">SubTotal</td>
-                <td style="text-align: right; font-weight: bold;">
+                <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
+                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">SubTotal</td>
+                <td style="text-align: right; font-weight: bold; border:none;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
-                <td t-attf-colspan="#{9 if show_inquired_item else 8}"></td>
-                <td style="text-align: right; font-weight: bold;">VAT 5%</td>
-                <td style="text-align: right; font-weight: bold;">
+                <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
+                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">VAT 5%</td>
+                <td style="text-align: right; font-weight: bold; border:none;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
-                <td t-attf-colspan="#{9 if show_inquired_item else 8}"></td>
-                <td style="text-align: right; font-weight: bold;">Total Amount</td>
-                <td style="text-align: right; font-weight: bold;">
+                <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
+                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">Total Amount</td>
+                <td style="text-align: right; font-weight: bold; border:none;">
                     <span t-field="o.amount_total"/>
                 </td>
             </tr>
