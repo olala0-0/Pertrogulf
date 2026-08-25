@@ -33,7 +33,7 @@
 <!--                                <span t-field="line.customer_ref_id.name"/>-->
 <!--                            </td>-->
                             <td t-if="show_inquired_item" style="border:1px solid #6c757d !important;">
-                                <span t-field="line.inquired_item"/>
+                                <span t-field="line.customer_ref_id.name"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_id"/>
