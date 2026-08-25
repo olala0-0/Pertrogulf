@@ -1,20 +1,21 @@
 <odoo>
     <template id="body_petrogulf_aviation">
+       <t t-set="show_inquired_item" t-value="any(l.inquired_item for l in o.order_line if not l.display_type)"/>
        <table class="o_has_total_table table o_main_table table-borderless mb-0" style="border-collapse:collapse;">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group;text-transform: none !important;">
-                    <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</td>
-                    <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Inquired Items</td>
-                    <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>
-                    <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Offered Product</td>
-                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Category</td>
-                    <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Lead Time</td>
-                    <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Pkg Type</td>
-                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Requested Qty</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Kgs per Pkg Type</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Total Kgs</td>
-                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Rate per Pack</td>
-                    <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">
+                    <td style=" width:4%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap; border-radius:8px 0 0 0;">Sn</td>
+                    <td t-if="show_inquired_item" class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Inquired Items</td>
+<!--                    <td class="text-start" style=" width:16%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</td>-->
+                    <td class="text-start" style=" width:10%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Offered Product</td>
+                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Category</td>
+                    <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Lead Time</td>
+                    <td class="text-start" style=" width:7%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">PKG Type</td>
+                    <td class="text-start" style=" width:8%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Requested Qty</td>
+                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">KGS Per PKG Type</td>
+                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Total KGS</td>
+                    <td class="text-start" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">Rate Per Pack</td>
+                    <td name="th_subtotal" class="text-end" style=" width:7.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap; border-radius:0 8px 0 0;">
                         <span>Amount</span>
                     </td>
 
@@ -28,35 +29,35 @@
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
-                            <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.customer_ref_id.name"/>
-                            </td>
-                            <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.name"/>
+<!--                            <td style="border:1px solid #6c757d !important;">-->
+<!--                                <span t-field="line.customer_ref_id.name"/>-->
+<!--                            </td>-->
+                            <td t-if="show_inquired_item" style="border:1px solid #6c757d !important;">
+                                <span t-field="line.inquired_item"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.offered_product"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.category"/>
+                                <span t-field="line.product_id.categ_id.name"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.leads_time"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.pkg_type"/>
+                                <span t-field="line.product_id.pack_size_id"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.product_uom_qty"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.kgs_per_pkg_type"/>
+                                <span t-field="line.product_id.kgs_per_pkg_type"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.total_kgs"/>
+                                <span t-esc="'{:,.2f}'.format(line.product_uom_qty * line.product_id.kgs_per_pkg_type)"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.rate_per_pack"/>
+                                <span t-field="line.price_unit"/>
                             </td>
                             <td class="text-right" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>

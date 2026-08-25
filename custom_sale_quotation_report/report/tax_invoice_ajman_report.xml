@@ -227,7 +227,7 @@
                                         <td style="padding:4px; width:25%;"><span t-field="delivery.name"/></td>
                                         <td style="padding:4px; width:25%;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/></td>
                                     </tr>
-                                    <tr>
+                                    <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; white-space:nowrap;">Vessel Name</td>
                                         <td style="padding:4px; white-space:nowrap;">IMO No</td>
                                     </tr>
@@ -243,7 +243,7 @@
                                         <td style="padding:4px;"><span t-field="so.client_po_order_no"/></td>
                                         <td style="padding:4px;"> </td>
                                     </tr>
-                                    <tr>
+                                    <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; white-space:nowrap;">Dispatch Note No.</td>
                                         <td style="padding:4px; white-space:nowrap;">Date</td>
                                     </tr>
@@ -259,13 +259,13 @@
                                         <td style="padding:4px;"> </td>
                                         <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
                                     </tr>
-                                    <tr>
+                                    <tr style="background-color:#f2f2f2;">
                                         <td style="padding:4px; white-space:nowrap;">Payment Terms</td>
                                         <td style="padding:4px; white-space:nowrap;">Terms of Delivery</td>
                                     </tr>
                                     <tr>
                                         <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px;"> <span t-field="o.delivery_special_instruction"/></td>
                                     </tr>
                                 </table>
                             </td>
