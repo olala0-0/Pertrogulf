@@ -265,7 +265,7 @@
                                     </tr>
                                     <tr>
                                         <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
-                                        <td style="padding:4px;"> <span t-field="o.delivery_special_instruction"/></td>
+                                        <td style="padding:4px;"> <span t-field="so.delivery_special_instructions"/></td>
                                     </tr>
                                 </table>
                             </td>

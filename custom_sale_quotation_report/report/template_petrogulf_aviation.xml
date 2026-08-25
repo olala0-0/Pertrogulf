@@ -1,6 +1,6 @@
 <odoo>
     <template id="body_petrogulf_aviation">
-       <t t-set="show_inquired_item" t-value="any(l.inquired_item for l in o.order_line if not l.display_type)"/>
+       <t t-set="show_inquired_item" t-value="any(l.customer_ref_id for l in o.order_line if not l.display_type)"/>
        <table class="o_has_total_table table o_main_table table-borderless mb-0" style="border-collapse:collapse;">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group;text-transform: none !important;">
