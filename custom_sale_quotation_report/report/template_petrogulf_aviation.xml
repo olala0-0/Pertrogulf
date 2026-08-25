@@ -83,22 +83,22 @@
             </colgroup>
             <tr>
                 <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
-                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">SubTotal</td>
-                <td style="text-align: right; font-weight: bold; border:none;">
+                <td colspan="2" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">SubTotal</td>
+                <td style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                     <span t-field="o.amount_untaxed"/>
                 </td>
             </tr>
             <tr>
                 <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
-                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">VAT 5%</td>
-                <td style="text-align: right; font-weight: bold; border:none;">
+                <td colspan="2" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">VAT 5%</td>
+                <td style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                     <span t-field="o.amount_tax"/>
                 </td>
             </tr>
             <tr>
                 <td t-attf-colspan="#{8 if show_inquired_item else 7}" style="border:none;"></td>
-                <td colspan="2" style="text-align: right; font-weight: bold; border:none;">Total Amount</td>
-                <td style="text-align: right; font-weight: bold; border:none;">
+                <td colspan="2" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">Total Amount</td>
+                <td style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                     <span t-field="o.amount_total"/>
                 </td>
             </tr>
