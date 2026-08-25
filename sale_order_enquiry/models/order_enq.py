@@ -1264,6 +1264,11 @@ class ResPartner(models.Model):
     inquiry_count = fields.Integer(
         string="Inquiry Count", compute="_compute_inquiry_count"
     )
+    quotation_count = fields.Integer(
+        string="Quotation Count",
+        groups="sales_team.group_sale_salesman",
+        compute="_compute_quotation_count",
+    )
 
     def _compute_inquiry_count(self):
         order_data = self.env["order.enq"].read_group(
@@ -1274,3 +1279,24 @@ class ResPartner(models.Model):
         }
         for partner in self:
             partner.inquiry_count = mapped_data.get(partner.id, 0)
+
+    def _compute_quotation_count(self):
+        self.quotation_count = 0
+        if not self.env.user.has_group("sales_team.group_sale_salesman"):
+            return
+
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [("id", "child_of", self.ids)],
+            ["parent_id"],
+        )
+        quotation_groups = self.env["sale.order"]._read_group(
+            domain=[("partner_id", "in", all_partners.ids), ("state", "in", ["draft", "sent"])],
+            groupby=["partner_id"], aggregates=["__count"]
+        )
+        self_ids = set(self._ids)
+
+        for partner, count in quotation_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.quotation_count += count
+                partner = partner.parent_id

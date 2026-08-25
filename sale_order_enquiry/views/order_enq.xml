@@ -746,6 +746,7 @@
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="inquiry_count" invisible="False"/>
                 <field name="sale_order_count" invisible="False"/>
+                <field name="quotation_count" invisible="False"/>
             </xpath>
         </field>
     </record>
@@ -758,6 +759,7 @@
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="inquiry_count"/>
                 <field name="sale_order_count"/>
+                <field name="quotation_count"/>
             </xpath>
         </field>
     </record>

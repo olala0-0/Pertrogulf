@@ -140,6 +140,30 @@
         <!-- <field name="groups_id" eval="[(6, 0, [ref('zilancer_customisation.group_print_pi_automotive')])]"/> -->
     </record>
 
+    <record id="action_report_pgm_singapore" model="ir.actions.report">
+        <field name="name">PGM Singapore</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_pgm_singapore</field>
+        <field name="report_file">zilancer_customisation.report_pgm_singapore</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PGM_Singapore - %s' % (object.name)) or 'PGM_Singapore - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+    </record>
+
+    <record id="action_report_pgm_greece" model="ir.actions.report">
+        <field name="name">PGM Greece</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">zilancer_customisation.report_pgm_greece</field>
+        <field name="report_file">zilancer_customisation.report_pgm_greece</field>
+        <field name="print_report_name">(object.state in ('draft', 'sent') and 'PGM_Greece - %s' % (object.name)) or 'PGM_Greece - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="zilancer_customisation.paperformat_label_sheet_quotation_tax"/>
+    </record>
+
     <record id="action_report_automative_quote_lines" model="ir.actions.report">
         <field name="name">Quotation - Toll Blending</field>
         <field name="model">sale.order</field>

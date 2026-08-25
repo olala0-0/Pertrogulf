@@ -44,6 +44,8 @@
         'reports/toll_blanding_report.xml',
         'reports/pgm_lube_eu_report.xml',
         'reports/pgm_oman_report.xml',
+        'reports/pgm_singapore_report.xml',
+        'reports/pgm_greece_report.xml',
         'wizard/sale_order_approval_views.xml',
         'wizard/sale_amendment_wizard_views.xml',
     ],

@@ -25,9 +25,17 @@
                                 <span style="font-size:20px !important; ">Customer Address:</span>
                                 <span style="font-size:20px !important;" t-field="o.partner_id.street"></span>
                                 <span style="font-size:20px !important;" t-field="o.partner_id.street2"></span>
-                                <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
-                                <span style="font-size:20px !important;"
-                                      t-field="o.partner_id.country_id.name"></span>
+                                <t t-if="o.company_id.business_unit == 'pg_aviation'">
+                                    <br/>
+                                    <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
+                                    <t t-if="o.partner_id.state_id">, <span style="font-size:20px !important;" t-field="o.partner_id.state_id.name"></span></t>
+                                    <span style="font-size:20px !important;" t-field="o.partner_id.country_id.name"></span>
+                                </t>
+                                <t t-else="">
+                                    <span style="font-size:20px !important;" t-field="o.partner_id.city"></span>
+                                    <span style="font-size:20px !important;"
+                                          t-field="o.partner_id.country_id.name"></span>
+                                </t>
                                 <t t-if="o.partner_id.phone and o.company_id.business_unit not in ('pg_marine', 'pg_greece', 'pg_sing')">
                                     <br/>
                                     <span style="font-size:20px !important; ">Contact No:</span>
