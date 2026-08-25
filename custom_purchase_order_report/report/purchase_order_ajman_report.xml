@@ -243,7 +243,8 @@
                     <div style="margin-top:15px;">
                         <strong>Amount in Words:</strong>
                         <t t-if="o.currency_id">
-                            <span t-esc="o.currency_id.currency_unit_label"/>&#160;<span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                            <!-- <span t-esc="o.currency_id.currency_unit_label"/>&#160; -->
+                            <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
                         </t>
                     </div>
 
