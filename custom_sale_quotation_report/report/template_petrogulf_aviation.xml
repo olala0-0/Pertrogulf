@@ -157,7 +157,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">VAT
+                        <td colspan="5" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">VAT
                             5%
                         </td>
                         <td style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
@@ -165,7 +165,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">Total
+                        <td colspan="5" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">Total
                             Amount
                         </td>
                         <td style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
