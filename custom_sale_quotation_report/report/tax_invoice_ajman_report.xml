@@ -33,7 +33,7 @@
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
-                            <td style="width:55%; vertical-align:top; font-size:12px;">
+                            <td style="border:none;width:55%; vertical-align:top; font-size:12px;">
                                 <t t-if="is_fixed_company_name">
                                     <div><strong>Petro Gulf Oil Manufacturing LLC</strong></div>
                                     <div>New Industrial Area 1,</div>
