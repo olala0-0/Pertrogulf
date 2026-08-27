@@ -18,7 +18,7 @@
                             <col style="width:93mm;"/>
                             <col style="width:117mm;"/>
                         </colgroup>
-                        <tr>
+                        <tr style="border:none;">
                             <td style="border:none;padding:3mm 4mm; vertical-align:middle; text-align:left;">
                                 <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
                             </td>
@@ -405,11 +405,11 @@
                         </tr>
                     </table>
                     <table t-else="" style="width:100%; border-collapse:collapse; margin-top:10px;">
-                        <tr>
-                            <td style="width:52%; vertical-align:top;"/>
-                            <td style="width:48%; vertical-align:top;">
+                        <tr style="border:none;">
+                            <td style="border:none;width:52%; vertical-align:top;"/>
+                            <td style="border:none;width:48%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                                    <tr>
+                                    <tr >
                                         <td style="border:1px solid #ccc; padding:4px;"><strong>Sub Total</strong></td>
                                         <td style="border:1px solid #ccc; padding:4px; text-align:right;">
                                             <span t-field="o.amount_untaxed"
