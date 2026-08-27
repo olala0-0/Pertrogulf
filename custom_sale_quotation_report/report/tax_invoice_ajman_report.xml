@@ -50,15 +50,15 @@
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                                    <tr>
-                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
+                                    <tr style="border:none;">
+                                        <td style="border:none;border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
                                             <strong>Invoice No</strong>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px;">
+                                        <td style="border:none;border:1px solid #ccc; padding:4px;">
                                             <span t-field="o.name"/>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr >
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
                                             <strong><span t-esc="'Date' if is_powerx else 'Date'"/></strong>
                                         </td>
@@ -120,7 +120,7 @@
                     <!-- ============ BUYER / INVOICE DETAILS ============ -->
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
-                            <td style="width:48%; vertical-align:bottom;">
+                            <td style="border:none;width:48%; vertical-align:bottom;">
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine">
@@ -178,8 +178,8 @@
                                     </t>
                                 </table>
                             </td>
-                            <td style="width:4%;"/>
-                            <td style="width:48%; vertical-align:top;">
+                            <td style="border:none;width:4%;"/>
+                            <td style="border:none;width:48%; vertical-align:top;">
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">
                                     <span t-esc="'Delivery Details' if is_powerx else 'Invoice Details'"/>
                                 </div>
@@ -454,7 +454,7 @@
                     <!-- ============ BANK DETAILS ============ -->
                     <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                         <tr>
-                            <td style="width:48%; vertical-align:top;">
+                            <td style="border:none;width:48%; vertical-align:top;">
                                 <div style="background-color:#f2f2f2; padding:10px; font-size:12px;">
                                     <div style="font-weight:bold; margin-bottom:6px;">BANK DETAILS</div>
                                     <table style="width:100%; border-collapse:collapse;">
@@ -481,8 +481,8 @@
                                     </table>
                                 </div>
                             </td>
-                            <td style="width:4%;"/>
-                            <td style="width:48%; vertical-align:top; font-size:11px;">
+                            <td style="border:none;width:4%;"/>
+                            <td style="border:none;width:48%; vertical-align:top; font-size:11px;">
                                 <t t-if="is_marine">
                                     <div style="font-weight:bold; margin-bottom:4px;">Terms :</div>
                                     <div t-field="o.narration"/>
