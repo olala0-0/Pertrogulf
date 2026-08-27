@@ -32,7 +32,7 @@
                     <div style="padding:3mm 7mm 0 7mm;">
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
-                        <tr>
+                        <tr style="border:none;">
                             <td style="border:none;width:55%; vertical-align:top; font-size:12px;">
                                 <t t-if="is_fixed_company_name">
                                     <div><strong>Petro Gulf Oil Manufacturing LLC</strong></div>
@@ -50,11 +50,11 @@
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                                    <tr style="border:none;">
-                                        <td style="border:none;border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
+                                    <tr >
+                                        <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
                                             <strong>Invoice No</strong>
                                         </td>
-                                        <td style="border:none;border:1px solid #ccc; padding:4px;">
+                                        <td style="border:1px solid #ccc; padding:4px;">
                                             <span t-field="o.name"/>
                                         </td>
                                     </tr>
