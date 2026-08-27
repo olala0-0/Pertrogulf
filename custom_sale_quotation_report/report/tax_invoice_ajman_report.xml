@@ -409,35 +409,35 @@
                             <td style="border:none;width:52%; vertical-align:top;"/>
                             <td style="border:none;width:48%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                                    <tr >
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Sub Total</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                    <tr>
+                                        <td style="border:none; padding:4px;"><strong>Sub Total</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_untaxed"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr t-if="so and so.vat_selection and so.vat_selection != 'vat_not_applicable'">
-                                        <td style="border:1px solid #ccc; padding:4px;">
+                                        <td style="border:none; padding:4px;">
                                             <strong>
                                                 <span t-if="so.vat_selection == 'vat_5'">VAT 5%</span>
                                                 <span t-if="so.vat_selection == 'vat_0'">VAT 0%</span>
                                             </strong>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_tax"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr t-elif="o.amount_tax">
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>VAT</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px;"><strong>VAT</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_tax"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Grand Total</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px;"><strong>Grand Total</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_total"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
