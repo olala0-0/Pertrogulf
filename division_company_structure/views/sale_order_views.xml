@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sale Order Form View Extension -->
+    <record id="view_order_form_division" model="ir.ui.view">
+        <field name="name">sale.order.form.division</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="division_id" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sale Order Tree View Extension -->
+    <record id="view_order_tree_division" model="ir.ui.view">
+        <field name="name">sale.order.tree.division</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="division_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Sale Order Search View Extension -->
+    <record id="view_sales_order_filter_division" model="ir.ui.view">
+        <field name="name">sale.order.search.division</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="division_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Division" name="groupby_division" context="{'group_by': 'division_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
