@@ -152,12 +152,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px; width:40%;">Company Name</td>
-                                        <td style="padding:4px;">: <span t-field="o.partner_id.name"/></td>
+                                        <td style="border:none; padding:4px; width:40%;">Company Name</td>
+                                        <td style="border:none; padding:4px;">: <span t-field="o.partner_id.name"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">Address</td>
-                                        <td style="padding:4px;">:
+                                        <td style="border:none; padding:4px;">Address</td>
+                                        <td style="border:none; padding:4px;">:
                                             <span t-field="o.partner_id.street"/>
                                             <span t-if="o.partner_id.street2" t-field="o.partner_id.street2"/>
                                             <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
@@ -165,38 +165,38 @@
                                     </tr>
                                     <t t-if="is_marine">
                                         <tr>
-                                            <td style="padding:4px;">Emirate / State</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate / State</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN / GSTN / TAX ID</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN / GSTN / TAX ID</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                     <t t-else="">
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Emirate</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                 </table>
@@ -224,7 +224,7 @@
                                         <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.document_number"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;" colspan="2">Terms</td>
+                                        <td style="border:none; padding:4px;" colspan="2">Terms</td>
                                     </tr>
                                     <tr>
                                         <td style="padding:4px;" colspan="2">&#160;</td>
