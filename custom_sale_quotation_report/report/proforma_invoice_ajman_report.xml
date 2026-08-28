@@ -35,7 +35,7 @@
                                 <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
                                 <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
                                 <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
-                                <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+                                <div t-if="o.company_id.website"><span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
@@ -177,54 +177,54 @@
                                         <td style="padding:4px;"><span t-field="o.port_master_id.name"/></td>
                                     </tr>
                                 </table>
-                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; table-layout:fixed;">
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; width:50%;">Delivery Note No.</td>
-                                        <td style="padding:4px;">Delivery Note Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Delivery Note No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Delivery Note Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Vessel Name</td>
-                                        <td style="padding:4px;">IMO No</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Vessel Name</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">IMO No</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="o.vessel_no_id.name"/></td>
-                                        <td style="padding:4px;"><span t-field="o.imo_number"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.vessel_no_id.name"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.imo_number"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Buyer's Order No.</td>
-                                        <td style="padding:4px;">Dated</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Buyer's Order No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Dated</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="o.client_po_order_no"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.client_po_order_no"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.buyers_date"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Despatch Document No.</td>
-                                        <td style="padding:4px;">Despatch Note Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Despatch Document No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Despatch Note Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.document_number"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Despatch Document Date</td>
-                                        <td style="padding:4px;">Payment Terms</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Despatch Document Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Payment Terms</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="o.payment_term_id.name"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.payment_term_id.name"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Despatched through</td>
-                                        <td style="padding:4px;">Port</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Despatched through</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Port</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="o.port_master_id.name"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.port_master_id.name"/>&#160;</td>
                                     </tr>
                                 </table>
                             </td>

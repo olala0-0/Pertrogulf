@@ -33,7 +33,7 @@
                         <div t-if="company.street"><span t-field="company.street"/><span t-if="company.city">, <span t-field="company.city"/></span></div>
                         <div t-if="company.phone"><span t-field="company.phone"/></div>
                         <div t-if="company.email"><span t-field="company.email"/></div>
-                        <div t-if="company.website"><span t-field="company.website"/></div>
+                        <div t-if="company.website"><span t-esc="company.website.replace('http://', '').replace('https://', '')"/></div>
                     </div>
 
                     <!-- ============ HEADER FIELDS ============ -->

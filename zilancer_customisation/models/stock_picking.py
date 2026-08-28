@@ -141,7 +141,7 @@ class StockPicking(models.Model):
         if 'document_type' in vals and vals['document_type'] != self.document_type:
             # Only regenerate if the type actually changed
             for picking in self:
-                if picking.state in ['draft', 'assigned']:  # Only allow regeneration in draft/assigned states
+                if picking.state not in ['cancel']:  # Only allow regeneration in draft/assigned states
                     if vals['document_type']:
                         vals['document_number'] = self._generate_document_number_simple(vals['document_type'])
         return super(StockPicking, self).write(vals)
@@ -149,9 +149,9 @@ class StockPicking(models.Model):
     @api.onchange('document_type')
     def _onchange_document_type(self):
         """Generate document number on change of document type - only in draft state"""
-        if self.document_type and not self.document_number and self.state in ['draft', False]:
+        if self.document_type and not self.document_number and self.state not in ['cancel', False]:
             self.document_number = self._generate_document_number_simple(self.document_type)
-        elif self.document_type and self.document_number and self.state in ['draft', False]:
+        elif self.document_type and self.document_number and self.state not in ['cancel', False]:
             # If document type changed and we're in draft state, regenerate number
             # Check if the prefix matches the current document type
             current_prefix = self._get_prefix_from_document_type(self.document_type)
