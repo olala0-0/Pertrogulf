@@ -112,7 +112,7 @@
                                 <span t-esc="sn"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.product_type"/>
+                                <span t-field="line.product_id.type"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
@@ -129,18 +129,6 @@
             </tbody>
         </table>
 
-        <table t-if="o.show_vat or o.show_credit_note" class="table"
-               style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
-            <tr t-if="o.show_vat">
-                <td style="text-align: right; font-weight: bold; width: 77%;">VAT 5%</td>
-                <td style="text-align: right; font-weight: bold;">
-                    <span t-field="o.amount_tax"/>
-                </td>
-            </tr>
-            <tr t-if="o.show_credit_note">
-                <td colspan="2" style="text-align: right; font-weight: bold;">Credit Note</td>
-            </tr>
-        </table>
 
         <p>
             <strong>Total Amount in words:</strong>

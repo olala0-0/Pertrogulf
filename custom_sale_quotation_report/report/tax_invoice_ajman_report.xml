@@ -8,7 +8,9 @@
                 <t t-set="delivery" t-value="o._get_related_delivery()"/>
                 <t t-set="is_powerx" t-value="o.company_id.business_unit == 'pg_powerx'"/>
                 <t t-set="is_marine" t-value="o.company_id.business_unit == 'pg_fujairah' or (o.company_id.parent_id and o.company_id.parent_id.business_unit == 'pg_fujairah')"/>
-                <t t-set="is_fixed_company_name" t-value="o.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd')"/>
+                <!-- <t t-set="is_fixed_company_name" t-value="o.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd', 'pg_fujairah', 'pg_marine')"/> -->
+                <t t-set="is_fixed_company_name" t-value="o.company_id.business_unit in ('pg_fujairah', 'pg_marine')"/>
+                <t t-set="is_logo_company" t-value="o.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd', 'pg_fujairah', 'pg_marine', 'pg_ajman')"/>
                 <div class="page" style="font-size:12px; padding:0; margin:0;">
 
                     <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
@@ -18,39 +20,60 @@
                             <col style="width:93mm;"/>
                             <col style="width:117mm;"/>
                         </colgroup>
-                        <tr>
-                            <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
-                                <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                        <tr style="border:none;">
+                            <td style="border:none;padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                <!-- <t t-if="is_logo_company">
+                                    <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                </t>
+                                <t t-else="">
+                                    <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                </t> -->
+                                <t t-set="ajman_company" t-value="env['res.company'].search([('business_unit', '=', 'pg_ajman')], limit=1)"/>
+                                <t t-if="is_logo_company and ajman_company">
+                                    <img t-if="ajman_company.logo" t-att-src="ajman_company.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                </t>
+                                <t t-else="">
+                                    <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                </t>
                             </td>
-                            <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                            <td style="border:none;padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
                                 <span style="font-size:34px; font-weight:bold; color:#231f20;">TAX INVOICE</span>
                             </td>
                         </tr>
                     </table>
                     </div>
 
-                    <div style="padding:3mm 7mm 0 7mm;">
+                    <!-- <div style="padding:3mm 7mm 0 7mm;"> -->
+                    <div>
 
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
-                        <tr>
-                            <td style="width:55%; vertical-align:top; font-size:12px;">
+                        <tr style="border:none;">
+                            <td style="border:none;width:50%; vertical-align:top; font-size:12px;">
                                 <t t-if="is_fixed_company_name">
-                                    <div><strong>Petro Gulf Oil Manufacturing LLC</strong></div>
-                                    <div>New Industrial Area 1,</div>
-                                    <div>Ajman, United Arab Emirates</div>
+                                    <div style="margin-left: 4px;"><strong>Petro Gulf Oil Manufacturing L.L.C</strong></div>
+                                    <div style="margin-left: 4px;">Office C7, FIFTCO 02, Fujairah Port,</div>
+                                    <div style="margin-left: 4px;">Fujairah, United Arab Emirates</div>
+                                </t>
+                                <t t-elif="is_powerx">
+                                    <div style="margin-left: 4px;"><strong t-field="o.company_id.name"/></div>
+                                    <div style="margin-left: 4px;" t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
                                 </t>
                                 <t t-else="">
-                                    <div><strong t-field="o.company_id.name"/></div>
-                                    <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
+                                    <div style="margin-left: 4px;"><strong>Petro Gulf Oil Manufacturing L.L.C</strong></div>
+                                    <div style="margin-left: 4px;">Industrial Area - 1,</div>
+                                    <div style="margin-left: 4px;">Ajman, United Arab Emirates,</div>
+                                    <!-- <div>Ajman, United Arab Emirates,</div> -->
                                 </t>
-                                <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
-                                <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
-                                <div t-if="o.company_id.vat">TRN : <span t-field="o.company_id.vat"/></div>
-                                <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+                                <div style="margin-left: 4px;" t-if="o.company_id.vat">TRN : <span t-field="o.company_id.vat"/></div>
+                                <div style="margin-left: 4px;" t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+                                <div style="margin-left: 4px;" t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+                                <div style="margin-left: 4px;" t-if="o.company_id.website">
+                                    <span t-esc="o.get_formatted_website()"/>
+                                </div>
                             </td>
-                            <td style="width:45%; vertical-align:top;">
+                            <td style="width:50%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
-                                    <tr>
+                                    <tr >
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2; width:35%;">
                                             <strong>Invoice No</strong>
                                         </td>
@@ -58,7 +81,7 @@
                                             <span t-field="o.name"/>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr >
                                         <td style="border:1px solid #ccc; padding:4px; background-color:#f2f2f2;">
                                             <strong><span t-esc="'Date' if is_powerx else 'Date'"/></strong>
                                         </td>
@@ -120,21 +143,21 @@
                     <!-- ============ BUYER / INVOICE DETAILS ============ -->
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
-                            <td style="width:48%; vertical-align:bottom;">
+                            <td style="border:none;width:50%; vertical-align:bottom;">
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine">
                                         <td colspan="2" style="padding:4px; font-size:12px; font-style:italic;">
-                                            Master and/or Owner(s) and/or Managing Director(s) and/or Operator(s) and/or Charterer(s) and/or Buyer(s) for Vessel
+                                            Master and/or Owner(s) and/or Managing Director(s) and/or Operator(s) and/or Charterer(s) and/or Buyer(s) for Vessel - <span t-if="so and so.vessel_no_id" t-field="so.vessel_no_id.name"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px; width:40%;">Company Name</td>
-                                        <td style="padding:4px;">: <span t-field="o.partner_id.name"/></td>
+                                        <td style="border:none; padding:4px; width:40%;">Company Name</td>
+                                        <td style="border:none; padding:4px;">: <span t-field="o.partner_id.name"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">Address</td>
-                                        <td style="padding:4px;">:
+                                        <td style="border:none; padding:4px;">Address</td>
+                                        <td style="border:none; padding:4px;">:
                                             <span t-field="o.partner_id.street"/>
                                             <span t-if="o.partner_id.street2" t-field="o.partner_id.street2"/>
                                             <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
@@ -142,130 +165,130 @@
                                     </tr>
                                     <t t-if="is_marine">
                                         <tr>
-                                            <td style="padding:4px;">Emirate / State</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate / State</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN / GSTN / TAX ID</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN / GSTN / TAX ID</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                     <t t-else="">
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Emirate</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                 </table>
                             </td>
-                            <td style="width:4%;"/>
-                            <td style="width:48%; vertical-align:top;">
+                            <!-- <td style="border:none;width:4%;"/> -->
+                            <td style="border:none;width:50%; vertical-align:top;">
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">
                                     <span t-esc="'Delivery Details' if is_powerx else 'Invoice Details'"/>
                                 </div>
-                                <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; table-layout:fixed;">
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; width:50%;">Vehicle No.</td>
-                                        <td style="padding:4px;">Contact No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Vehicle No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Contact No.</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="delivery.vehicle_no"/></td>
-                                        <td style="padding:4px;"><span t-field="o.partner_id.phone"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.vehicle_no"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.partner_id.phone"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Weight Slip No.</td>
-                                        <td style="padding:4px;">Delivery Note No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Weight Slip No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Delivery Note No.</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.document_number"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;" colspan="2">Terms</td>
+                                        <td style="border:none; padding:4px;" colspan="2">Terms</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;" colspan="2"> </td>
+                                        <td style="padding:4px;" colspan="2">&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Place of Supply</td>
-                                        <td style="padding:4px;">Place of Loading</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Place of Supply</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Place of Loading</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;">&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.port_master_id.name"/>&#160;</td>
                                     </tr>
                                 </table>
-                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
+                                <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px; table-layout:fixed;">
                                     <tr t-if="is_marine" style="background-color:#f2f2f2;">
-                                        <td colspan="4" style="padding:4px;"> </td>
+                                        <td colspan="2" style="padding:4px;">&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; width:25%; white-space:nowrap;">Delivery Note No.</td>
-                                        <td style="padding:4px; width:25%; white-space:nowrap;">Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Delivery Note No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px; width:25%;"><span t-field="delivery.name"/></td>
-                                        <td style="padding:4px; width:25%;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.name"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Vessel Name</td>
-                                        <td style="padding:4px; white-space:nowrap;">IMO No</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Vessel Name</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">IMO No</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="so.vessel_no_id.name"/></td>
-                                        <td style="padding:4px;"><span t-field="so.imo_number"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.vessel_no_id.name"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.imo_number"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Buyer's Order No.</td>
-                                        <td style="padding:4px; white-space:nowrap;">Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Buyer's Order No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="so.client_po_order_no"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.client_po_order_no"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.buyers_date"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Dispatch Note No.</td>
-                                        <td style="padding:4px; white-space:nowrap;">Date</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Dispatch Note No.</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="delivery.document_number"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-esc="delivery.scheduled_date and delivery.scheduled_date.strftime('%d/%m/%Y')"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Dispatched through</td>
-                                        <td style="padding:4px; white-space:nowrap;">Port</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Dispatched through</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Port</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.dispatch_through"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.port_master_id.name"/>&#160;</td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Payment Terms</td>
-                                        <td style="padding:4px; white-space:nowrap;">Terms of Delivery</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Payment Terms</td>
+                                        <td style="padding:4px; width:50%; white-space:nowrap;">Terms of Delivery</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
-                                        <td style="padding:4px;"> <span t-field="so.delivery_special_instructions"/></td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="o.invoice_payment_term_id.name"/>&#160;</td>
+                                        <td style="padding:4px; width:50%; vertical-align:top;"><span t-field="so.incoterm.name"/>&#160;</td>
                                     </tr>
                                 </table>
                             </td>
@@ -405,39 +428,39 @@
                         </tr>
                     </table>
                     <table t-else="" style="width:100%; border-collapse:collapse; margin-top:10px;">
-                        <tr>
-                            <td style="width:52%; vertical-align:top;"/>
-                            <td style="width:48%; vertical-align:top;">
+                        <tr style="border:none;">
+                            <td style="border:none;width:52%; vertical-align:top;"/>
+                            <td style="border:none;width:48%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Sub Total</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px;"><strong>Sub Total</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_untaxed"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr t-if="so and so.vat_selection and so.vat_selection != 'vat_not_applicable'">
-                                        <td style="border:1px solid #ccc; padding:4px;">
+                                        <td style="border:none; padding:4px;">
                                             <strong>
                                                 <span t-if="so.vat_selection == 'vat_5'">VAT 5%</span>
                                                 <span t-if="so.vat_selection == 'vat_0'">VAT 0%</span>
                                             </strong>
                                         </td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_tax"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr t-elif="o.amount_tax">
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>VAT</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px;"><strong>VAT</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_tax"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="border:1px solid #ccc; padding:4px;"><strong>Grand Total</strong></td>
-                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                        <td style="border:none; padding:4px;"><strong>Grand Total</strong></td>
+                                        <td style="border:none; padding:4px; text-align:right;">
                                             <span t-field="o.amount_total"
                                                   t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                         </td>
@@ -454,35 +477,35 @@
                     <!-- ============ BANK DETAILS ============ -->
                     <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                         <tr>
-                            <td style="width:48%; vertical-align:top;">
+                            <td style="border:none;width:48%; vertical-align:top;">
                                 <div style="background-color:#f2f2f2; padding:10px; font-size:12px;">
                                     <div style="font-weight:bold; margin-bottom:6px;">BANK DETAILS</div>
                                     <table style="width:100%; border-collapse:collapse;">
                                         <tr>
                                             <td style="padding:2px; width:45%;">Account Name</td>
-                                            <td style="padding:2px;">: <span t-field="bank.partner_id.name"/></td>
+                                            <td style="padding:2px;"><span t-field="bank.partner_id.name"/></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:2px;"><span t-esc="'Account Number' if is_marine else 'A/C No.'"/></td>
-                                            <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                            <td style="padding:2px;"><span t-field="bank.acc_number"/></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:2px;">Bank Name</td>
-                                            <td style="padding:2px;">: <span t-field="bank.bank_id.name"/></td>
+                                            <td style="padding:2px;"><span t-field="bank.bank_id.name"/></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:2px;">IBAN</td>
-                                            <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                            <td style="padding:2px;"><span t-field="bank.acc_number"/></td>
                                         </tr>
                                         <tr>
                                             <td style="padding:2px;">Branch &amp; SWIFT Code</td>
-                                            <td style="padding:2px;">: <span t-field="bank.bank_bic"/></td>
+                                            <td style="padding:2px;"><span t-field="bank.bank_bic"/></td>
                                         </tr>
                                     </table>
                                 </div>
                             </td>
-                            <td style="width:4%;"/>
-                            <td style="width:48%; vertical-align:top; font-size:11px;">
+                            <td style="border:none;width:4%;"/>
+                            <td style="border:none;width:48%; vertical-align:top; font-size:11px;">
                                 <t t-if="is_marine">
                                     <div style="font-weight:bold; margin-bottom:4px;">Terms :</div>
                                     <div t-field="o.narration"/>
@@ -490,7 +513,7 @@
                                 <t t-elif="not is_powerx">
                                     <div style="text-align:right; font-size:12px;">
                                         <div t-if="is_fixed_company_name">for Petro Gulf Oil Manufacturing LLC</div>
-                                        <div t-else="">for <span t-field="o.company_id.name"/></div>
+                                        <div t-else="">for Petro Gulf Oil Manufacturing LLC</div>
                                         <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
                                     </div>
                                 </t>

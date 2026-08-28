@@ -82,6 +82,7 @@
                     <field name="total_quantity"/>
                     <field name="total_qty_units"/>
                     <field name="client_po_order_no"/>
+                    <field name="buyers_date"/>
                     <field name="vat_selection" invisible="False"/>
                     <field name="create_uid" invisible="False"/>
                 </xpath>
@@ -520,6 +521,7 @@
                             <field name="payment_term_id" placeholder="Immediate" options="{'no_open': True, 'no_create': True}"/>
                             <field name="business_unit" readonly="True" force_save="True"/>
                             <field name="client_po_order_no"/>
+                            <field name="buyers_date"/>
                             <field name="vat_selection" invisible="False"/>
                             <field name="create_uid" invisible="False"/>
                         </group>

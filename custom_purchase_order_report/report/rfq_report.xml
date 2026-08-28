@@ -31,7 +31,7 @@
                                 <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
                                 <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
                                 <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
-                                <div t-if="o.company_id.website"><span t-field="o.company_id.website"/></div>
+                                <div t-if="o.company_id.website"><span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
