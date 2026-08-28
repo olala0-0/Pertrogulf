@@ -124,17 +124,17 @@
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine">
-                                        <td colspan="2" style="padding:4px; font-size:12px; font-style:italic;">
+                                        <td colspan="2" style="border:none; padding:4px; font-size:12px; font-style:italic;">
                                             Master and/or Owner(s) and/or Managing Director(s) and/or Operator(s) and/or Charterer(s) and/or Buyer(s) for Vessel
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px; width:40%;">Company Name</td>
-                                        <td style="padding:4px;">: <span t-field="o.partner_id.name"/></td>
+                                        <td style="border:none; padding:4px; width:40%;">Company Name</td>
+                                        <td style="border:none; padding:4px;">: <span t-field="o.partner_id.name"/></td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;">Address</td>
-                                        <td style="padding:4px;">:
+                                        <td style="border:none; padding:4px;">Address</td>
+                                        <td style="border:none; padding:4px;">:
                                             <span t-field="o.partner_id.street"/>
                                             <span t-if="o.partner_id.street2" t-field="o.partner_id.street2"/>
                                             <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>
@@ -142,38 +142,38 @@
                                     </tr>
                                     <t t-if="is_marine">
                                         <tr>
-                                            <td style="padding:4px;">Emirate / State</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate / State</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN / GSTN / TAX ID</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN / GSTN / TAX ID</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                     <t t-else="">
                                         <tr>
-                                            <td style="padding:4px;">Contact No.</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.phone"/></td>
+                                            <td style="border:none; padding:4px;">Contact No.</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.phone"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Emirate</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Emirate</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.state_id.name"/></td>
                                         </tr>
                                         <tr t-if="not is_powerx">
-                                            <td style="padding:4px;">Country</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
+                                            <td style="border:none; padding:4px;">Country</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.country_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:4px;">TRN</td>
-                                            <td style="padding:4px;">: <span t-field="o.partner_id.vat"/></td>
+                                            <td style="border:none; padding:4px;">TRN</td>
+                                            <td style="border:none; padding:4px;">: <span t-field="o.partner_id.vat"/></td>
                                         </tr>
                                     </t>
                                 </table>
@@ -185,87 +185,87 @@
                                 </div>
                                 <table t-if="is_powerx" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; width:50%;">Vehicle No.</td>
-                                        <td style="padding:4px;">Contact No.</td>
+                                        <td style="border:none; padding:4px; width:50%;">Vehicle No.</td>
+                                        <td style="border:none; padding:4px;">Contact No.</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="delivery.vehicle_no"/></td>
-                                        <td style="padding:4px;"><span t-field="o.partner_id.phone"/></td>
+                                        <td style="border:none; padding:4px;"><span t-field="delivery.vehicle_no"/></td>
+                                        <td style="border:none; padding:4px;"><span t-field="o.partner_id.phone"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Weight Slip No.</td>
-                                        <td style="padding:4px;">Delivery Note No.</td>
+                                        <td style="border:none; padding:4px;">Weight Slip No.</td>
+                                        <td style="border:none; padding:4px;">Delivery Note No.</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
+                                        <td style="border:none; padding:4px;"> </td>
+                                        <td style="border:none; padding:4px;"><span t-field="delivery.document_number"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;" colspan="2">Terms</td>
+                                        <td style="border:none; padding:4px;" colspan="2">Terms</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;" colspan="2"> </td>
+                                        <td style="border:none; padding:4px;" colspan="2"> </td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px;">Place of Supply</td>
-                                        <td style="padding:4px;">Place of Loading</td>
+                                        <td style="border:none; padding:4px;">Place of Supply</td>
+                                        <td style="border:none; padding:4px;">Place of Loading</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
+                                        <td style="border:none; padding:4px;"> </td>
+                                        <td style="border:none; padding:4px;"><span t-field="so.port_master_id.name"/></td>
                                     </tr>
                                 </table>
                                 <table t-else="" style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine" style="background-color:#f2f2f2;">
-                                        <td colspan="4" style="padding:4px;"> </td>
+                                        <td colspan="4" style="border:none; padding:4px;"> </td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; width:25%; white-space:nowrap;">Delivery Note No.</td>
-                                        <td style="padding:4px; width:25%; white-space:nowrap;">Date</td>
+                                        <td style="border:none; padding:4px; width:25%; white-space:nowrap;">Delivery Note No.</td>
+                                        <td style="border:none; padding:4px; width:25%; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px; width:25%;"><span t-field="delivery.name"/></td>
-                                        <td style="padding:4px; width:25%;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/></td>
+                                        <td style="border:none; padding:4px; width:25%;"><span t-field="delivery.name"/></td>
+                                        <td style="border:none; padding:4px; width:25%;"><span t-field="delivery.date_done" t-options="{'widget': 'date'}"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Vessel Name</td>
-                                        <td style="padding:4px; white-space:nowrap;">IMO No</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Vessel Name</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">IMO No</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="so.vessel_no_id.name"/></td>
-                                        <td style="padding:4px;"><span t-field="so.imo_number"/></td>
+                                        <td style="border:none; padding:4px;"><span t-field="so.vessel_no_id.name"/></td>
+                                        <td style="border:none; padding:4px;"><span t-field="so.imo_number"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Buyer's Order No.</td>
-                                        <td style="padding:4px; white-space:nowrap;">Date</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Buyer's Order No.</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="so.client_po_order_no"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="border:none; padding:4px;"><span t-field="so.client_po_order_no"/></td>
+                                        <td style="border:none; padding:4px;"> </td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Dispatch Note No.</td>
-                                        <td style="padding:4px; white-space:nowrap;">Date</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Dispatch Note No.</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Date</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="delivery.document_number"/></td>
-                                        <td style="padding:4px;"> </td>
+                                        <td style="border:none; padding:4px;"><span t-field="delivery.document_number"/></td>
+                                        <td style="border:none; padding:4px;"> </td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Dispatched through</td>
-                                        <td style="padding:4px; white-space:nowrap;">Port</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Dispatched through</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Port</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"> </td>
-                                        <td style="padding:4px;"><span t-field="so.port_master_id.name"/></td>
+                                        <td style="border:none; padding:4px;"> </td>
+                                        <td style="border:none; padding:4px;"><span t-field="so.port_master_id.name"/></td>
                                     </tr>
                                     <tr style="background-color:#f2f2f2;">
-                                        <td style="padding:4px; white-space:nowrap;">Payment Terms</td>
-                                        <td style="padding:4px; white-space:nowrap;">Terms of Delivery</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Payment Terms</td>
+                                        <td style="border:none; padding:4px; white-space:nowrap;">Terms of Delivery</td>
                                     </tr>
                                     <tr>
-                                        <td style="padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
-                                        <td style="padding:4px;"> <span t-field="so.delivery_special_instructions"/></td>
+                                        <td style="border:none; padding:4px;"><span t-field="o.invoice_payment_term_id.name"/></td>
+                                        <td style="border:none; padding:4px;"> <span t-field="so.delivery_special_instructions"/></td>
                                     </tr>
                                 </table>
                             </td>
@@ -459,24 +459,24 @@
                                     <div style="font-weight:bold; margin-bottom:6px;">BANK DETAILS</div>
                                     <table style="width:100%; border-collapse:collapse;">
                                         <tr>
-                                            <td style="padding:2px; width:45%;">Account Name</td>
-                                            <td style="padding:2px;">: <span t-field="bank.partner_id.name"/></td>
+                                            <td style="border:none; padding:2px; width:45%;">Account Name</td>
+                                            <td style="border:none; padding:2px;">: <span t-field="bank.partner_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:2px;"><span t-esc="'Account Number' if is_marine else 'A/C No.'"/></td>
-                                            <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                            <td style="border:none; padding:2px;"><span t-esc="'Account Number' if is_marine else 'A/C No.'"/></td>
+                                            <td style="border:none; padding:2px;">: <span t-field="bank.acc_number"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:2px;">Bank Name</td>
-                                            <td style="padding:2px;">: <span t-field="bank.bank_id.name"/></td>
+                                            <td style="border:none; padding:2px;">Bank Name</td>
+                                            <td style="border:none; padding:2px;">: <span t-field="bank.bank_id.name"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:2px;">IBAN</td>
-                                            <td style="padding:2px;">: <span t-field="bank.acc_number"/></td>
+                                            <td style="border:none; padding:2px;">IBAN</td>
+                                            <td style="border:none; padding:2px;">: <span t-field="bank.acc_number"/></td>
                                         </tr>
                                         <tr>
-                                            <td style="padding:2px;">Branch &amp; SWIFT Code</td>
-                                            <td style="padding:2px;">: <span t-field="bank.bank_bic"/></td>
+                                            <td style="border:none; padding:2px;">Branch &amp; SWIFT Code</td>
+                                            <td style="border:none; padding:2px;">: <span t-field="bank.bank_bic"/></td>
                                         </tr>
                                     </table>
                                 </div>
