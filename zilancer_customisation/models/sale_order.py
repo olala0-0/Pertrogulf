@@ -9,7 +9,7 @@ from datetime import datetime
 from datetime import timedelta
 from collections import defaultdict
 from werkzeug import urls
-from odoo.tools import float_repr
+from odoo.tools import float_repr, is_html_empty
 
 SALE_ORDER_STATE = [
     ("draft", "Quotation"),
@@ -276,7 +276,8 @@ class SaleOrder(models.Model):
     toll_sale_type = fields.Selection(
         [("rm", "Raw Material"), ("fg", "Finished Goods")], string="Sale Type"
     )
-    client_po_order_no = fields.Char(string="Client PO Order No")
+    client_po_order_no = fields.Char(string="Buyer's Order No.")
+    buyers_date = fields.Date(string="Buyer's Order Date")
     quotation_lines = fields.One2many(
         comodel_name="quotation.line", inverse_name="order_id", string="Quotation Lines"
     )
@@ -781,6 +782,25 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         invoice_vals = super()._prepare_invoice()
+        if not invoice_vals.get('narration') or is_html_empty(invoice_vals.get('narration')):
+            use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+            company = self.company_id or self.env.company
+            if use_invoice_terms:
+                lang = self.partner_invoice_id.lang or self.env.user.lang
+                if company.terms_type != 'html':
+                    if company.invoice_terms and not is_html_empty(company.invoice_terms):
+                        invoice_vals['narration'] = company.with_context(lang=lang).invoice_terms
+                    else:
+                        invoice_vals.pop('narration', None)
+                else:
+                    baseurl = company.get_base_url() + '/terms'
+                    invoice_vals['narration'] = _('Terms & Conditions: %s', baseurl)
+            elif company.invoice_terms and not is_html_empty(company.invoice_terms):
+                lang = self.partner_invoice_id.lang or self.env.user.lang
+                invoice_vals['narration'] = company.with_context(lang=lang).invoice_terms
+            else:
+                invoice_vals.pop('narration', None)
+
         if self.sale_type:
             invoice_vals["sale_type"] = self.sale_type
         if getattr(self, 'vessel_no_id', False) and 'vessel_no_id' in self.env['account.move']._fields:

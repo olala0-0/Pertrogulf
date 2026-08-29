@@ -176,7 +176,7 @@ class MrpProduction(models.Model):
     def _mrp_custom_sync_lot_from_bom(self):
         """
         Pull the Lot/Serial number from the selected BOM into the MO's
-        lot_producing_id. Finds an existing lot by name or creates a new one.
+        lot_producing_ids. Finds an existing lot by name or creates a new one.
         The lot is NOT auto-generated; it must be entered manually on the BOM.
         """
         Lot = self.env['stock.lot']
@@ -198,7 +198,7 @@ class MrpProduction(models.Model):
                     'product_id': production.product_id.id,
                     'company_id': production.company_id.id,
                 })
-            production.lot_producing_id = lot
+            production.lot_producing_ids = lot
 
     @api.depends(
         'production_group_id.child_ids.production_ids',

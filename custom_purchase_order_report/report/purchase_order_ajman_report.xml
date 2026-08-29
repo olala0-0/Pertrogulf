@@ -49,7 +49,7 @@
                                         <span t-field="o.company_id.email"/>
                                     </div>
                                     <div t-if="o.company_id.website">
-                                        <span t-field="o.company_id.website"/>
+                                        <span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/>
                                     </div>
                                 </t>
                             </td>
