@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Template Form View Extension -->
+    <record id="product_template_form_view_division" model="ir.ui.view">
+        <field name="name">product.template.form.division</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="division_id" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Tree / List View Extension -->
+    <record id="product_template_tree_view_division" model="ir.ui.view">
+        <field name="name">product.template.tree.division</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="division_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Search View Extension -->
+    <record id="product_template_search_view_division" model="ir.ui.view">
+        <field name="name">product.template.search.division</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="division_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Division" name="groupby_division" context="{'group_by': 'division_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

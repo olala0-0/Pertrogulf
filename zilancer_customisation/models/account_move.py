@@ -19,32 +19,69 @@ class AccountMove(models.Model):
 
     def _generate_sale_type_invoice_sequence(self):
         self.ensure_one()
+        company = self.company_id or self.env.company
+        bu = company.business_unit or (company.parent_id and company.parent_id.business_unit)
+
+        if bu in ('pg_marine', 'pg_fujairah'):
+            unit_prefix = "PGM"
+        elif bu == 'pg_auto':
+            unit_prefix = "PGAI"
+        elif bu == 'pg_aviation':
+            unit_prefix = "PGA"
+        elif bu == 'pg_tblnd':
+            unit_prefix = "PGT"
+        elif bu == 'pg_powerx':
+            unit_prefix = "PowerX"
+        else:
+            unit_prefix = "PG"
+
         sale_type = self.sale_type or 'local_sale'
 
         # Map sale_type to sequence prefix base and code key
         if sale_type == 'out_of_scope':
-            prefix_base = "PGM/OOS/"
+            prefix_base = f"{unit_prefix}/OOS/"
             type_code = "out_of_scope"
         elif sale_type == 'export':
-            prefix_base = "PGM/E/"
+            prefix_base = f"{unit_prefix}/E/"
             type_code = "export"
         else:  # local_sale or default
-            prefix_base = "PGM/"
+            prefix_base = f"{unit_prefix}/"
             type_code = "local_sale"
 
         ref_date = self.invoice_date or self.date or fields.Date.context_today(self)
         year_str = ref_date.strftime("%Y")
         prefix_type = f"{prefix_base}{year_str}/"
 
-        sequence_code = f"account.move.sale_type.{type_code}.{year_str}"
+        sequence_code = f"account.move.sale_type.{company.id}.{type_code}.{year_str}"
+        legacy_code = f"account.move.sale_type.{type_code}.{year_str}"
 
-        seq = self.env["ir.sequence"].sudo().search([("code", "=", sequence_code)], limit=1)
+        seq = self.env["ir.sequence"].sudo().search([
+            ("code", "=", sequence_code),
+            ("company_id", "in", [company.id, False])
+        ], limit=1)
+
         if not seq:
-            seq_name = f"Invoice Sequence {type_code.replace('_', ' ').title()} {year_str}"
+            seq = self.env["ir.sequence"].sudo().search([("code", "=", legacy_code)], limit=1)
+            if seq:
+                try:
+                    seq.sudo().write({
+                        "name": f"Invoice Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}",
+                        "code": sequence_code,
+                        "company_id": company.id,
+                        "prefix": prefix_type,
+                        "suffix": "",
+                    })
+                    self.env.cr.commit()
+                except Exception as e:
+                    print(f"Error migrating sequence {legacy_code}: {e}")
+
+        if not seq:
+            seq_name = f"Invoice Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}"
             try:
                 seq = self.env["ir.sequence"].sudo().create({
                     "name": seq_name,
                     "code": sequence_code,
+                    "company_id": company.id,
                     "prefix": prefix_type,
                     "suffix": "",
                     "padding": 4,
@@ -57,7 +94,6 @@ class AccountMove(models.Model):
             except Exception as e:
                 print(f"Error creating sequence {sequence_code}: {e}")
         else:
-            # Ensure existing sequence prefix/suffix match the new format PGM/OOS/2026/0001
             if seq.prefix != prefix_type or seq.suffix:
                 try:
                     seq.sudo().write({
@@ -73,14 +109,18 @@ class AccountMove(models.Model):
             if seq:
                 next_name = seq._next()
             if not next_name:
-                next_name = self.env["ir.sequence"].sudo().next_by_code(sequence_code)
+                next_name = self.env["ir.sequence"].sudo().with_company(company).next_by_code(sequence_code)
         except Exception as e:
             print(f"Error fetching sequence for {sequence_code}: {e}")
 
         if not next_name:
             pattern = f"{prefix_type}%"
             last_move = self.sudo().search(
-                [("name", "like", pattern), ("move_type", "in", ["out_invoice", "out_refund"])],
+                [
+                    ("name", "like", pattern),
+                    ("move_type", "in", ["out_invoice", "out_refund"]),
+                    ("company_id", "=", company.id)
+                ],
                 order="id desc",
                 limit=1
             )
