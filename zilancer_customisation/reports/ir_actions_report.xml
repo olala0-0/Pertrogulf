@@ -380,6 +380,8 @@
                                         <div style="white-space: nowrap; display: inline-block;">Petro Gulf Oil Manufacturing LLC</div>
                                         <div>New Industrial Area 1,</div>
                                         <div>Ajman, United Arab Emirates</div>
+                                        <div t-if="docs.company_id.phone"><t t-esc="docs.company_id.phone"/></div>
+                                        <div t-if="docs.company_id.website"><t t-esc="docs.company_id.website.replace('http://', '').replace('https://', '')"/></div>
                                     </div>
                                     <div t-if="docs.company_id and docs.company_id.business_unit not in ('pg_aviation', 'pg_auto', 'pg_tblnd')" class="o_company_tagline fw-bold" style="color: black !important;">
                                         <!--<span><t t-esc="docs.company_id.name"/></span>-->

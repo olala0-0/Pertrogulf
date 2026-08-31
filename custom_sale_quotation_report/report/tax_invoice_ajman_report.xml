@@ -471,7 +471,7 @@
                     </table>
                     <div t-if="not is_powerx" style="margin-top:8px; font-size:12px;">
                         <strong>Amount in words</strong> :
-                        <span t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
+                        <span style="font-weight:bold;" t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
                     </div>
 
                     <!-- ============ BANK DETAILS ============ -->

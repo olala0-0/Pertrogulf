@@ -60,7 +60,7 @@
                             </div>
                             <div class="col" name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
-                                <div t-field="o.validity_date" t-options='{"format": "dd MMM yyyy"}'>2023-12-31</div>
+                                <div t-field="o.validity_date" t-options='{"format": "dd/MMM/yyyy"}'>2023-12-31</div>
                             </div>
                             <div t-if="o.create_uid.name" class="col">
                                 <strong>Quoted by</strong>

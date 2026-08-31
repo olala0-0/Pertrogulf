@@ -43,5 +43,17 @@
             <attribute name="class">o_company_logo mb-2 d-block ms-0 me-auto</attribute>
         </xpath>
 
+        <xpath expr="//ul[@name='company_address_list']/li[position()=3]" position="before">
+            <li t-if="o and o.company_id.business_unit in ('pg_aviation', 'pg_tblnd', 'pg_auto')">
+                <t t-if="o.company_id.phone">
+                    Tel: <span t-field="o.company_id.phone"/>
+                </t>
+                <t t-if="o.company_id.website">
+                    <br t-if="o.company_id.phone"/>
+                    <span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/>
+                </t>
+            </li>
+        </xpath>
+
     </template>
 </odoo>
