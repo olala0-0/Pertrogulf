@@ -290,6 +290,7 @@
                         <!-- <field name="imo_no_id" optional="show"/> -->
                         <field name="imo_number" optional="show"/>
                         <field name="partner_id"/>
+                        <field name="buyers_date" optional="show"/>
                         <!-- <field name="user_id" optional="show"/> -->
                         <field name="user_id" optional="show" string="Sales Manager"/>
                         <field name="create_uid" optional="show" string="CS Name"/>

@@ -8,7 +8,7 @@
         <t t-set="total_columns" t-value="6 + (1 if show_net_weight else 0) + (1 if show_gross_weight else 0) + (1 if show_pack_type else 0) + (1 if show_hs_code else 0) + (1 if show_discount else 0)"/>
         <table class="table table-sm o_main_table mb-0" style="font-size:15px; border-collapse:collapse;">
             <tr>
-                <th style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">Sn</th>
+                <th style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;" class="text-center">SN</th>
                 <th style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">Offered Items</th>
                 <th style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">Pack Size</th>
                 <th style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">No of Units</th>
@@ -18,7 +18,7 @@
                 <th t-if="show_pack_type" style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">Pack Type</th>
                 <th t-if="show_hs_code" style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">HS Code</th>
                 <th t-if="show_discount" style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb;">Discount/Credit Note</th>
-                <th class="text-right" style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">Amount</th>
+                <th class="text-end" style="font-weight:bold; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;" >Amount</th>
             </tr>
             <tbody>
                 <t t-set="sn" t-value="0"/>
@@ -26,7 +26,7 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td style="border:1px solid #6c757d !important;">
+                            <td style="border:1px solid #6c757d !important;" class="text-center">
                                 <span t-esc="sn"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
@@ -56,31 +56,33 @@
                             <td t-if="show_discount" style="border:1px solid #6c757d !important;">
                                 <t t-if="line.discount"><span t-field="line.discount"/>%</t>
                             </td>
-                            <td class="text-right" style="border:1px solid #6c757d !important;">
+                            <td class="text-end" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
                     </t>
                 </t>
+            </tbody>
+            <tfoot>
                 <tr>
-                    <td t-attf-colspan="#{total_columns - 1}" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">SubTotal</td>
-                    <td class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">SubTotal</td>
+                    <td t-attf-colspan="#{total_columns - 4}" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
                         <span t-field="o.amount_untaxed"/>
                     </td>
                 </tr>
                 <tr>
-                    <td t-attf-colspan="#{total_columns - 1}" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">VAT 5%</td>
-                    <td class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">VAT 5%</td>
+                    <td t-attf-colspan="#{total_columns - 4}" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         <span t-field="o.amount_tax"/>
                     </td>
                 </tr>
                 <tr>
-                    <td t-attf-colspan="#{total_columns - 1}" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">Grand Total</td>
-                    <td class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
+                    <td colspan="4" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">Grand Total</td>
+                    <td t-attf-colspan="#{total_columns - 4}" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         <span t-field="o.amount_total"/>
                     </td>
                 </tr>
-            </tbody>
+            </tfoot>
         </table>
 
         <div class="mt-3">

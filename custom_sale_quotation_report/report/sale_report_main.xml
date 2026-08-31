@@ -14,13 +14,13 @@
                         <div class="row col-12 mb4">
                             <div class="col-6">
                                 <span style="font-size:20px !important; ">Quotation No:</span>
-                                <span style="font-size:20px;" t-field="o.name"/>
+                                <span style="font-size:20px;font-weight:bold;" t-field="o.name"/>
                                 <br/>
-                                <span style="font-size:20px !important; font-weight:bold;">Kind Attn:</span>
+                                <span style="font-size:20px !important; ">Kind Attn:</span>
                                 <span style="font-size:20px; font-weight:bold;" t-field="o.inquiry_rec_from"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Name:</span>
-                                <span style="font-size:20px;" t-field="o.partner_id.name"/>
+                                <span style="font-size:20px;font-weight:bold;" t-field="o.partner_id.name"/>
                                 <br/>
                                 <span style="font-size:20px !important; ">Customer Address:</span>
                                 <span style="font-size:20px !important;" t-field="o.partner_id.street"></span>
@@ -60,7 +60,7 @@
                                     class="col"
                                     name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
-                                <div t-field="o.validity_date">2023-12-31</div>
+                                <div t-field="o.validity_date" t-options='{"format": "dd/MMM/yyyy"}'>2023-12-31</div>
                             </div>
                             <div t-if="o.create_uid.name" class="col">
                                 <strong>Quoted by</strong>
