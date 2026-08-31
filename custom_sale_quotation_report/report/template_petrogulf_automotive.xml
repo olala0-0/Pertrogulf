@@ -85,7 +85,7 @@
             </tfoot>
         </table>
                 <p>
-            <strong>Total Amount in words:</strong>
+            <p>Total Amount in words:</p>
             <span style="font-weight:bold;" t-esc="o._get_amount_in_words()"/>
         </p>
 
