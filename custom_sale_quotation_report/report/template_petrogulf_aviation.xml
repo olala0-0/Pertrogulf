@@ -5,7 +5,7 @@
         <table class="o_has_total_table table o_main_table table-borderless mb-0" style="border-collapse:collapse;">
             <!-- In case we want to repeat the header, remove "display: table-row-group" -->
             <thead style="display: table-row-group;text-transform: none !important;">
-                <td style=" border:1px solid #6c757d ; background-color:#f4b6bb;font-weight:bold; white-space:nowrap;">
+                <td class="text-center" style=" border:1px solid #6c757d ; background-color:#f4b6bb;font-weight:bold; white-space:nowrap;">
                     SN
                 </td>
                 <td t-if="show_inquired_item" class="text-start"
@@ -56,7 +56,7 @@
                     <t t-if="not line.display_type">
                         <t t-set="sn" t-value="sn + 1"/>
                         <tr>
-                            <td style="border:1px solid #6c757d !important;">
+                            <td class="text-center" style="border:1px solid #6c757d !important;">
                                 <span t-esc="sn"/>
                             </td>
                             <td t-if="show_inquired_item"
@@ -87,7 +87,7 @@
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit"/>
                             </td>
-                            <td class="text-right" style="border:1px solid #6c757d !important;">
+                            <td class="text-end" style="border:1px solid #6c757d !important;">
                                 <span t-field="line.price_subtotal"/>
                             </td>
                         </tr>
@@ -100,7 +100,7 @@
                     <td t-att-colspan="cols_before_total_kgs" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
                         SubTotal
                     </td>
-                    <td colspan="3" class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                    <td colspan="3" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
                         <span t-field="o.amount_untaxed"/>
                     </td>
                 </tr>
@@ -108,7 +108,7 @@
                     <td t-att-colspan="cols_before_total_kgs" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         VAT 5%
                     </td>
-                    <td colspan="3" class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
+                    <td colspan="3" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         <span t-field="o.amount_tax"/>
                     </td>
                 </tr>
@@ -116,7 +116,7 @@
                     <td t-att-colspan="cols_before_total_kgs" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         Total Amount
                     </td>
-                    <td colspan="3" class="text-right" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
+                    <td colspan="3" class="text-end" style="text-align: right; font-weight: bold; border:1px solid #6c757d !important;">
                         <span t-field="o.amount_total"/>
                     </td>
                 </tr>
