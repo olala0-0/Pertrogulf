@@ -143,7 +143,7 @@
                     <!-- ============ BUYER / INVOICE DETAILS ============ -->
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
-                            <td style="border:none;width:50%; vertical-align:bottom;">
+                            <td style="border:none;width:50%; vertical-align: top;">
                                 <div style="background-color:#d9d9d9; padding:4px 6px; font-weight:bold;">Buyer</div>
                                 <table style="width:100%; border-collapse:collapse; border:1px solid #ccc; font-size:12px;">
                                     <tr t-if="is_marine">
@@ -391,13 +391,13 @@
                     <!-- ============ TERMS / TOTALS ============ -->
                     <table t-if="is_powerx" style="width:100%; border-collapse:collapse; margin-top:10px;">
                         <tr>
-                            <td style="width:55%; vertical-align:top; font-size:12px;">
+                            <td style="width:80%; vertical-align:top; font-size:12px;">
                                 <div><strong>Amount Chargeable (in words)</strong></div>
                                 <div><span t-esc="o.currency_id.amount_to_text(o.amount_total)"/></div>
                                 <div style="margin-top:10px;"><strong>VAT Amount (in words)</strong></div>
                                 <div><span t-esc="o.currency_id.amount_to_text(o.amount_tax)"/></div>
                             </td>
-                            <td style="width:45%; vertical-align:top;">
+                            <td style="width:20%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr style="background-color:#f2f2f2;">
                                         <td style="border:1px solid #ccc; padding:4px;"><strong>VAT %</strong></td>
@@ -429,8 +429,8 @@
                     </table>
                     <table t-else="" style="width:100%; border-collapse:collapse; margin-top:10px;">
                         <tr style="border:none;">
-                            <td style="border:none;width:52%; vertical-align:top;"/>
-                            <td style="border:none;width:48%; vertical-align:top;">
+                            <td style="border:none;width:75%; vertical-align:top;"/>
+                            <td style="border:none;width:25%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
                                     <tr>
                                         <td style="border:none; padding:4px;"><strong>Sub Total</strong></td>
@@ -505,19 +505,36 @@
                                 </div>
                             </td>
                             <td style="border:none;width:4%;"/>
-                            <td style="border:none;width:48%; vertical-align:top; font-size:11px;">
-                                <t t-if="is_marine">
-                                    <div style="font-weight:bold; margin-bottom:4px;">Terms :</div>
-                                    <div t-field="o.narration"/>
-                                </t>
-                                <t t-elif="not is_powerx">
-                                    <div style="text-align:right; font-size:12px;">
-                                        <div t-if="is_fixed_company_name">for Petro Gulf Oil Manufacturing LLC</div>
-                                        <div t-else="">for Petro Gulf Oil Manufacturing LLC</div>
-                                        <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
-                                    </div>
-                                </t>
-                            </td>
+                            <t t-if="not is_powerx">
+                                <td style="border:none;width:48%; vertical-align:bottom; font-size:11px;">
+                                    <t t-if="is_marine">
+                                        <div style="font-weight:bold; margin-bottom:4px;">Terms :</div>
+                                        <div t-field="o.narration"/>
+                                    </t>
+                                    <t t-elif="not is_powerx">
+                                        <div style="text-align:center; font-size:12px;">
+                                            <div t-if="is_fixed_company_name">for Petro Gulf Oil Manufacturing LLC</div>
+                                            <div t-else="">for Petro Gulf Oil Manufacturing LLC</div>
+                                            <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td style="border:none;width:48%; vertical-align:top; font-size:11px;">
+                                    <t t-if="is_marine">
+                                        <div style="font-weight:bold; margin-bottom:4px;">Terms :</div>
+                                        <div t-field="o.narration"/>
+                                    </t>
+                                    <t t-elif="not is_powerx">
+                                        <div style="text-align:right; font-size:12px;">
+                                            <div t-if="is_fixed_company_name">for Petro Gulf Oil Manufacturing LLC</div>
+                                            <div t-else="">for Petro Gulf Oil Manufacturing LLC</div>
+                                            <div style="margin-top:24px;"><strong>Authorised Signatory</strong></div>
+                                        </div>
+                                    </t>
+                                </td>
+                            </t>
                         </tr>
                     </table>
 
