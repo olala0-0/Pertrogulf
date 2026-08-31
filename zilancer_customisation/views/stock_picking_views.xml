@@ -101,12 +101,12 @@
                 </xpath>
                 <!-- Add package and pack fields to the Operations page list view -->
                 <xpath expr="//page[@name='operations']//field[@name='move_ids']/list/field[@name='product_uom']" position="after">
-                    <field name="package" string="Package"/>
-                    <field name="pack" string="Pack"/>
-                    <field name="batch_no"/>
-                    <field name="mfg_date"/>
+                    <!-- <field name="package" string="Package"/> -->
+                    <!-- <field name="pack" string="Pack"/> -->
+                    <!-- <field name="batch_no"/> -->
+                    <!-- <field name="mfg_date"/> -->
                     <field name="sample_type" column_invisible="parent.document_type != 'general_dispatch'" optional="show"/>
-                    <field name="exp_date" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
+                    <!-- <field name="exp_date" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/> -->
                     <field name="sap_fg_code" column_invisible="parent.document_type != 'dispatch_advise'" optional="show"/>
                     <field name="remarks" string="Dispatch Instructions"/>
                 </xpath>

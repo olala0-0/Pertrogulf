@@ -35,6 +35,10 @@ class AccountMove(models.Model):
         else:
             unit_prefix = "PG"
 
+        is_credit_note = self.move_type == 'out_refund'
+        if is_credit_note:
+            unit_prefix = f"{unit_prefix}/CN"
+
         sale_type = self.sale_type or 'local_sale'
 
         # Map sale_type to sequence prefix base and code key
@@ -52,8 +56,14 @@ class AccountMove(models.Model):
         year_str = ref_date.strftime("%Y")
         prefix_type = f"{prefix_base}{year_str}/"
 
-        sequence_code = f"account.move.sale_type.{company.id}.{type_code}.{year_str}"
-        legacy_code = f"account.move.sale_type.{type_code}.{year_str}"
+        if is_credit_note:
+            sequence_code = f"account.move.sale_type.{company.id}.cn.{type_code}.{year_str}"
+            legacy_code = f"account.move.sale_type.cn.{type_code}.{year_str}"
+            seq_name = f"Credit Note Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}"
+        else:
+            sequence_code = f"account.move.sale_type.{company.id}.{type_code}.{year_str}"
+            legacy_code = f"account.move.sale_type.{type_code}.{year_str}"
+            seq_name = f"Invoice Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}"
 
         seq = self.env["ir.sequence"].sudo().search([
             ("code", "=", sequence_code),
@@ -65,7 +75,7 @@ class AccountMove(models.Model):
             if seq:
                 try:
                     seq.sudo().write({
-                        "name": f"Invoice Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}",
+                        "name": seq_name,
                         "code": sequence_code,
                         "company_id": company.id,
                         "prefix": prefix_type,
@@ -76,7 +86,6 @@ class AccountMove(models.Model):
                     print(f"Error migrating sequence {legacy_code}: {e}")
 
         if not seq:
-            seq_name = f"Invoice Sequence {company.name} {type_code.replace('_', ' ').title()} {year_str}"
             try:
                 seq = self.env["ir.sequence"].sudo().create({
                     "name": seq_name,
@@ -118,7 +127,7 @@ class AccountMove(models.Model):
             last_move = self.sudo().search(
                 [
                     ("name", "like", pattern),
-                    ("move_type", "in", ["out_invoice", "out_refund"]),
+                    ("move_type", "=", self.move_type),
                     ("company_id", "=", company.id)
                 ],
                 order="id desc",
@@ -139,11 +148,11 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         for move in self:
-            if move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/')):
+            if move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/') or move.name.startswith('RINV/')):
                 move.name = move._generate_sale_type_invoice_sequence()
         posted = super()._post(soft=soft)
         for move in posted:
-            if move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/')):
+            if move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/') or move.name.startswith('RINV/')):
                 move.name = move._generate_sale_type_invoice_sequence()
         return posted
 
@@ -151,7 +160,7 @@ class AccountMove(models.Model):
     def create(self, vals_list):
         moves = super().create(vals_list)
         for move in moves:
-            if move.state == 'posted' and move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/')):
+            if move.state == 'posted' and move.is_sale_document(include_receipts=True) and (not move.name or move.name == '/' or move.name.startswith('INV/') or move.name.startswith('RINV/')):
                 move.name = move._generate_sale_type_invoice_sequence()
         return moves
 
