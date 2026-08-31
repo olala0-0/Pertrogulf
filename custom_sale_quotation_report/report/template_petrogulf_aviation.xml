@@ -6,7 +6,7 @@
             <!-- In case we want to repeat the header, remove "display: table-row-group" -->
             <thead style="display: table-row-group;text-transform: none !important;">
                 <td style=" border:1px solid #6c757d ; background-color:#f4b6bb;font-weight:bold; white-space:nowrap;">
-                    Sn
+                    SN
                 </td>
                 <td t-if="show_inquired_item" class="text-start"
                     style="  border:1px solid #6c757d ; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">
