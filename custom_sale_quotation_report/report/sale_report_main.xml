@@ -56,7 +56,7 @@
                             <div t-if="o.date_order" class="col" name="informations_date">
                                 <strong t-if="o.state in ['draft', 'sent']">Quotation Date</strong>
                                 <strong t-else="">Order Date</strong>
-                                <div t-field="o.date_order" t-options='{"widget": "date"}'>2023-12-31</div>
+                                <div t-field="o.date_order" t-options='{"format": "dd/MMM/yyyy"}'>2023-12-31</div>
                             </div>
                             <div class="col" name="expiration_date">
                                 <strong>Quote Valid Till Date</strong>
