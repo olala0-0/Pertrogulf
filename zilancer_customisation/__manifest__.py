@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': "Zilancer Customisation",
-    'version': '19.0.1.0.11',
+    'version': '19.0.1.0.12',
     "category": 'Contacts',
     'summary': """Zilancer Customisation""",
     'description': """Zilancer Customisation""",
