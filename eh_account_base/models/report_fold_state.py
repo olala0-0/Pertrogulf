@@ -70,18 +70,26 @@ class EhAccountReportFoldState(models.Model):
     )
 
     @api.model
-    def get_for_user(self, report_code, user=None):
-        """Return {line_id: is_unfolded} for the user + report.
+    def get_for_user(self, report_code):
+        """Return {line_id: is_unfolded} for current user + report.
 
         Used by the OWL viewer at mount time to seed the initial
         expand / collapse state. An empty dict means "no preferences
         recorded yet"; the viewer falls back to its default
         (everything expanded).
+
+        Lazy-leaf rule: the viewer MUST NOT auto-restore a saved expansion
+        for a lazy account leaf. Re-expanding every account on reload would
+        fan out to one fetch per account and materialise every journal item
+        (the big-data invariant forbids this). Lazy leaves therefore always
+        start collapsed; the viewer's hydrate path skips any line whose
+        payload flag `lazy` is true even if a row exists here. Persisting a
+        lazy-leaf toggle is harmless (the key is an arbitrary string) but is
+        never replayed on load.
         """
-        user = user or self.env.user
-        rows = self.sudo().search_read(
+        rows = self.search_read(
             [
-                ('user_id', '=', user.id),
+                ('user_id', '=', self.env.user.id),
                 ('report_code', '=', report_code),
             ],
             ['line_id', 'is_unfolded'],
@@ -89,15 +97,14 @@ class EhAccountReportFoldState(models.Model):
         return {r['line_id']: r['is_unfolded'] for r in rows}
 
     @api.model
-    def set_for_user(self, report_code, line_id, is_unfolded, user=None):
-        """Upsert one fold-state row for the user.
+    def set_for_user(self, report_code, line_id, is_unfolded):
+        """Upsert one fold-state row for current user.
 
         Called by the OWL viewer when the user clicks a fold caret.
         Idempotent: re-calling with the same values is a no-op write.
         """
-        user = user or self.env.user
-        existing = self.sudo().search([
-            ('user_id', '=', user.id),
+        existing = self.search([
+            ('user_id', '=', self.env.user.id),
             ('report_code', '=', report_code),
             ('line_id', '=', line_id),
         ], limit=1)
@@ -105,21 +112,25 @@ class EhAccountReportFoldState(models.Model):
             if existing.is_unfolded != bool(is_unfolded):
                 existing.is_unfolded = bool(is_unfolded)
             return existing
-        return self.sudo().create({
-            'user_id': user.id,
+        return self.create({
+            'user_id': self.env.user.id,
             'report_code': report_code,
             'line_id': line_id,
             'is_unfolded': bool(is_unfolded),
         })
 
     @api.model
-    def reset_for_user(self, report_code, user=None):
-        """Drop every saved fold-state row for the user + report.
+    def reset_for_user(self, report_code):
+        """Drop every saved fold-state row for current user + report.
 
         Used by the "Reset folding" action on the report viewer.
         """
-        user = user or self.env.user
-        self.sudo().search([
-            ('user_id', '=', user.id),
+        # ``unlink`` on an empty recordset is intentionally a no-op in the
+        # ORM and therefore does not consult ACLs.  Check the model right up
+        # front so a read-only auditor cannot turn the reset RPC into a
+        # write-capability probe merely because no preferences exist yet.
+        self.check_access_rights('unlink')
+        self.search([
+            ('user_id', '=', self.env.user.id),
             ('report_code', '=', report_code),
         ]).unlink()

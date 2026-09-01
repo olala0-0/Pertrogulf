@@ -17,7 +17,10 @@ import json
 from odoo.tests import tagged
 
 from odoo.addons.eh_account_base.tools.payload_codec import (
-    compress_payload, decompress_payload,
+    compress_payload,
+    decompress_payload,
+    PayloadCorruptionError,
+    UnsupportedPayloadVersionError,
 )
 from .common import EhAccountUnitTestCase
 
@@ -54,8 +57,29 @@ class TestPayloadCodec(EhAccountUnitTestCase):
 
     def test_unknown_version_raises(self):
         bad_blob = bytes([0xFF]) + b'somecompressedjunk'
-        with self.assertRaises(ValueError):
+        with self.assertRaises(UnsupportedPayloadVersionError):
             decompress_payload(bad_blob)
+
+    def test_invalid_base64_raises_typed_corruption(self):
+        with self.assertRaisesRegex(PayloadCorruptionError, 'base64'):
+            decompress_payload('not valid base64***')
+        with self.assertRaisesRegex(PayloadCorruptionError, 'base64'):
+            decompress_payload(b'not valid base64***')
+
+    def test_corrupt_zlib_body_raises_typed_corruption(self):
+        with self.assertRaisesRegex(PayloadCorruptionError, 'zlib'):
+            decompress_payload(b'\x01not-zlib')
+
+    def test_corrupt_json_body_raises_typed_corruption(self):
+        import zlib
+        with self.assertRaisesRegex(PayloadCorruptionError, 'JSON'):
+            decompress_payload(b'\x01' + zlib.compress(b'{bad json'))
+
+    def test_valid_base64_unknown_version_remains_typed_version_error(self):
+        import base64
+        encoded = base64.b64encode(b'\xffunknown-version')
+        with self.assertRaises(UnsupportedPayloadVersionError):
+            decompress_payload(encoded)
 
     def test_large_payload_compresses_well(self):
         # Repetitive payload should compress to a small fraction.

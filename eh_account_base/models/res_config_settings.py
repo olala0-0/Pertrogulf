@@ -21,11 +21,50 @@ forecast horizon, etc. config_parameter is reserved for genuinely
 global defaults (no per-company differentiation).
 """
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
+
+    eh_forecast_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+    eh_assets_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+    eh_collections_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+    eh_approval_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+    eh_sepa_dd_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+    eh_ap_automation_module_installed = fields.Boolean(
+        compute='_compute_eh_feature_modules_installed', compute_sudo=True,
+    )
+
+    @api.depends_context('uid')
+    def _compute_eh_feature_modules_installed(self):
+        module_fields = {
+            'eh_account_dynamic_reports_pro':
+                'eh_forecast_module_installed',
+            'eh_account_assets_pro': 'eh_assets_module_installed',
+            'eh_account_collections': 'eh_collections_module_installed',
+            'eh_account_approval': 'eh_approval_module_installed',
+            'eh_account_sepa_dd': 'eh_sepa_dd_module_installed',
+            'eh_account_ap_automation':
+                'eh_ap_automation_module_installed',
+        }
+        installed = set(self.env['ir.module.module'].sudo().search([
+            ('name', 'in', list(module_fields)),
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
+        for settings in self:
+            for module_name, field_name in module_fields.items():
+                settings[field_name] = module_name in installed
 
     # ------------------------------------------------------------------
     # Reporting engine (eh_account_base)
@@ -49,6 +88,56 @@ class ResConfigSettings(models.TransientModel):
             "AR / AP overdue and recent activity tiles. Smaller values "
             "make the dashboard refresh faster."
         ),
+    )
+    eh_pnl_finance_cost_account_ids = fields.Many2many(
+        related='company_id.eh_pnl_finance_cost_account_ids',
+        readonly=False,
+        string="Finance Cost Accounts",
+    )
+    eh_pnl_tax_expense_account_ids = fields.Many2many(
+        related='company_id.eh_pnl_tax_expense_account_ids',
+        readonly=False,
+        string="Tax Expense Accounts",
+    )
+    eh_pnl_deferred_tax_account_ids = fields.Many2many(
+        related='company_id.eh_pnl_deferred_tax_account_ids',
+        readonly=False,
+        string="Deferred Tax Accounts",
+    )
+    eh_cash_equivalent_account_ids = fields.Many2many(
+        related='company_id.eh_cash_equivalent_account_ids',
+        readonly=False,
+        string="Cash Equivalent Accounts",
+    )
+    eh_cash_fx_revaluation_journal_id = fields.Many2one(
+        related='company_id.eh_cash_fx_revaluation_journal_id',
+        readonly=False,
+        string="Cash Revaluation Journal",
+    )
+    eh_cf_interest_paid_section = fields.Selection(
+        related='company_id.eh_cf_interest_paid_section',
+        readonly=False,
+        string="Interest Paid Presentation",
+    )
+    eh_cf_interest_received_section = fields.Selection(
+        related='company_id.eh_cf_interest_received_section',
+        readonly=False,
+        string="Interest Received Presentation",
+    )
+    eh_cf_dividends_paid_section = fields.Selection(
+        related='company_id.eh_cf_dividends_paid_section',
+        readonly=False,
+        string="Dividends Paid Presentation",
+    )
+    eh_cf_dividends_received_section = fields.Selection(
+        related='company_id.eh_cf_dividends_received_section',
+        readonly=False,
+        string="Dividends Received Presentation",
+    )
+    eh_cf_tax_fallback = fields.Boolean(
+        related='company_id.eh_cf_tax_fallback',
+        readonly=False,
+        string="Taxes Paid Fallback",
     )
 
     # ------------------------------------------------------------------

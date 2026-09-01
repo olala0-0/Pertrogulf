@@ -35,7 +35,7 @@
                         <field name="display_name" readonly="1"/>
                     </h1>
                     <group>
-                        <group>
+                        <group string="Execution">
                             <field name="report_code"/>
                             <field name="executed_at"/>
                             <field name="executed_by"/>
@@ -43,7 +43,7 @@
                             <field name="result_format"/>
                             <field name="state"/>
                         </group>
-                        <group>
+                        <group string="Result">
                             <field name="duration_ms"/>
                             <field name="row_count"/>
                             <field name="move_version_at_start"/>
@@ -106,12 +106,6 @@
     </record>
 
     <!--
-    Rename the Community "Invoicing" root menu to "Accounting" so the
-    suite reads as a real accounting product.
-    -->
-    <menuitem id="account.menu_finance" name="Accounting"/>
-
-    <!--
     Legacy ERP Heritage container kept for back compat with downstream
     modules that may still chain under it. Hidden from navigation via
     base.group_no_one so it does not show up in the navbar.
@@ -121,12 +115,5 @@
               parent="account.menu_finance"
               sequence="900"
               groups="base.group_no_one"/>
-
-    <menuitem id="menu_eh_account_report_execution"
-              name="Report Audit Log"
-              parent="account.menu_finance_reports"
-              action="action_eh_account_report_execution"
-              sequence="50"
-              groups="account.group_account_user"/>
 
 </odoo>

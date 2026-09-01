@@ -27,7 +27,13 @@ Design rules:
 
 import re
 
+from odoo.release import version_info
 from odoo.tools import SQL
+
+# From Odoo 17, account.account names are translated JSONB. Odoo 16 stores
+# account names as plain varchar. Code becomes company-dependent in 18.
+_ACCOUNT_CODE_JSONB = version_info[0] >= 18
+_ACCOUNT_NAME_JSONB = version_info[0] >= 17
 
 
 _AML_FIELDS = frozenset({
@@ -72,7 +78,8 @@ class MoveLineQuery:
         # rows: [{'account_id': 5, 'balance': -1234.56}, ...]
     """
 
-    def __init__(self, env, company_ids):
+    def __init__(self, env, company_ids, currency_table=None,
+                 presentation_currency_id=None):
         if not company_ids:
             raise MoveLineQueryError(
                 "MoveLineQuery requires at least one company id"
@@ -89,6 +96,25 @@ class MoveLineQuery:
         self._offset = 0
         self._include_cancelled = False
         self._posted_only = False
+        # Analytic filters carry allocation semantics, not only presence
+        # semantics.  Keep selected ids on the query so monetary selectors
+        # can apply the matching percentages even when the caller adds the
+        # selector before adding the filter.
+        self._analytic_account_ids = set()
+        # Horizontal analytic columns are an intersecting membership filter,
+        # not a replacement for the report's global analytic row filter.
+        # When active, this set owns allocation weighting while the global
+        # set still contributes its own WHERE predicate.  ``None`` means no
+        # column scope; an empty set means an explicitly empty group.
+        self._analytic_column_account_ids = None
+        # Optional multi-currency consolidation (WS4). When a CurrencyTable
+        # is attached AND it is in multicurrency mode, build() emits a
+        # per-company rate LEFT JOIN and the converted-sum selectors multiply
+        # each monetary column by the rate. With no table, or a monocurrency
+        # table, every rendered fragment is byte-for-byte identical to the
+        # legacy form, so existing callers and tests are unaffected.
+        self.currency_table = currency_table
+        self.presentation_currency_id = presentation_currency_id
 
     # ---- selection ----
 
@@ -129,7 +155,7 @@ class MoveLineQuery:
         # jsonb column 'code_store' keyed by company_id (as text); name
         # is a translated jsonb keyed by language code. Resolve at SQL time.
         if field_name == 'code':
-            expr = SQL("(acc.code_store ->> aml.company_id::text)")
+            expr = self._account_code_sql()
         elif field_name == 'name':
             expr = self._translated_account_name_sql()
         else:
@@ -165,16 +191,162 @@ class MoveLineQuery:
         return self
 
     def select_balance_sum(self, alias='balance'):
-        return self.select(SQL("SUM(aml.balance)"), alias)
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(SQL("aml.balance")),
+            ),
+            alias,
+        )
 
     def select_debit_sum(self, alias='debit'):
-        return self.select(SQL("SUM(aml.debit)"), alias)
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(SQL("aml.debit")),
+            ),
+            alias,
+        )
 
     def select_credit_sum(self, alias='credit'):
-        return self.select(SQL("SUM(aml.credit)"), alias)
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(SQL("aml.credit")),
+            ),
+            alias,
+        )
 
     def select_count(self, alias='line_count'):
         return self.select(SQL("COUNT(aml.id)"), alias)
+
+    # ---- currency-aware sums (WS4) ----
+    #
+    # When a multicurrency CurrencyTable is attached these emit
+    # ``SUM((aml.<col>) * ct.rate)`` and build() adds the validated rate
+    # join. With no table / a monocurrency table the rate expression folds to
+    # ``* 1`` is NOT emitted at all: _balance_expr returns the bare
+    # ``aml.balance`` so the rendered SQL is identical to select_balance_sum.
+    # This keeps the single-company / single-currency hot path byte-identical.
+
+    def _has_currency_conversion(self):
+        ct = self.currency_table
+        return bool(ct is not None and not ct.is_monocurrency)
+
+    def _balance_expr(self):
+        if self._has_currency_conversion():
+            return SQL("(aml.balance) * %s", self.currency_table.rate_expr())
+        return SQL("aml.balance")
+
+    def _debit_expr(self):
+        if self._has_currency_conversion():
+            return SQL("(aml.debit) * %s", self.currency_table.rate_expr())
+        return SQL("aml.debit")
+
+    def _credit_expr(self):
+        if self._has_currency_conversion():
+            return SQL("(aml.credit) * %s", self.currency_table.rate_expr())
+        return SQL("aml.credit")
+
+    def select_balance_sum_converted(self, alias='balance'):
+        """Currency-converted SUM(balance).
+
+        Identical to select_balance_sum when no multicurrency table is
+        attached, so it is a safe drop-in everywhere the raw sum was used.
+        """
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(self._balance_expr()),
+            ),
+            alias,
+        )
+
+    def select_debit_sum_converted(self, alias='debit'):
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(self._debit_expr()),
+            ),
+            alias,
+        )
+
+    def select_credit_sum_converted(self, alias='credit'):
+        return self._select_dynamic(
+            lambda: SQL(
+                "SUM(%s)", self._analytic_weighted(self._credit_expr()),
+            ),
+            alias,
+        )
+
+    def select_balance_converted(self, alias='balance'):
+        """Select one line's balance in presentation currency."""
+        return self._select_dynamic(
+            lambda: self._analytic_weighted(self._balance_expr()), alias,
+        )
+
+    def select_debit_converted(self, alias='debit'):
+        """Select one line's debit in presentation currency."""
+        return self._select_dynamic(
+            lambda: self._analytic_weighted(self._debit_expr()), alias,
+        )
+
+    def select_credit_converted(self, alias='credit'):
+        """Select one line's credit in presentation currency."""
+        return self._select_dynamic(
+            lambda: self._analytic_weighted(self._credit_expr()), alias,
+        )
+
+    def _select_dynamic(self, expression_factory, alias):
+        """Add an internal SELECT expression resolved at build time.
+
+        Analytic filters may be composed after a monetary selector.  Delaying
+        these expressions until ``build`` makes both call orders identical.
+        Public callers still pass only validated ``SQL`` objects to select().
+        """
+        if not isinstance(alias, str) or not _IDENTIFIER_RE.match(alias):
+            raise MoveLineQueryError(
+                f"alias must be alphanumeric and underscore starting with a "
+                f"letter or underscore, got {alias!r}"
+            )
+        self._select_exprs.append(expression_factory)
+        self._select_aliases.append((alias, SQL.identifier(alias)))
+        return self
+
+    def _analytic_weight_sql(self):
+        """Percentage allocated to selected analytics as a SQL fraction.
+
+        One distribution key may contain a cross-plan combination such as
+        ``"12,34"``.  A matching key contributes its percentage once even
+        when several selected ids occur in that key.  Malformed legacy JSON
+        values contribute zero instead of making report SQL fail.
+        """
+        allocation_ids = (
+            self._analytic_column_account_ids
+            if self._analytic_column_account_ids is not None
+            else self._analytic_account_ids
+        )
+        if not allocation_ids:
+            return SQL("1.0")
+        keys = [str(i) for i in sorted(allocation_ids)]
+        return SQL(
+            "COALESCE(("
+            "SELECT SUM(CASE "
+            "WHEN string_to_array(analytic_part.key, ',') && %s::text[] "
+            "AND jsonb_typeof(analytic_part.value) = 'number' "
+            "THEN (analytic_part.value #>> '{}')::numeric ELSE 0 END) "
+            "FROM jsonb_each(CASE "
+            "WHEN jsonb_typeof(aml.analytic_distribution) = 'object' "
+            "THEN aml.analytic_distribution ELSE '{}'::jsonb END"
+            ") AS analytic_part(key, value)"
+            "), 0.0) / 100.0",
+            keys,
+        )
+
+    def _analytic_weighted(self, expression):
+        allocation_ids = (
+            self._analytic_column_account_ids
+            if self._analytic_column_account_ids is not None
+            else self._analytic_account_ids
+        )
+        if not allocation_ids:
+            return expression
+        return SQL("(%s) * (%s)", expression, self._analytic_weight_sql())
 
     # ---- where filters ----
 
@@ -203,13 +375,14 @@ class MoveLineQuery:
             return self
         self._joined_tables.add('account_account')
         # Odoo 19: code is per company in acc.code_store jsonb.
-        clauses = [
-            SQL(
-                "(acc.code_store ->> aml.company_id::text) LIKE %s",
-                f"{p}%",
-            )
-            for p in prefixes
-        ]
+        clauses = []
+        for prefix in prefixes:
+            # Prefixes are literal chart-of-account codes.  Escape LIKE's
+            # metacharacters and the escape character itself before adding
+            # our one intentional trailing wildcard.
+            literal = str(prefix).replace('\\', '\\\\')
+            literal = literal.replace('%', '\\%').replace('_', '\\_')
+            clauses.append(self._account_code_like_sql(literal + '%'))
         joined = SQL(" OR ").join(clauses)
         self._wheres.append(SQL("(%s)", joined))
         return self
@@ -231,19 +404,81 @@ class MoveLineQuery:
         """Restrict to journal items whose analytic_distribution references
         any of the given analytic account ids.
 
-        analytic_distribution is a jsonb keyed by analytic_account_id (as
-        string) carrying the percentage allocated. We match presence of any
-        of the supplied keys; the percentage threshold check is left to
-        callers that need it via where_raw().
+        analytic_distribution is a jsonb keyed either by one analytic account
+        id (``"12"``) or by a comma-separated cross-plan combination
+        (``"12,34"``), carrying the percentage allocated. Match the supplied
+        ids against every key token; PostgreSQL's jsonb ``?|`` operator only
+        matches whole keys and therefore misses composite distributions.
+
+        ``jsonb_object_keys``, ``string_to_array`` and text-array overlap are
+        available throughout the PostgreSQL versions supported by Odoo
+        16-19. The percentage threshold check remains the caller's concern.
         """
+        ids = tuple(int(i) for i in (analytic_account_ids or ()))
+        if not ids:
+            return self
+        self._analytic_account_ids.update(ids)
+        return self._where_analytic_membership(ids)
+
+    def _where_analytic_membership(self, analytic_account_ids):
+        """Append token-aware analytic JSON membership for validated IDs."""
         ids = tuple(int(i) for i in (analytic_account_ids or ()))
         if not ids:
             return self
         keys = [str(i) for i in ids]
         self._wheres.append(SQL(
-            "aml.analytic_distribution ?| %s", keys,
+            "((jsonb_typeof(aml.analytic_distribution) = 'object' "
+            "AND aml.analytic_distribution ?| %s) "
+            "OR EXISTS ("
+            "SELECT 1 "
+            "FROM jsonb_object_keys(CASE "
+            "WHEN jsonb_typeof(aml.analytic_distribution) = 'object' "
+            "THEN aml.analytic_distribution ELSE '{}'::jsonb END"
+            ") AS analytic_key(key) "
+            "WHERE string_to_array(analytic_key.key, ',') && %s::text[]"
+            "))",
+            keys,
+            keys,
         ))
         return self
+
+    def where_analytic_column_accounts(
+        self, analytic_account_ids, require_match=True,
+    ):
+        """Add horizontal analytic membership and allocation semantics.
+
+        This filter intersects any prior global analytic filter.  Monetary
+        selectors weight by this column's allocation, preventing a composite
+        distribution key matching several global/column IDs from being
+        counted twice.  Explicit empty non-total groups fail closed to zero.
+        """
+        ids = tuple(int(i) for i in (analytic_account_ids or ()))
+        self._analytic_column_account_ids = set(ids)
+        if not ids:
+            if require_match:
+                self._wheres.append(SQL("FALSE"))
+            return self
+        return self._where_analytic_membership(ids)
+
+    def _analytic_account_ids_for_plans(self, plan_ids):
+        """Resolve plan descendants to analytic accounts for SQL filtering."""
+        ids = tuple(int(i) for i in (plan_ids or ()))
+        if not ids:
+            return []
+        cr = self.env.cr
+        cr.execute(
+            "WITH RECURSIVE selected_plans(id) AS ("
+            " SELECT id FROM account_analytic_plan WHERE id IN %s"
+            " UNION ALL"
+            " SELECT child.id FROM account_analytic_plan child"
+            " JOIN selected_plans parent ON child.parent_id = parent.id"
+            ")"
+            " SELECT DISTINCT account.id"
+            " FROM account_analytic_account account"
+            " JOIN selected_plans plan ON plan.id = account.plan_id",
+            (ids,),
+        )
+        return [row[0] for row in cr.fetchall()]
 
     def where_analytic_plans(self, plan_ids):
         """Restrict to journal items whose analytic_distribution references
@@ -255,16 +490,20 @@ class MoveLineQuery:
         ids = tuple(int(i) for i in (plan_ids or ()))
         if not ids:
             return self
-        cr = self.env.cr
-        cr.execute(
-            "SELECT id FROM account_analytic_account WHERE plan_id IN %s",
-            (ids,),
-        )
-        account_ids = [r[0] for r in cr.fetchall()]
+        account_ids = self._analytic_account_ids_for_plans(ids)
         if not account_ids:
             self._wheres.append(SQL("FALSE"))
             return self
         return self.where_analytic_accounts(account_ids)
+
+    def where_analytic_column_plans(self, plan_ids, require_match=True):
+        """Horizontal-column peer of :meth:`where_analytic_plans`."""
+        ids = tuple(int(i) for i in (plan_ids or ()))
+        account_ids = self._analytic_account_ids_for_plans(ids)
+        return self.where_analytic_column_accounts(
+            account_ids,
+            require_match=require_match,
+        )
 
     def where_posted_only(self, posted=True):
         self._posted_only = bool(posted)
@@ -330,21 +569,77 @@ class MoveLineQuery:
             )
         self._joined_tables.add('account_account')
         if field_name == 'code':
-            expr = SQL("(acc.code_store ->> aml.company_id::text)")
+            expr = self._account_code_sql()
         elif field_name == 'name':
             expr = self._translated_account_name_sql()
         else:
             expr = SQL("acc.%s" % field_name)
         return self.order_by(expr, direction)
 
+    def group_by_account_field(self, field_name):
+        """Group by a column on the joined account_account table.
+
+        Mirrors the expression that select_account_field / order_by_account_field
+        emit for the same field name. This matters for translated jsonb columns
+        like ``name``: SELECT and ORDER BY resolve the user's lang via COALESCE,
+        so GROUP BY must use the identical expression or PostgreSQL rejects the
+        query with "must appear in the GROUP BY clause" when env.lang is not
+        en_US. Reusing this helper keeps the three call sites in lock-step.
+        """
+        if field_name not in _ACCOUNT_FIELDS:
+            raise MoveLineQueryError(
+                f"unknown account_account field {field_name!r}"
+            )
+        self._joined_tables.add('account_account')
+        if field_name == 'code':
+            expr = self._account_code_sql()
+        elif field_name == 'name':
+            expr = self._translated_account_name_sql()
+        else:
+            expr = SQL("acc.%s" % field_name)
+        self._group_by_exprs.append(expr)
+        return self
+
+    def _account_code_sql(self):
+        """SQL for account.account.code.
+
+        Odoo 18+ stores codes in ``code_store`` under the active company's
+        root-company id. ``res.company.root_id`` is computed/non-stored, so
+        derive that id from the stored ``parent_path`` instead of referring
+        to a column that does not exist.
+        """
+        if _ACCOUNT_CODE_JSONB:
+            self._joined_tables.add('res_company')
+            return SQL(
+                "(acc.code_store ->> "
+                "COALESCE(NULLIF(split_part(aml_company.parent_path, '/', 1), "
+                "'')::int, aml.company_id)::text)"
+            )
+        return SQL("acc.code")
+
+    def _account_code_like_sql(self, pattern):
+        """A ``code LIKE pattern`` clause, version-aware (see
+        _account_code_sql)."""
+        if _ACCOUNT_CODE_JSONB:
+            self._joined_tables.add('res_company')
+            return SQL(
+                "(acc.code_store ->> "
+                "COALESCE(NULLIF(split_part(aml_company.parent_path, '/', 1), "
+                "'')::int, aml.company_id)::text) "
+                "LIKE %s ESCAPE '\\'",
+                pattern,
+            )
+        return SQL("acc.code LIKE %s ESCAPE '\\'", pattern)
+
     def _translated_account_name_sql(self):
         """Resolve acc.name to the user's language with an en_US fallback.
 
-        Odoo 19 stores translated fields as a jsonb keyed by language
-        code. The user's active language comes from env.lang; if the
-        translation is missing for that language we fall back to the
-        base 'en_US' entry that Odoo always populates.
+        Supported Odoo series store translated fields as jsonb keyed by language code;
+        the user's active language comes from env.lang, with a fallback to the
+        base 'en_US' entry Odoo always populates.
         """
+        if not _ACCOUNT_NAME_JSONB:
+            return SQL("acc.name")
         lang = self.env.lang or 'en_US'
         if lang == 'en_US':
             return SQL("(acc.name ->> 'en_US')")
@@ -376,6 +671,12 @@ class MoveLineQuery:
         for expr, (_alias_str, alias_sql) in zip(
             self._select_exprs, self._select_aliases,
         ):
+            if callable(expr):
+                expr = expr()
+            if not isinstance(expr, SQL):
+                raise MoveLineQueryError(
+                    "internal select expression must resolve to SQL"
+                )
             select_parts.append(SQL("%s AS %s", expr, alias_sql))
         select_clause = SQL(", ").join(select_parts)
 
@@ -383,11 +684,23 @@ class MoveLineQuery:
         joins = []
         if 'account_account' in self._joined_tables:
             joins.append(SQL("JOIN account_account acc ON acc.id = aml.account_id"))
+        if 'res_company' in self._joined_tables:
+            joins.append(SQL(
+                "JOIN res_company aml_company ON aml_company.id = aml.company_id"
+            ))
         joins.append(SQL("JOIN account_move am ON am.id = aml.move_id"))
         if 'account_journal' in self._joined_tables:
             joins.append(SQL("JOIN account_journal aj ON aj.id = aml.journal_id"))
         if 'res_partner' in self._joined_tables:
             joins.append(SQL("LEFT JOIN res_partner p ON p.id = aml.partner_id"))
+        # Currency-conversion rate join (WS4). Emitted ONLY when a
+        # multicurrency CurrencyTable is attached; monocurrency / no table
+        # yields an empty fragment, so the FROM/JOIN clause is byte-identical
+        # to the legacy query for the single-currency hot path.
+        if self._has_currency_conversion():
+            ct_join = self.currency_table.join_sql('aml')
+            if ct_join.code.strip():
+                joins.append(ct_join)
         joins_clause = SQL(" ").join(joins)
 
         # WHERE clauses. Mandatory: company scope. State filter:

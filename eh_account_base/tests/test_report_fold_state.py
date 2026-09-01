@@ -9,8 +9,12 @@
 Per-user fold-state model tests.
 """
 
-from odoo.tests import tagged
+from psycopg2 import IntegrityError
+
+from odoo.exceptions import AccessError
+from odoo.tests import new_test_user, tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 @tagged('eh_account_base', 'unit')
@@ -50,16 +54,17 @@ class TestReportFoldState(TransactionCase):
         self.assertEqual(pl.get('l2'), True)
 
     def test_unique_per_user_report_line(self):
-        from psycopg2.errors import UniqueViolation
         # Two creates with the same key should violate the constraint;
-        # Odoo wraps it as IntegrityError.
+        # assert the exact storage error so an unrelated regression cannot
+        # satisfy this test.
         self.Model.create({
             'user_id': self.user.id,
             'report_code': 'balance_sheet',
             'line_id': 'unique-line',
             'is_unfolded': True,
         })
-        with self.assertRaises(Exception):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'), \
+                self.env.cr.savepoint():
             self.Model.create({
                 'user_id': self.user.id,
                 'report_code': 'balance_sheet',
@@ -68,14 +73,54 @@ class TestReportFoldState(TransactionCase):
             })
 
     def test_per_user_isolation(self):
-        other = self.env['res.users'].create({
-            'name': 'Other Test User',
-            'login': 'fold_test_other',
-            'email': 'fold_test_other@example.com',
-        })
+        other = new_test_user(
+            self.env,
+            login='fold_test_other',
+            groups='eh_account_base.group_eh_user',
+        )
         self.Model.set_for_user('balance_sheet', 'l1', True)
-        self.Model.set_for_user('balance_sheet', 'l2', True, user=other)
+        mine_row = self.Model.sudo().search([
+            ('user_id', '=', self.user.id),
+            ('report_code', '=', 'balance_sheet'),
+        ])
+        self.Model.with_user(other).set_for_user(
+            'balance_sheet', 'l2', True,
+        )
         mine = self.Model.get_for_user('balance_sheet')
-        theirs = self.Model.get_for_user('balance_sheet', user=other)
+        theirs = self.Model.with_user(other).get_for_user('balance_sheet')
         self.assertEqual(mine, {'l1': True})
         self.assertEqual(theirs, {'l2': True})
+
+        self.assertFalse(
+            self.Model.with_user(other).search([
+                ('id', 'in', mine_row.ids),
+            ])
+        )
+
+    def test_rpc_helpers_do_not_bypass_model_acl(self):
+        outsider = new_test_user(
+            self.env,
+            login='fold_test_outsider',
+            groups='base.group_user',
+        )
+        Model = self.Model.with_user(outsider)
+        with self.assertRaises(AccessError):
+            Model.get_for_user('balance_sheet')
+        with self.assertRaises(AccessError):
+            Model.set_for_user('balance_sheet', 'l1', True)
+        with self.assertRaises(AccessError):
+            Model.reset_for_user('balance_sheet')
+
+    def test_read_only_auditor_can_mount_but_cannot_persist_fold_state(self):
+        auditor = new_test_user(
+            self.env,
+            login='fold_test_auditor',
+            groups='eh_account_base.group_eh_auditor',
+        )
+        Model = self.Model.with_user(auditor)
+
+        self.assertEqual(Model.get_for_user('balance_sheet'), {})
+        with self.assertRaises(AccessError):
+            Model.set_for_user('balance_sheet', 'l1', True)
+        with self.assertRaises(AccessError):
+            Model.reset_for_user('balance_sheet')

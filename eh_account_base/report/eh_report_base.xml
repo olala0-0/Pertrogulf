@@ -202,21 +202,20 @@
     </template>
 
     <!--
-        Suite footer block. Single source of truth so a re-brand only
-        needs to edit one template. Per-module reports include with:
+        Statutory footer block. Per-module reports include with:
 
             <t t-call="eh_account_base.eh_report_footer"/>
 
-        Uses the U+2661 white heart suit glyph; it ships in the
-        Liberation / DejaVu / Arial families bundled with every
-        wkhtmltopdf install we have shipped against, so the line
-        renders consistently without adding a font dependency.
+        Footer identifies reporting company only. Vendor/support marketing
+        does not belong on customer-facing accounting evidence.
     -->
     <template id="eh_report_footer">
         <div class="eh_pdf_footer">
-            <div class="eh_pdf_footer_brand">ERP Heritage Accounting Suite</div>
-            <div class="eh_pdf_footer_credit">
-                Made with <span class="eh_pdf_heart">&#x2665;</span> from Melbourne, Australia by ERP Heritage
+            <div class="eh_pdf_footer_brand" t-if="company">
+                <t t-out="company.display_name"/>
+            </div>
+            <div class="eh_pdf_footer_credit" t-if="company and company.vat">
+                Tax ID <t t-out="company.vat"/>
             </div>
         </div>
     </template>
@@ -257,7 +256,7 @@
             <div class="o_footer_content d-flex border-top pt-2"
                  style="font-size: 7.5pt; color: #6c757d; padding-top: 4pt;">
                 <div class="flex-grow-1 text-start me-2">
-                    ERP Heritage Accounting Suite
+                    <t t-if="company" t-out="company.display_name"/>
                 </div>
                 <div class="text-end text-muted text-nowrap"
                      t-if="report_type == 'pdf'">
