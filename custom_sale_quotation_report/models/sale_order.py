@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     # --- Petrogulf Aviation fields ---
     aircraft_reg_details = fields.Char(string="Aircraft Reg Details")
     aircraft_type = fields.Char(string="Aircraft Type")
-    country_of_origin = fields.Char(string="Country of Origin")
+    country_of_origin = fields.Many2one("res.country", string="Country of Origin")
 
     # --- Petrogulf Toll Blending fields ---
     show_bank_details = fields.Boolean(
