@@ -113,6 +113,19 @@ class createpurchaseorder(models.TransientModel):
                     if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                         price_unit = supplierinfo.currency_id._convert(price_unit, purchase_order.currency_id,
                                                                     purchase_order.company_id, fields.Date.today())
+                parent_so = data.order_id or so
+                so_line = parent_so.order_line.filtered(lambda l: l.product_id == data.product_id and l.name == data.name)[:1] if parent_so else False
+                if not so_line and parent_so:
+                    so_line = parent_so.order_line.filtered(lambda l: l.product_id == data.product_id)[:1]
+                so_taxes = False
+                if so_line:
+                    so_taxes = so_line.tax_ids if hasattr(so_line, 'tax_ids') else getattr(so_line, 'tax_id', False)
+
+                if so_taxes:
+                    line_tax_ids = [(6, 0, so_taxes.ids)]
+                else:
+                    line_tax_ids = [(6, 0, data.product_id.supplier_taxes_id.ids)]
+
                 if self.partner_id.property_purchase_currency_id :
                     value.append({
                         'product_id': data.product_id.id,
@@ -120,7 +133,7 @@ class createpurchaseorder(models.TransientModel):
                         'product_qty': data.product_qty,
                         'order_id': purchase_order.id,
                         'product_uom_id': data.product_uom.id,
-                        'tax_ids': data.product_id.supplier_taxes_id.ids,
+                        'tax_ids': line_tax_ids,
                         'date_planned': data.date_planned,
                         'price_unit': price_unit,
                     })
@@ -131,7 +144,7 @@ class createpurchaseorder(models.TransientModel):
                         'product_qty': data.product_qty,
                         'order_id': purchase_order.id,
                         'product_uom_id': data.product_uom.id,
-                        'tax_ids': data.product_id.supplier_taxes_id.ids,
+                        'tax_ids': line_tax_ids,
                         'date_planned': data.date_planned,
                         'price_unit': price_unit,
                     })

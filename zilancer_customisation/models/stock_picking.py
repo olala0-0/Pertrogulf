@@ -49,6 +49,7 @@ class StockPicking(models.Model):
     # widget='radio'
 
     document_number = fields.Char(string='Document Number', copy=False, readonly=True)
+    manual_dispatch_note_no = fields.Char(string='Manual Dispatch Note No.', copy=False)
 
     # Additional fields
     customer_lpo_no = fields.Char(string='Customer LPO No')

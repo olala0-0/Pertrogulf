@@ -7,6 +7,20 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@id='header_left_group']/div[hasclass('o_col')]" position="after">
                 <field name="sale_type" widget="radio" options="{'horizontal': true}" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'"/>
+                <field name="old_invoice_number" invisible="move_type not in ('out_invoice', 'out_refund', 'out_receipt')" readonly="state != 'draft'"/>
+                <field name="old_bill_number" invisible="move_type not in ('in_invoice', 'in_refund', 'in_receipt')" readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_tree_inherit_old_numbers" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.old.numbers</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="old_invoice_number" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')"/>
+                <field name="old_bill_number" optional="show" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')"/>
             </xpath>
         </field>
     </record>

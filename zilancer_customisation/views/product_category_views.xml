@@ -10,6 +10,7 @@
                     <field name="property_account_income_local_categ_id"/>
                     <field name="property_account_income_export_categ_id"/>
                     <field name="property_account_income_out_scope_categ_id"/>
+                    <field name="property_account_income_gcc_categ_id"/>
                 </group>
             </xpath>
         </field>

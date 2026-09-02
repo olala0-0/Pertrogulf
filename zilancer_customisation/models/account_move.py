@@ -7,9 +7,13 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     sale_type = fields.Selection(
-        [("local_sale", "Local Sales"), ("export", "Export"), ("out_of_scope", "Out of Scope")],
+        [("local_sale", "Local Sales"), ("export", "Export"), ("out_of_scope", "Out of Scope"), ("gcc", "GCC")],
         string="Sale Type",
+        required=True,
+        default="local_sale",
     )
+    old_invoice_number = fields.Char(string="Old Invoice Number", copy=False)
+    old_bill_number = fields.Char(string="Old Bill Number", copy=False)
 
     @api.onchange('sale_type')
     def _onchange_sale_type_update_lines(self):
@@ -32,6 +36,12 @@ class AccountMove(models.Model):
             unit_prefix = "PGT"
         elif bu == 'pg_powerx':
             unit_prefix = "PowerX"
+        elif bu == 'pg_sing':
+            unit_prefix = "PGSNG"
+        elif bu == 'pg_golden':
+            unit_prefix = "PGOM"
+        elif bu == 'pg_greece':
+            unit_prefix = "PGEU"
         else:
             unit_prefix = "PG"
 
@@ -48,6 +58,9 @@ class AccountMove(models.Model):
         elif sale_type == 'export':
             prefix_base = f"{unit_prefix}/E/"
             type_code = "export"
+        elif sale_type == 'gcc':
+            prefix_base = f"{unit_prefix}/GCC/"
+            type_code = "gcc"
         else:  # local_sale or default
             prefix_base = f"{unit_prefix}/"
             type_code = "local_sale"
