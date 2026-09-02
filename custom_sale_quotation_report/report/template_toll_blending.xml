@@ -7,7 +7,7 @@
                 <tr>
                     <th class="text-center" style="font-weight:bold; width:5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:8px 0 0 0;">SN</th>
                     <th style="font-weight:bold; width:45%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Product Description</th>
-                    <th style="font-weight:bold; width:15%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Selling Unit</th>
+                    <th style="font-weight:bold; width:15%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Pack Size</th>
                     <th style="font-weight:bold; width:12%; border:1px solid #6c757d !important; background-color:#f4b6bb;">No of Units</th>
                     <th style="font-weight:bold; width:11.5%; border:1px solid #6c757d !important; background-color:#f4b6bb;">Unit Price</th>
                     <th class="text-end" style="font-weight:bold; width:11.5%; border:1px solid #6c757d !important; background-color:#f4b6bb; border-radius:0 8px 0 0;">Amount</th>
@@ -51,7 +51,7 @@
                 </td>
             </tr>
             <tr t-if="o.show_vat">
-                <td style="text-align: right; font-weight: bold; width: 77%;">Vat 5%</td>
+                <td style="text-align: right; font-weight: bold; width: 77%;">VAT 5%</td>
                 <td style="text-align: right; font-weight: bold;">
                     <span t-field="o.amount_tax"/>
                 </td>
@@ -112,7 +112,7 @@
                                 <span t-esc="sn"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
-                                <span t-field="line.product_id.type"/>
+                                    <span t-esc="', '.join(line.product_id.product_tag_ids.mapped('name'))"/>
                             </td>
                             <td style="border:1px solid #6c757d !important;">
                                 <span t-field="line.name"/>
