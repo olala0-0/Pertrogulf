@@ -44,7 +44,7 @@
                     </td>
                     <td class="text-start"
                         style="  border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap">
-                        Rate Per Pack
+                        (<span t-field="o.currency_id.name"/>) Rate Per Pack
                     </td>
                     <td name="th_subtotal" class="text-end"
                         style="  border:1px solid #6c757d !important; background-color:#f4b6bb;font-weight:bold; white-space:nowrap;">
