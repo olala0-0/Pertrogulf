@@ -86,7 +86,7 @@
                                     <span t-esc="'{:,.2f}'.format(line.product_uom_qty * line.product_id.kgs_per_pkg_type)"/>
                                 </td>
                                 <td style="border:1px solid #6c757d !important;">
-                                    <span t-field="line.price_unit"/>
+                                    <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
                                 <td class="text-end" style="border:1px solid #6c757d !important;">
                                     <span t-field="line.price_subtotal"/>
