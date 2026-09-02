@@ -29,7 +29,7 @@
                             <td style="width:50%; vertical-align:top; font-size:12px;">
                                 <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">
                                     <div>
-                                        Petro Gulf Oil Manufacturing LLC<br/>
+                                        PetroGulf Oil Manufacturing LLC<br/>
                                         Al Hail Industrial Area, Fujairah<br/>
                                         United Arab Emirates<br/>
                                         www.petrogulfmarine.com
@@ -180,7 +180,7 @@
                     <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:11px;">
                         <thead>
                             <tr style="background-color:#d9d9d9;">
-                                <th style="border:1px solid #ccc; padding:4px;">Sn</th>
+                                <th style="border:1px solid #ccc; padding:4px;">SN</th>
                                 <th style="border:1px solid #ccc; padding:4px;">Description of Goods</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Due on</th>
                                 <th style="border:1px solid #ccc; padding:4px; text-align:right;">Quantity</th>
