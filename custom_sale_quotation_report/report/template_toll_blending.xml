@@ -68,7 +68,7 @@
         </table>
 
         <p>
-            <p>Total Amount in words:</p>
+            <strong>Total Amount in words:</strong>
             <span style="font-weight:bold;"  t-esc="o._get_amount_in_words()"/>
         </p>
         <div class="mt-3">
