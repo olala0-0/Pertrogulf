@@ -1,0 +1,87 @@
+<odoo>
+    <template id="report_picking_list">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="font-size:13px; padding:0; margin:0;">
+
+                    <!-- ============ HEADER (letterhead banner, SVG shape as background image) ============ -->
+                    <div style="width:100%; height:42mm; background-repeat:no-repeat; background-size:100% 100%; background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMTAgNDIiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxwb2x5Z29uIHBvaW50cz0iMCwwIDIxMCwwIDIxMCwxNC40IDk5LjMsMTQuNCA4Ny45LDQyIDAsNDIiIGZpbGw9IiNkMWQzZDQiLz48L3N2Zz4=');">
+                        <table style="width:100%; height:42mm; table-layout:fixed; border-collapse:collapse;">
+                            <colgroup>
+                                <col style="width:93mm;"/>
+                                <col style="width:117mm;"/>
+                            </colgroup>
+                            <tr>
+                                <td style="padding:3mm 4mm; vertical-align:middle; text-align:left;">
+                                    <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                </td>
+                                <td style="padding:6mm 18mm 6mm 4mm; vertical-align:middle; text-align:right;">
+                                    <span style="font-size:34px; font-weight:bold; color:#231f20;">PICKING LIST</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="padding:3mm 7mm 0 7mm;">
+
+                        <!-- ============ COMPANY INFO (fixed name/address, dynamic contact info) ============ -->
+                        <div class="fw-bold" style="color:black !important; font-size:12px;">
+                            <div>Petro Gulf Oil Manufacturing L.L.C</div>
+                            <div>New Industrial Area 1, Ajman, UAE</div>
+                            <div t-if="o.company_id.phone"><t t-esc="o.company_id.phone"/></div>
+                            <div t-if="o.company_id.email"><t t-esc="o.company_id.email"/></div>
+                            <div t-if="o.company_id.website"><t t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
+                        </div>
+
+                        <!-- ============ PICKER / DATE ============ -->
+                        <table style="width:100%; border-collapse:collapse; margin:15px 0; font-size:12px;">
+                            <tr>
+                                <td style="border:1px solid #ccc; background-color:#f2f2f2; padding:8px 12px; width:50%;">
+                                    <strong>Picker Name :</strong> <span t-field="o.driver_name"/>
+                                </td>
+                                <td style="border:1px solid #ccc; background-color:#f2f2f2; padding:8px 12px; width:50%;">
+                                    <strong>Picking Date :</strong>
+                                    <span t-esc="o.date_done or o.scheduled_date" t-options="{'widget': 'date'}"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- ============ LINE ITEMS ============ -->
+                        <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#d9d9d9;">
+                                    <th style="border:1px solid #ccc; padding:4px;">SN</th>
+                                    <th style="border:1px solid #ccc; padding:4px;">Product</th>
+                                    <th style="border:1px solid #ccc; padding:4px; text-align:right;">Quantity</th>
+                                    <th style="border:1px solid #ccc; padding:4px;">From</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="sn" t-value="0"/>
+                                <t t-foreach="o.move_ids.filtered(lambda m: m.state != 'cancel')" t-as="move">
+                                    <t t-set="sn" t-value="sn + 1"/>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-esc="sn"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="move.product_id.name"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px; text-align:right;">
+                                            <span t-field="move.product_uom_qty"/>
+                                            <span t-field="move.product_uom"/>
+                                        </td>
+                                        <td style="border:1px solid #ccc; padding:4px;">
+                                            <span t-field="move.location_id.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
