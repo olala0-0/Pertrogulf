@@ -18,13 +18,11 @@ Known offenders:
 * group_rfq  (purchase_stock) - default 'default'
 * group_on   (purchase_stock) - default 'default'
 
-The Python-level setdefault is helpful for direct calls; the
-table-level DEFAULT is the belt-and-braces guarantee for paths that
-go through Enterprise overrides which strip Python-side vals before
-the INSERT.
+The Python-level setdefault covers direct calls. A versioned migration applies
+the optional table defaults once for databases affected by older upstream
+overrides; registry initialization itself stays read-only.
 
-Both layers are no-ops when the offending column is not in the
-registry / table (i.e. when purchase_stock is not installed).
+Both layers are no-ops when the offending field/column is absent.
 """
 
 from odoo import api, models
@@ -42,6 +40,13 @@ _REQUIRED_PARTNER_DEFAULTS = (
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    # EH_LEGACY_CONTACT_STATISTICS_COMPAT_START
+    @api.depends_context('uid', 'allowed_company_ids', 'company')
+    def _compute_application_statistics(self):
+        """Partition Odoo 19's native statistics cache by actor and company."""
+        return super()._compute_application_statistics()
+    # EH_LEGACY_CONTACT_STATISTICS_COMPAT_END
+
     @api.model_create_multi
     def create(self, vals_list):
         for column, default in _REQUIRED_PARTNER_DEFAULTS:
@@ -49,26 +54,3 @@ class ResPartner(models.Model):
                 for vals in vals_list:
                     vals.setdefault(column, default)
         return super().create(vals_list)
-
-    def _auto_init(self):
-        result = super()._auto_init()
-        # Belt-and-braces: if the offending column exists, set a
-        # PostgreSQL column DEFAULT so a missing value at INSERT time
-        # falls back to the declared default instead of violating
-        # NOT NULL. The probe avoids touching the column when the
-        # source module is absent; the ALTER is idempotent.
-        for column, default in _REQUIRED_PARTNER_DEFAULTS:
-            self.env.cr.execute(
-                """
-                SELECT 1 FROM information_schema.columns
-                WHERE table_name = 'res_partner' AND column_name = %s
-                """,
-                [column],
-            )
-            if self.env.cr.fetchone():
-                self.env.cr.execute(
-                    f"ALTER TABLE res_partner "
-                    f"ALTER COLUMN {column} SET DEFAULT %s",
-                    [default],
-                )
-        return result

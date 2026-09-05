@@ -18,6 +18,8 @@ code and params, which is enough to verify:
 * Composition (joins, group_by, order_by, limit, offset) renders correctly.
 """
 
+from odoo.release import version_info
+from odoo.exceptions import UserError
 from odoo.tools import SQL
 from odoo.tests import tagged
 
@@ -36,6 +38,16 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
 
     def _q(self):
         return MoveLineQuery(self.env, company_ids=[self.cid])
+
+    def _assert_account_code_expression(self, sql):
+        if version_info[0] >= 18:
+            self.assertIn('JOIN res_company aml_company', sql.code)
+            self.assertIn('acc.code_store', sql.code)
+            self.assertIn('aml_company.parent_path', sql.code)
+        else:
+            self.assertNotIn('JOIN res_company aml_company', sql.code)
+            self.assertNotIn('acc.code_store', sql.code)
+            self.assertIn('acc.code', sql.code)
 
     # ---- guardrails ----
 
@@ -110,7 +122,7 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
     def test_select_account_field_joins_account(self):
         sql = self._q().select_balance_sum().select_account_field('code').build()
         self.assertIn('JOIN account_account acc', sql.code)
-        self.assertIn('acc.code_store', sql.code)
+        self._assert_account_code_expression(sql)
 
     def test_multiple_selects_comma_separated(self):
         sql = (
@@ -156,8 +168,9 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
             .build()
         )
         self.assertIn('JOIN account_account acc', sql.code)
-        self.assertIn('acc.code_store', sql.code)
+        self._assert_account_code_expression(sql)
         self.assertIn('LIKE', sql.code)
+        self.assertIn("ESCAPE '\\'", sql.code)
         self.assertIn('1%', sql.params)
         self.assertIn('20%', sql.params)
         self.assertIn(' OR ', sql.code)
@@ -212,7 +225,7 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
             .build()
         )
         self.assertIn('JOIN account_account acc', sql.code)
-        self.assertIn('acc.code_store', sql.code)
+        self._assert_account_code_expression(sql)
         self.assertIn('ASC', sql.code)
 
     def test_join_journal_emits_clause(self):
@@ -266,17 +279,63 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
         # No additional filters should appear beyond those two.
         self.assertEqual(sql.code.count(' AND '), 1)
 
-    def test_where_analytic_accounts_uses_jsonb_match(self):
+    def test_where_analytic_accounts_matches_composite_jsonb_keys(self):
         sql = (
             self._q()
             .select_balance_sum()
             .where_analytic_accounts([3, 7])
             .build()
         )
+        self.assertIn('jsonb_object_keys', sql.code)
+        self.assertIn("jsonb_typeof(aml.analytic_distribution)", sql.code)
+        self.assertIn("ELSE '{}'::jsonb", sql.code)
+        self.assertIn('string_to_array', sql.code)
+        self.assertIn('&&', sql.code)
+        # Preserve the index-friendly whole-key path for ordinary one-plan
+        # distributions, then fall back to token matching for composites.
         self.assertIn('analytic_distribution ?|', sql.code)
-        # Keys are passed as a string array; Postgres ?| matches any of them.
+        # Keys are passed as a string array and compared with every token in
+        # both simple keys ("3") and cross-plan composite keys ("3,11").
         params = list(sql.params or ())
-        self.assertIn(['3', '7'], params)
+        # Two copies belong to the inclusive key predicate and one to the
+        # monetary analytic-weight expression.
+        self.assertEqual(params.count(['3', '7']), 3)
+
+    def test_analytic_filter_weights_monetary_selector_added_first(self):
+        sql = (
+            self._q()
+            .select_balance_sum()
+            .where_analytic_accounts([3, 7])
+            .build()
+        )
+        self.assertIn('jsonb_each', sql.code)
+        self.assertIn("jsonb_typeof(analytic_part.value) = 'number'", sql.code)
+        self.assertIn('/ 100.0', sql.code)
+        self.assertEqual(list(sql.params).count(['3', '7']), 3)
+
+    def test_column_analytic_intersects_global_and_owns_weight(self):
+        sql = (
+            self._q()
+            .select_balance_sum()
+            .where_analytic_accounts([3])
+            .where_analytic_column_accounts([7])
+            .build()
+        )
+        params = list(sql.params or ())
+        # Two membership binds per scope.  Only column 7 owns allocation
+        # weighting, so it has one additional bind and 3 never weights value.
+        self.assertEqual(params.count(['3']), 2)
+        self.assertEqual(params.count(['7']), 3)
+        self.assertNotIn(['3', '7'], params)
+
+    def test_empty_analytic_column_group_fails_closed(self):
+        sql = (
+            self._q()
+            .select_balance_sum()
+            .where_analytic_column_accounts([], require_match=True)
+            .build()
+        )
+        self.assertIn('FALSE', sql.code)
 
     # ---- group / order / limit ----
 
@@ -394,16 +453,163 @@ class TestMoveLineQueryShape(EhAccountUnitTestCase):
         with self.assertRaises(MoveLineQueryError):
             q.select(SQL("SUM(aml.balance)"), 'balance"; DROP TABLE--')
 
-    def test_account_codes_prefix_with_percent_is_treated_as_like_pattern(self):
-        # If a caller passes a raw % the LIKE will match more than intended,
-        # but no SQL string injection is possible since the value is a param.
+    def test_account_code_prefix_treats_like_metacharacters_literally(self):
         sql = (
             self._q()
             .select_balance_sum()
-            .where_account_codes(['1%; DROP TABLE--'])
+            .where_account_codes([r'1%_\prefix'])
             .build()
         )
-        # The % suffix is appended to the param, not the code.
-        self.assertIn('acc.code_store', sql.code)
-        self.assertIn('LIKE %s', sql.code)
-        self.assertIn('1%; DROP TABLE--%', sql.params)
+        self._assert_account_code_expression(sql)
+        self.assertIn("LIKE %s ESCAPE '\\'", sql.code)
+        self.assertIn(r'1\%\_\\prefix%', sql.params)
+
+
+@tagged('eh_account_base', 'unit')
+class TestMoveLineQueryCurrencyConversion(EhAccountUnitTestCase):
+    """WS4: select_*_sum_converted + the currency-table LEFT JOIN.
+
+    These are pure shape assertions (the SQL is inspected, never executed),
+    proving:
+
+    * With no currency table, or a monocurrency one, the rendered SQL is
+      byte-identical to the legacy select_balance_sum path (regression guard
+      on the single-currency hot path that 95% of installs run).
+    * With a multicurrency table attached, the converted sums render the
+      ``* ct.rate`` multiply and build() emits the complete per-company
+      VALUES join, with no identity fallback.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.cid = self.env.company.id
+
+    def _q(self, **kw):
+        return MoveLineQuery(self.env, company_ids=[self.cid], **kw)
+
+    def _multicurrency_table(self, rate_map):
+        """A CurrencyTable forced into multicurrency mode with a fixed map.
+
+        Bypasses ORM rate seeding (white-box) so the test does not depend on
+        creating two real different-currency companies in the registry.
+        """
+        from odoo.addons.eh_account_base.tools.currency_table import (
+            CurrencyTable,
+        )
+        ct = CurrencyTable(
+            self.env, company_ids=list(rate_map.keys()),
+            presentation_currency_id=self.env.company.currency_id.id,
+            rate_map=rate_map,
+        )
+        ct._is_monocurrency = False  # force the conversion path
+        return ct
+
+    # ---- regression guard: byte-identical without conversion ----
+
+    def test_converted_sum_byte_identical_without_table(self):
+        plain = self._q().select_balance_sum().build()
+        converted = self._q().select_balance_sum_converted().build()
+        self.assertEqual(plain.code, converted.code)
+        self.assertEqual(plain.params, converted.params)
+
+    def test_converted_sum_byte_identical_with_monocurrency_table(self):
+        # A monocurrency table (single company) must add NO join and NO
+        # multiply: the rendered SQL equals the no-table form exactly.
+        ct = self._multicurrency_table({self.cid: 1.0})
+        ct._is_monocurrency = True  # monocurrency: zero-overhead path
+        plain = self._q().select_balance_sum().build()
+        q = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        )
+        with_table = q.select_balance_sum_converted().build()
+        self.assertEqual(plain.code, with_table.code)
+        self.assertEqual(plain.params, with_table.params)
+        self.assertNotIn('ct.rate', with_table.code)
+        self.assertNotIn('LEFT JOIN (VALUES', with_table.code)
+
+    # ---- multicurrency rendering ----
+
+    def test_converted_balance_renders_rate_multiply(self):
+        ct = self._multicurrency_table({self.cid: 1.5})
+        q = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        )
+        sql = q.select_balance_sum_converted().build()
+        self.assertIn('ct.rate', sql.code)
+        self.assertNotIn('COALESCE(ct.rate, 1)', sql.code)
+        self.assertIn('aml.balance', sql.code)
+        self.assertIn('JOIN (VALUES', sql.code)
+        # The aml alias is bound as a quoted identifier for injection safety.
+        self.assertIn('ct.company_id = "aml".company_id', sql.code)
+        # The seeded rate is bound as a param, never interpolated.
+        self.assertIn(1.5, sql.params)
+
+    def test_converted_debit_and_credit_render_rate_multiply(self):
+        ct = self._multicurrency_table({self.cid: 2.0})
+        q = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        )
+        sql = (
+            q.select_debit_sum_converted()
+            .select_credit_sum_converted()
+            .build()
+        )
+        self.assertEqual(sql.code.count('ct.rate'), 2)
+        self.assertNotIn('COALESCE(ct.rate, 1)', sql.code)
+        self.assertIn('aml.debit', sql.code)
+        self.assertIn('aml.credit', sql.code)
+
+    def test_single_company_different_target_requires_conversion(self):
+        from odoo.addons.eh_account_base.tools.currency_table import (
+            CurrencyTable,
+        )
+        target = self.env['res.currency'].create({
+            'name': 'SCT', 'symbol': 'S', 'rounding': 0.01,
+        })
+        ct = CurrencyTable(
+            self.env,
+            company_ids=[self.cid],
+            presentation_currency_id=target.id,
+            rate_map={self.cid: 2.0},
+        )
+        self.assertFalse(ct.is_monocurrency)
+        sql = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        ).select_balance_converted().build()
+        self.assertIn('ct.rate', sql.code)
+        self.assertNotIn('COALESCE(ct.rate, 1)', sql.code)
+        self.assertIn('JOIN (VALUES', sql.code)
+
+    def test_multicurrency_join_emitted_only_once(self):
+        ct = self._multicurrency_table({self.cid: 1.25})
+        q = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        )
+        sql = (
+            q.select_balance_sum_converted()
+            .select_debit_sum_converted()
+            .build()
+        )
+        # One rate join regardless of how many converted sums are selected.
+        self.assertEqual(sql.code.count('JOIN (VALUES'), 1)
+
+    def test_multicurrency_join_rejects_incomplete_or_invalid_rate_map(self):
+        missing = self._multicurrency_table({self.cid: 1.25})
+        missing.company_ids = (self.cid, self.cid + 999999)
+        with self.assertRaises(UserError):
+            missing.join_sql()
+
+        for rate in (0.0, float('nan'), float('inf')):
+            invalid = self._multicurrency_table({self.cid: rate})
+            with self.subTest(rate=rate), self.assertRaises(UserError):
+                invalid.join_sql()
+
+    def test_plain_select_balance_sum_unaffected_by_attached_table(self):
+        # select_balance_sum (the legacy method) must NOT convert even when a
+        # multicurrency table is attached; only the *_converted variants do.
+        ct = self._multicurrency_table({self.cid: 9.0})
+        q = MoveLineQuery(
+            self.env, company_ids=[self.cid], currency_table=ct,
+        )
+        sql = q.select_balance_sum().build()
+        self.assertNotIn('ct.rate', sql.code.split('LEFT JOIN')[0])

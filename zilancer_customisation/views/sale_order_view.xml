@@ -229,13 +229,13 @@
 
 
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_unit']" position="after">
-                    <field name="offered_price" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
+                    <field name="offered_price" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export', 'gcc']"/>
                     <field name="hs_code" optional="hide"/>
                     <field name="leads_time" optional="show"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_subtotal']" position="after">
-                    <field name="discount_rate" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
-                    <field name="discount_value" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export']"/>
+                    <field name="discount_rate" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export', 'gcc']"/>
+                    <field name="discount_value" optional="show" column_invisible="parent.sale_type not in ['local_sale', 'export', 'gcc']"/>
                 </xpath>
 
                 <xpath expr="//field[@name='order_line']//list/field[@name='price_unit']" position="before">
@@ -290,6 +290,7 @@
                         <!-- <field name="imo_no_id" optional="show"/> -->
                         <field name="imo_number" optional="show"/>
                         <field name="partner_id"/>
+                        <field name="client_po_order_no" optional="show"/>
                         <field name="buyers_date" optional="show"/>
                         <!-- <field name="user_id" optional="show"/> -->
                         <field name="user_id" optional="show" string="Sales Manager"/>

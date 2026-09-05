@@ -267,8 +267,10 @@ class SaleOrder(models.Model):
         string="VAT",
     )
     sale_type = fields.Selection(
-        [("local_sale", "Local Sales"), ("out_of_scope", "Out of Scope"), ("export", "Export"),],
+        [("local_sale", "Local Sales"), ("export", "Export"), ("out_of_scope", "Out of Scope"), ("gcc", "GCC")],
         string="Sale Type",
+        required=True,
+        default="local_sale",
     )
     customer_user_id = fields.Many2one(
         related="partner_id.user_id", string="Customer Sales Person", store=True
@@ -770,7 +772,7 @@ class SaleOrder(models.Model):
                         "margin_value": 0.0,
                     }
                 )
-            elif order.sale_type in ("local_sale", "export"):
+            elif order.sale_type in ("local_sale", "export", "gcc"):
                 # Reset offered price and discount fields on all lines
                 order.order_line.update(
                     {

@@ -22,7 +22,12 @@ keys are ignored on load and missing keys fall back to defaults.
 import json
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
+
+
+def _reject_non_json_constant(value):
+    """Make Python's permissive JSON decoder obey the JSON specification."""
+    raise ValueError("non-finite JSON constant: %s" % value)
 
 
 class EhReportSavedView(models.Model):
@@ -36,17 +41,20 @@ class EhReportSavedView(models.Model):
     user_id = fields.Many2one(
         'res.users',
         default=lambda self: self.env.user,
-        ondelete='cascade',
+        ondelete='set null',
         index=True,
+        readonly=True,
         help=(
-            "Owner of the view. The owner can edit and delete; other users "
-            "can read it only when shared is True."
+            "Owner of the view. Shared definitions survive owner removal "
+            "with an empty owner; private definitions then become visible "
+            "only to administrators until reviewed or reassigned."
         ),
     )
     company_id = fields.Many2one(
         'res.company',
         default=lambda self: self.env.company,
         index=True,
+        readonly=True,
     )
     options_json = fields.Text(
         required=True,
@@ -73,13 +81,83 @@ class EhReportSavedView(models.Model):
             if not rec.options_json:
                 raise ValidationError(_("options_json must not be empty."))
             try:
-                payload = json.loads(rec.options_json)
+                payload = json.loads(
+                    rec.options_json,
+                    parse_constant=_reject_non_json_constant,
+                )
             except ValueError as exc:
                 raise ValidationError(_(
                     "options_json must be valid JSON (got %s).",
                 ) % exc)
             if not isinstance(payload, dict):
                 raise ValidationError(_("options_json must encode a dict."))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Stamp the caller as owner and freeze the company boundary.
+
+        Data loading and explicitly trusted server code may use ``sudo`` to
+        preserve a supplied owner/company.  An ordinary RPC caller cannot
+        manufacture a row owned by somebody else (or place it in another
+        company) and then exploit the shared-read rule.
+        """
+        secured_vals_list = []
+        for incoming_vals in vals_list:
+            vals = dict(incoming_vals)
+            if not self.env.su:
+                if (
+                    'user_id' in vals
+                    and (vals.get('user_id') or False) != self.env.uid
+                ):
+                    raise AccessError(_(
+                        "A saved view can only be created for the current "
+                        "user."
+                    ))
+                if (
+                    'company_id' in vals
+                    and (vals.get('company_id') or False)
+                    != self.env.company.id
+                ):
+                    raise AccessError(_(
+                        "A saved view can only be created in the current "
+                        "company."
+                    ))
+                vals['user_id'] = self.env.uid
+                vals['company_id'] = self.env.company.id
+            else:
+                vals.setdefault('user_id', self.env.uid)
+                vals.setdefault('company_id', self.env.company.id)
+            secured_vals_list.append(vals)
+        return super().create(secured_vals_list)
+
+    def _check_owner_mutation(self):
+        """Reject mutations of shared rows by their non-owner readers."""
+        if self.env.su:
+            return
+        foreign = self.filtered(lambda rec: rec.user_id.id != self.env.uid)
+        if foreign:
+            raise AccessError(_(
+                "Only the owner can modify or delete a saved view."
+            ))
+
+    def write(self, vals):
+        self._check_owner_mutation()
+        for rec in self:
+            if (
+                'user_id' in vals
+                and (vals.get('user_id') or False) != rec.user_id.id
+            ):
+                raise AccessError(_("A saved view's owner is immutable."))
+            if (
+                'company_id' in vals
+                and (vals.get('company_id') or False) != rec.company_id.id
+            ):
+                raise AccessError(_("A saved view's company is immutable."))
+        return super().write(vals)
+
+    def unlink(self):
+        self._check_owner_mutation()
+        return super().unlink()
 
     @api.model
     def list_for(self, report_code):
@@ -117,6 +195,18 @@ class EhReportSavedView(models.Model):
 
         Returns the persisted record id.
         """
+        if not isinstance(options, dict):
+            raise UserError(_("Saved view options must be a JSON object."))
+        try:
+            encoded_options = json.dumps(
+                options,
+                sort_keys=True,
+                allow_nan=False,
+            )
+        except (TypeError, ValueError) as exc:
+            raise UserError(_(
+                "Saved view options must be JSON serialisable."
+            )) from exc
         existing = self.search([
             ('user_id', '=', self.env.user.id),
             ('report_code', '=', report_code),
@@ -125,7 +215,7 @@ class EhReportSavedView(models.Model):
         vals = {
             'name': name,
             'report_code': report_code,
-            'options_json': json.dumps(options or {}, sort_keys=True),
+            'options_json': encoded_options,
             'shared': bool(shared),
             'notes': notes or False,
         }
@@ -134,20 +224,22 @@ class EhReportSavedView(models.Model):
             return existing.id
         return self.create(vals).id
 
-    def load(self):
+    def load_options(self):
         """Return the parsed options dict for the OWL viewer."""
         self.ensure_one()
         try:
-            return json.loads(self.options_json)
-        except ValueError:
-            return {}
-
-    def unlink(self):
-        # Owner-only delete. The view is visible to others when shared,
-        # but only the owner can remove it.
-        for rec in self:
-            if rec.user_id and rec.user_id.id != self.env.user.id:
-                raise ValidationError(_(
-                    "Only the owner can delete a saved view (%s).",
-                ) % rec.name)
-        return super().unlink()
+            payload = json.loads(
+                self.options_json,
+                parse_constant=_reject_non_json_constant,
+            )
+        except (TypeError, ValueError) as exc:
+            raise UserError(_(
+                "Saved view '%s' contains malformed JSON options.",
+                self.name,
+            )) from exc
+        if not isinstance(payload, dict):
+            raise UserError(_(
+                "Saved view '%s' options must be a JSON object.",
+                self.name,
+            ))
+        return payload

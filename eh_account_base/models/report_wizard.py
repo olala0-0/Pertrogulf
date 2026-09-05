@@ -15,7 +15,9 @@ form already scoped to a single report.
 """
 
 import base64
-from datetime import date
+from datetime import timedelta
+
+from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -54,12 +56,12 @@ class EhAccountReportWizard(models.TransientModel):
     )
     date_from = fields.Date(
         required=True,
-        default=lambda self: fields.Date.today().replace(day=1),
+        default=lambda self: fields.Date.context_today(self).replace(day=1),
         help="Inclusive start date of the reporting window.",
     )
     date_to = fields.Date(
         required=True,
-        default=fields.Date.today,
+        default=lambda self: fields.Date.context_today(self),
         help="Inclusive end date of the reporting window.",
     )
 
@@ -69,6 +71,7 @@ class EhAccountReportWizard(models.TransientModel):
         'wizard_id', 'company_id',
         required=True,
         default=lambda self: self.env.company,
+        domain=lambda self: [('id', 'in', self.env.companies.ids)],
     )
     journal_ids = fields.Many2many(
         'account.journal',
@@ -135,7 +138,30 @@ class EhAccountReportWizard(models.TransientModel):
                     "Date From cannot be later than Date To.",
                 ))
 
-    @api.onchange('period_preset')
+    @api.constrains('company_ids')
+    def _check_company_scope(self):
+        allowed = set(self.env.companies.ids)
+        for wizard in self:
+            # Inspect the module-owned relation itself after capturing the
+            # caller's allowed scope.  Reading ``company_ids`` through the
+            # ORM can hide an out-of-scope company behind res.company record
+            # rules (or retain a pre-invalidation M2M cache value), which
+            # would make this validation incorrectly conclude it is safe.
+            self.env.cr.execute(
+                "SELECT company_id "
+                "FROM eh_account_report_wizard_company_rel "
+                "WHERE wizard_id = %s",
+                (wizard.id,),
+            )
+            selected = {row[0] for row in self.env.cr.fetchall()}
+            forbidden = selected - allowed
+            if forbidden:
+                raise ValidationError(_(
+                    "Selected companies must belong to the active allowed "
+                    "company scope."
+                ))
+
+    @api.onchange('period_preset', 'company_ids')
     def _onchange_period_preset(self):
         """Recompute date_from / date_to when the user picks a preset.
 
@@ -148,52 +174,76 @@ class EhAccountReportWizard(models.TransientModel):
             if rec.period_preset == 'custom' or not rec.period_preset:
                 continue
             today = fields.Date.context_today(rec)
-            df, dt = rec._period_preset_dates(rec.period_preset, today)
+            companies = rec.company_ids or rec.env.company
+            fiscal_calendars = {
+                (
+                    company.fiscalyear_last_month,
+                    company.fiscalyear_last_day,
+                )
+                for company in companies
+            }
+            if (
+                rec.period_preset in {
+                    'qtd', 'ytd', 'last_quarter', 'last_year',
+                }
+                and len(fiscal_calendars) > 1
+            ):
+                raise ValidationError(_(
+                    "A fiscal-period preset requires all selected companies "
+                    "to share the same fiscal-year calendar."
+                ))
+            df, dt = rec._period_preset_dates(
+                rec.period_preset,
+                today,
+                company=companies[:1],
+            )
             rec.date_from = df
             rec.date_to = dt
 
-    @staticmethod
-    def _period_preset_dates(preset, today):
+    @api.model
+    def _period_preset_dates(self, preset, today, company=None):
         """Return (date_from, date_to) for a named preset.
 
-        Pure function so handlers and other callers can resolve a
-        preset without instantiating a wizard. Fiscal year is the
-        calendar year; localisations that override should subclass
-        and override this method.
+        Fiscal YTD, fiscal QTD, previous quarter, and previous year follow the
+        selected company's configured fiscal calendar. Calendar-month presets
+        remain calendar based. Callers may pass an explicit company; otherwise
+        the active company owns the policy.
         """
-        year = today.year
-        month = today.month
+        company = company or self.env.company
+        fiscal_dates = company.compute_fiscalyear_dates(today)
+        fiscal_start = fiscal_dates['date_from']
+        quarter_start = fiscal_start
+        while quarter_start + relativedelta(months=3) <= today:
+            quarter_start += relativedelta(months=3)
         if preset == 'mtd':
             return today.replace(day=1), today
         if preset == 'qtd':
-            quarter_start_month = 3 * ((month - 1) // 3) + 1
-            return date(year, quarter_start_month, 1), today
+            return quarter_start, today
         if preset == 'ytd':
-            return date(year, 1, 1), today
+            return fiscal_start, today
         if preset == 'last_month':
-            from datetime import timedelta
             first_of_this_month = today.replace(day=1)
             last_month_end = first_of_this_month - timedelta(days=1)
             last_month_start = last_month_end.replace(day=1)
             return last_month_start, last_month_end
         if preset == 'last_quarter':
-            quarter_start_month = 3 * ((month - 1) // 3) + 1
-            from datetime import timedelta
-            this_quarter_start = date(year, quarter_start_month, 1)
-            last_quarter_end = this_quarter_start - timedelta(days=1)
-            last_quarter_start_month = (
-                3 * ((last_quarter_end.month - 1) // 3) + 1
+            return (
+                quarter_start - relativedelta(months=3),
+                quarter_start - timedelta(days=1),
             )
-            last_quarter_start = date(
-                last_quarter_end.year, last_quarter_start_month, 1,
-            )
-            return last_quarter_start, last_quarter_end
         if preset == 'last_year':
-            return date(year - 1, 1, 1), date(year - 1, 12, 31)
+            prior_fiscal_dates = company.compute_fiscalyear_dates(
+                fiscal_start - timedelta(days=1)
+            )
+            return (
+                prior_fiscal_dates['date_from'],
+                prior_fiscal_dates['date_to'],
+            )
         return today.replace(day=1), today
 
     def _build_options(self):
         self.ensure_one()
+        self._check_company_scope()
         company_ids = self.company_ids.ids or [self.env.company.id]
         return {
             'date': {

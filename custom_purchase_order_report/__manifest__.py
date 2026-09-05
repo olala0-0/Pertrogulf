@@ -33,6 +33,8 @@
         'report/purchase_order_ajman_report.xml',
         'report/despatch_note_report_actions.xml',
         'report/despatch_note_report.xml',
+        'report/picking_list_report_actions.xml',
+        'report/picking_list_report.xml',
         'report/delivery_note_report_actions.xml',
         'report/delivery_note_ajman_report.xml',
         'report/grn_report_actions.xml',

@@ -22,6 +22,12 @@ class ProductCategory(models.Model):
         string="Income Account for Out of Scope",
         help="This account will be used when validating a customer invoice for Out of Scope.",
     )
+    property_account_income_gcc_categ_id = fields.Many2one(
+        'account.account',
+        company_dependent=True,
+        string="Income Account for GCC",
+        help="This account will be used when validating a customer invoice for GCC.",
+    )
 
     def _get_sale_type_income_account(self, sale_type):
         """
@@ -34,6 +40,7 @@ class ProductCategory(models.Model):
             'local_sale': 'property_account_income_local_categ_id',
             'export': 'property_account_income_export_categ_id',
             'out_of_scope': 'property_account_income_out_scope_categ_id',
+            'gcc': 'property_account_income_gcc_categ_id',
         }
         field_name = field_map.get(sale_type)
         if not field_name:

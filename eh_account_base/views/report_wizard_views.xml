@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <form string="Run Report">
                 <sheet>
+                    <field name="report_code" invisible="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="report_id" readonly="1"
@@ -31,8 +32,9 @@
                                    invisible="report_code != 'cash_flow'"/>
                         </group>
                     </group>
-                    <group>
+                    <group string="Filters">
                         <field name="company_ids" widget="many2many_tags"
+                               domain="[('id', 'in', context.get('allowed_company_ids', []))]"
                                options="{'no_create': True}"/>
                         <field name="journal_ids" widget="many2many_tags"
                                options="{'no_create': True}"/>
@@ -53,6 +55,14 @@
                 </footer>
             </form>
         </field>
+    </record>
+
+    <record id="action_eh_account_report_wizard" model="ir.actions.act_window">
+        <field name="name">Run Accounting Report</field>
+        <field name="res_model">eh.account.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_eh_account_report_wizard_form"/>
+        <field name="target">new</field>
     </record>
 
 </odoo>

@@ -39,33 +39,32 @@
                     </t>
                 </t>
             </tbody>
-        </table>
-        <table class="table table-sm o_main_table mb-0"
-               style="margin-top:0; font-size:15px; border-top:none;">
-            <tr>
-                <td style="text-align:right;width:75%;border-top:none;">
-                    <strong>Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;border-top:none;">
-                    <span t-field="o.amount_untaxed"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>VAT 5%</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
-                    <span t-field="o.amount_tax"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:right;width:75%">
-                    <strong>Grand Total</strong>
-                </td>
-                <td colspan="3" style="text-align:right;">
-                    <span t-field="o.amount_total"/>
-                </td>
-            </tr>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                        <strong>Total</strong>
+                    </td>
+                    <td colspan="2" class="text-right" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                        <span t-field="o.amount_untaxed"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:right; border:1px solid #6c757d !important;">
+                        <strong>VAT 5%</strong>
+                    </td>
+                    <td colspan="2" class="text-right" style="text-align:right; border:1px solid #6c757d !important;">
+                        <span t-field="o.amount_tax"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:right; border:1px solid #6c757d !important;">
+                        <strong>Grand Total</strong>
+                    </td>
+                    <td colspan="2" class="text-right" style="text-align:right; border:1px solid #6c757d !important;">
+                        <span t-field="o.amount_total"/>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
         <div class="mt-3">
