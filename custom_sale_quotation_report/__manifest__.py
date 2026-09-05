@@ -1,6 +1,6 @@
 {
     'name': 'Custom Sale Quotation Report by Business Unit',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.0.1',
     'category': 'Sales',
     'summary': 'Quotation PDF report layout varies by company business_unit',
     'description': """
