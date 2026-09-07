@@ -42,22 +42,35 @@
                                     - Others: Show current company logo
                                 -->
 
-                                <t t-set="ajman_company" t-value="env['res.company'].sudo().search([('business_unit', '=', 'pg_ajman')], limit=1)"/>
+                                <!-- <t t-set="is_logo_company" t-value="o.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd', 'pg_fujairah', 'pg_marine', 'pg_ajman')"/> -->
 
                                 <t t-if="is_logo_company">
-                                    <!-- For Marine and Ajman, use static logo -->
-                                    <t t-if="o.company_id.business_unit in ('pg_marine', 'pg_ajman')">
-                                        <img t-att-src="'/custom_sale_quotation_report/static/src/img/red_logo.png'" style="max-height:36mm; max-width:100%;"/>
+                                    <!-- For Marine, use Fujairah company logo -->
+                                    <t t-if="o.company_id.business_unit == 'pg_marine'">
+                                        <t t-set="target_company" t-value="env['res.company'].sudo().search([('business_unit', '=', 'pg_fujairah')], limit=1)"/>
+                                        <img t-if="target_company and target_company.logo" t-att-src="target_company.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                        <!-- Fallback if Fujairah company not found -->
+                                        <t t-else="">
+                                            <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                        </t>
                                     </t>
-                                    <!-- For other eligible companies, use Ajman company logo -->
-                                    <t t-elif="ajman_company">
-                                        <img t-if="ajman_company.logo" t-att-src="ajman_company.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                    
+                                    <!-- For Ajman, use Ajman company logo -->
+                                    <t t-elif="o.company_id.business_unit == 'pg_ajman'">
+                                        <t t-set="target_company" t-value="env['res.company'].sudo().search([('business_unit', '=', 'pg_ajman')], limit=1)"/>
+                                        <img t-if="target_company and target_company.logo" t-att-src="target_company.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                        <!-- Fallback if Ajman company not found -->
+                                        <t t-else="">
+                                            <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
+                                        </t>
                                     </t>
-                                    <!-- Fallback to current company logo -->
+                                    
+                                    <!-- For all other eligible companies, use their own logo -->
                                     <t t-else="">
                                         <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
                                     </t>
                                 </t>
+
                                 <!-- If is_logo_company is false, use current company logo -->
                                 <t t-else="">
                                     <img t-if="o.company_id.logo" t-att-src="o.company_id.get_logo_on_background()" style="max-height:36mm; max-width:100%;"/>
