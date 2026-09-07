@@ -41,7 +41,7 @@ class ResPartner(models.Model):
     business_unit = fields.Selection(
         BUSINESS_UNIT_SELECTION,
         string="Business Unit",
-        required=True,
+        required=False,
     )
     sbu_name = fields.Char(string="SBU Name")
     whatsapp_number = fields.Char("Whatsapp Number")
