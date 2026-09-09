@@ -1,7 +1,6 @@
 <odoo>
     <template id="body_petrogulf_aviation">
         <t t-set="show_inquired_item" t-value="any(l.customer_ref_id for l in o.order_line if not l.display_type)"/>
-        <div style="border-radius:14px; overflow:hidden;">
             <table  style="width:100%; border-collapse:collapse; margin-top:10px; font-size:14px;" >
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group;text-transform: none !important;">
@@ -129,7 +128,6 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
         <p>
             <strong>Total Amount in words:</strong>
             <span style="font-weight:bold;" t-esc="o._get_amount_in_words()"/>
