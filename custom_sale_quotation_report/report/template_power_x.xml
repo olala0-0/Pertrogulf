@@ -4,7 +4,8 @@
             <thead>
                 <tr>
                     <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:8px 0 0 0;">Sn</th>
-                    <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:32%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:8%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Quantity</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Rate</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Per</th>
                     <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Discount</th>
@@ -50,6 +51,9 @@
                                         </t>
                                     </small>
                                 </t>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
+                                <span t-field="line.product_uom_qty"/>
                             </td>
                             <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit"
