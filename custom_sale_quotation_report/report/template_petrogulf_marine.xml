@@ -73,65 +73,65 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
                         <strong>Total</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
                         <span t-esc="pg_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
                 <tr t-if="pg_discount">
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                         <strong>Discount</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                         <span t-esc="pg_discount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
                 <tr t-if="pg_discount">
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                         <strong>Discounted Value</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                         <span t-esc="pg_discounted_value"
                               t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                         <strong>Delivery Charge - OOS</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                         <span t-esc="sum(pg_delivery_charge_lines.mapped('price_subtotal'))"
                               t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                         <strong>Port and Custom Charges - OOS</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                         <span t-esc="sum(pg_port_charge_lines.mapped('price_subtotal'))"
                               t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                     </td>
                 </tr>
                 <t t-foreach="pg_other_expense_lines" t-as="line">
                     <tr>
-                        <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                        <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                             <strong>
                                 <span t-field="line.product_id.name"/>
                             </strong>
                         </td>
-                        <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                        <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                             <span t-field="line.price_subtotal"/>
                         </td>
                     </tr>
                 </t>
                 <tr>
-                    <td colspan="5" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="6" style="text-align:right; border:1px solid #6c757d !important;">
                         <strong>Grand Total</strong>
                     </td>
-                    <td colspan="2" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
+                    <td colspan="1" class="text-end" style="text-align:right; border:1px solid #6c757d !important;">
                         <span t-esc="o.currency_id.symbol"/>
                         <span t-esc="'{:,.2f}'.format(pg_discounted_value + pg_expense_total)"/>
                     </td>
