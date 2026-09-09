@@ -78,6 +78,10 @@
 
             <span t-field="o.payment_term_id.name"/>
 
+            <br/>
+            <strong>Delivery Terms:</strong>
+            <span t-field="o.incoterm.name"/>
+
         </div>
 
         <t t-if="o.show_bank_details">
@@ -136,6 +140,9 @@
             </ul>
             <strong>Payment terms:</strong>
             <span t-field="o.payment_term_id.name"/>
+            <br/>
+            <strong>Delivery Terms:</strong>
+            <span t-field="o.incoterm.name"/>
         </div>
 
         <t t-if="o.show_bank_details">

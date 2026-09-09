@@ -370,7 +370,7 @@
                         <tr>
                             <td style="width:55%; vertical-align:top; font-size:12px;">
                                 <div><strong>Terms of Delivery</strong></div>
-                                <div>Ex-Works Ajman</div>
+                                <div><span t-field="o.incoterm.name"/></div>
                                 <div style="margin-top:10px;">Veh. No : <span t-field="delivery.vehicle_no"/></div>
                             </td>
                             <td style="width:45%; vertical-align:top;">
