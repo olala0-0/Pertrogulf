@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Hide Specific Print Reports Per User — Module Description</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; line-height: 1.55; margin: 0; color: #222;">
+  <div style="max-width: 920px; margin: 0 auto; padding: 36px 20px 60px;">
+
+    <!-- Hero Section -->
+    <section style="background: linear-gradient(135deg, #f6f7fb, #f0f3ff); border-radius: 10px; padding: 28px; margin-bottom: 28px;">
+      <div style="text-transform: uppercase; letter-spacing: 0.06em; font-size: 12px; color: #6b7280; margin-bottom: 8px;">Tools • User Access Control</div>
+      <h1 style="margin: 0 0 6px; font-size: 28px;">Hide Specific Print Reports Per User</h1>
+      <p style="margin: 0; font-size: 16px; opacity: 0.9;">Hide specific print reports per user basis. Unlike hiding all reports for a model, this module lets you select exactly which reports to hide — giving you granular control over print report visibility.</p>
+    </section>
+
+    <!-- Grid Section -->
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 28px;">
+      <div style="background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 20px;">
+        <h2 style="margin: 0 0 12px 0; font-size: 20px;">✨ What it does</h2>
+        <ul style="margin: 0.5em 0 0.25em 1.25em; padding: 0;">
+          <li style="margin: 0.25em 0;"><span style="margin-right: 6px;">✅</span>Hide <strong>specific print reports</strong> — not all reports for a model.</li>
+          <li style="margin: 0.25em 0;"><span style="margin-right: 6px;">✅</span>Per user granular control over specific reports.</li>
+          <li style="margin: 0.25em 0;"><span style="margin-right: 6px;">✅</span>Select model first, then choose which reports to hide.</li>
+          <li style="margin: 0.25em 0;"><span style="margin-right: 6px;">✅</span>Works independently of group permissions.</li>
+        </ul>
+      </div>
+
+      <div style="background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 20px;">
+        <h2 style="margin: 0 0 12px 0; font-size: 20px;">🛠 How it works</h2>
+        <ul style="margin: 0.5em 0 0.25em 1.25em; padding: 0;">
+          <li style="margin: 0.25em 0;">Adds a <strong>Hide Specific Print Reports</strong> tab to the user form.</li>
+          <li style="margin: 0.25em 0;">Select a model (e.g., Sale Order) to see available reports.</li>
+          <li style="margin: 0.25em 0;">Choose specific reports to hide (e.g., hide Quotation but keep Sales Order).</li>
+          <li style="margin: 0.25em 0;">Selected reports are filtered from the Print menu for that user.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Configuration Section -->
+    <section style="background: #fff; border: 1px solid #f0f0f0; border-radius: 10px; padding: 20px; margin: 16px 0;">
+      <h2 style="margin: 0 0 12px 0; font-size: 20px;">⚙️ Configuration: Specific Print Report Control</h2>
+      <ol style="margin: 0.5em 0 0.25em 1.25em; padding: 0;">
+        <li style="margin: 0.25em 0;">Install the module from Apps.</li>
+        <li style="margin: 0.25em 0;">Go to <strong>Settings → Users & Companies → Users</strong>.</li>
+        <li style="margin: 0.25em 0;">Open the user for whom you want to hide specific print reports.</li>
+        <li style="margin: 0.25em 0;">Navigate to the <strong>Hide Specific Print Reports</strong> tab.</li>
+        <li style="margin: 0.25em 0;">Click "Add a line" and select a Model (e.g., <code style="background: #f7f7f8; border: 1px solid #eee; border-radius: 6px; padding: 2px 6px;">sale.order</code>).</li>
+        <li style="margin: 0.25em 0;">Select the specific reports to hide from the Reports to Hide field.</li>
+        <li style="margin: 0.25em 0;">Save and refresh the browser — changes take effect immediately.</li>
+      </ol>
+      <p style="color: #666; margin: 12px 0 0 0;"><strong>Quick Tip:</strong> You can add multiple lines — one for each model where you want to hide specific reports.</p>
+    </section>
+
+
+    <!-- Comparison Section -->
+    <section style="background: #f0f3ff; border: 1px solid #d0d8ff; border-radius: 10px; padding: 20px; margin: 16px 0;">
+      <h2 style="margin: 0 0 12px 0; font-size: 20px;">🔄 Comparison with "Hide Print Reports Per Model"</h2>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+        <tr style="background: #fff;">
+          <th style="padding: 10px; border: 1px solid #d0d8ff; text-align: left;">Feature</th>
+          <th style="padding: 10px; border: 1px solid #d0d8ff; text-align: left;">Hide Print Reports Per Model</th>
+          <th style="padding: 10px; border: 1px solid #d0d8ff; text-align: left;">Hide Specific Print Reports (This Module)</th>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Granularity</td>
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Hides ALL reports for a model</td>
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Hides SPECIFIC reports you select</td>
+        </tr>
+        <tr style="background: #fff;">
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Use case</td>
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Block all printing for a model</td>
+          <td style="padding: 10px; border: 1px solid #d0d8ff;">Fine-tune which reports are visible</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- About Company Section -->
+    <section style="border-radius: 10px; padding: 32px; margin: 24px 0; box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);">
+      <div style="text-align: center;">
+        <h2 style="margin: 0 0 12px 0; font-size: 26px; font-weight: 600; letter-spacing: 0.5px;">🏢 OdooMatrix</h2>
+        <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.7; opacity: 0.95; max-width: 700px; margin-left: auto; margin-right: auto;">
+          OdooMatrix specializes in delivering high-quality Odoo solutions and custom modules to enhance your business operations. We provide expert development, implementation, and support services for Odoo ERP systems.
+        </p>
+        <div style="display: inline-block; backdrop-filter: blur(10px); border-radius: 8px; padding: 20px 32px; margin-top: 8px;">
+          <div style="display: flex; gap: 32px; align-items: center; justify-content: center; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 20px;">📧</span>
+              <div style="text-align: left;">
+                <div style="font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Email</div>
+                <a href="mailto:dev.odoomatrix@gmail.com" style="text-decoration: none; font-weight: 500; font-size: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.3);">dev.odoomatrix@gmail.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>

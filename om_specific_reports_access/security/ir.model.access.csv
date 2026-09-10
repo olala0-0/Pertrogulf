@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_admin_user_report_hide,access_admin_user_report_hide,model_user_report_hide,base.group_system,1,1,1,1
+access_manager_user_report_hide,access_manager_user_report_hide,model_user_report_hide,base.group_erp_manager,1,1,1,1
+access_user_user_report_hide,access_user_user_report_hide,model_user_report_hide,base.group_user,1,0,0,0

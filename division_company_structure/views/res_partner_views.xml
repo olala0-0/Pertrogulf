@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form View Extension -->
+    <record id="view_partner_form_division" model="ir.ui.view">
+        <field name="name">res.partner.form.division</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="division_id" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Partner Tree / List View Extension -->
+    <record id="view_partner_tree_division" model="ir.ui.view">
+        <field name="name">res.partner.tree.division</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="division_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Partner Search View Extension -->
+    <record id="view_res_partner_filter_division" model="ir.ui.view">
+        <field name="name">res.partner.select.division</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="division_id"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Division" name="groupby_division" context="{'group_by': 'division_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

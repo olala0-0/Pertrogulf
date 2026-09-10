@@ -1,0 +1,26 @@
+<odoo>
+    <record id="paperformat_blend_sheet" model="report.paperformat">
+        <field name="name">Blend Sheet - Petro Gulf</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_blend_sheet" model="ir.actions.report">
+        <field name="name">Blend Sheet</field>
+        <field name="model">mrp.bom</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_purchase_order_report.report_blend_sheet</field>
+        <field name="report_file">custom_purchase_order_report.report_blend_sheet</field>
+        <field name="print_report_name">'Blend Sheet - %s' % (object.product_tmpl_id.name or object.display_name)</field>
+        <field name="paperformat_id" ref="paperformat_blend_sheet"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

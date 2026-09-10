@@ -1,0 +1,28 @@
+{
+    'name': "Division Company Structure",
+    'version': '19.0.1.0.3',
+    'summary': 'Division filtering for Petrogulf Oil Manufacturing LLC - Ajman on Contacts, Products, Sale Orders, and Inquiries.',
+    'category': 'Sales/Sales',
+    'author': "JD DEVS",
+    'website': "",
+    'license': 'AGPL-3',
+    'depends': [
+        'base',
+        'product',
+        'sale',
+        'sale_order_enquiry',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/division_security.xml',
+        'views/division_master_views.xml',
+        'views/res_users_views.xml',
+        'views/res_partner_views.xml',
+        'views/product_views.xml',
+        'views/sale_order_views.xml',
+        'views/order_enq_views.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

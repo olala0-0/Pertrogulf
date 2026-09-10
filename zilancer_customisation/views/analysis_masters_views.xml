@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shared list / form structure for analysis masters -->
+    <record id="view_analysis_product_type_list" model="ir.ui.view">
+        <field name="name">analysis.product.type.list</field>
+        <field name="model">analysis.product.type</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_product_type_form" model="ir.ui.view">
+        <field name="name">analysis.product.type.form</field>
+        <field name="model">analysis.product.type</field>
+        <field name="arch" type="xml">
+            <form string="Product Type">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_product_type" model="ir.actions.act_window">
+        <field name="name">Product Type</field>
+        <field name="res_model">analysis.product.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_analysis_product_brand_list" model="ir.ui.view">
+        <field name="name">analysis.product.brand.list</field>
+        <field name="model">analysis.product.brand</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_product_brand_form" model="ir.ui.view">
+        <field name="name">analysis.product.brand.form</field>
+        <field name="model">analysis.product.brand</field>
+        <field name="arch" type="xml">
+            <form string="Brand">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_product_brand" model="ir.actions.act_window">
+        <field name="name">Brand</field>
+        <field name="res_model">analysis.product.brand</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_analysis_api_list" model="ir.ui.view">
+        <field name="name">analysis.api.api.list</field>
+        <field name="model">analysis.api.api</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_api_form" model="ir.ui.view">
+        <field name="name">analysis.api.api.form</field>
+        <field name="model">analysis.api.api</field>
+        <field name="arch" type="xml">
+            <form string="API">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_api" model="ir.actions.act_window">
+        <field name="name">API</field>
+        <field name="res_model">analysis.api.api</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_analysis_sae_list" model="ir.ui.view">
+        <field name="name">analysis.sae.sae.list</field>
+        <field name="model">analysis.sae.sae</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_sae_form" model="ir.ui.view">
+        <field name="name">analysis.sae.sae.form</field>
+        <field name="model">analysis.sae.sae</field>
+        <field name="arch" type="xml">
+            <form string="SAE">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_sae" model="ir.actions.act_window">
+        <field name="name">SAE</field>
+        <field name="res_model">analysis.sae.sae</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_analysis_tbn_list" model="ir.ui.view">
+        <field name="name">analysis.tbn.tbn.list</field>
+        <field name="model">analysis.tbn.tbn</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_tbn_form" model="ir.ui.view">
+        <field name="name">analysis.tbn.tbn.form</field>
+        <field name="model">analysis.tbn.tbn</field>
+        <field name="arch" type="xml">
+            <form string="TBN">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_tbn" model="ir.actions.act_window">
+        <field name="name">TBN</field>
+        <field name="res_model">analysis.tbn.tbn</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_analysis_iso_tbn_list" model="ir.ui.view">
+        <field name="name">analysis.iso.tbn.list</field>
+        <field name="model">analysis.iso.tbn</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_analysis_iso_tbn_form" model="ir.ui.view">
+        <field name="name">analysis.iso.tbn.form</field>
+        <field name="model">analysis.iso.tbn</field>
+        <field name="arch" type="xml">
+            <form string="ISO / TBN">
+                <sheet>
+                    <group>
+                        <field name="code"/>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_analysis_iso_tbn" model="ir.actions.act_window">
+        <field name="name">ISO / TBN</field>
+        <field name="res_model">analysis.iso.tbn</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menus under Sales > Configuration -->
+    <menuitem id="menu_analysis_codes_root"
+              name="Analysis Codes"
+              parent="sale.prod_config_main"
+              sequence="50"/>
+
+    <menuitem id="menu_analysis_product_type"
+              name="Product Type"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_product_type"
+              sequence="10"/>
+    <menuitem id="menu_analysis_product_brand"
+              name="Brand"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_product_brand"
+              sequence="20"/>
+    <menuitem id="menu_analysis_api"
+              name="API"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_api"
+              sequence="30"/>
+    <menuitem id="menu_analysis_sae"
+              name="SAE"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_sae"
+              sequence="40"/>
+    <menuitem id="menu_analysis_tbn"
+              name="TBN"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_tbn"
+              sequence="50"/>
+    <menuitem id="menu_analysis_iso_tbn"
+              name="ISO / TBN"
+              parent="menu_analysis_codes_root"
+              action="action_analysis_iso_tbn"
+              sequence="60"/>
+</odoo>
