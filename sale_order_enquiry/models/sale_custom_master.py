@@ -66,7 +66,7 @@ class ProcessStage(models.Model):
         ('name_unique', 'unique(name)', 'Stage name must be unique.')
     ]
 
-class ProcessStage(models.Model):
+class SourceInquiry(models.Model):
     _name = 'source.inquiry'
     _description = 'Source of Inquiry'
 

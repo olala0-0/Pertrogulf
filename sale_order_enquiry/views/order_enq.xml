@@ -293,7 +293,7 @@
                 <field name="create_date" optional="show"/>
                 <field name="company_id" optional="show"/>
                 <field name="state" string="Status"/>
-                <field name="user_id" optional="show" string="Sales Manager"/>
+                <field name="sales_user_id" optional="show" string="Sales Manager"/>
                 <field name="sale_order_id" column_invisible="True"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="display_type" column_invisible="True"/>
