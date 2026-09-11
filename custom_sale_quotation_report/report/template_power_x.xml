@@ -4,7 +4,8 @@
             <thead>
                 <tr>
                     <th style="text-align:center; width:5%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold; border-radius:8px 0 0 0;">Sn</th>
-                    <th style="text-align:center; width:40%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:32%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Description of Goods</th>
+                    <th style="text-align:center; width:8%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Quantity</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Rate</th>
                     <th style="text-align:center; width:10%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Per</th>
                     <th style="text-align:center; width:15%; padding:8px; line-height:1.8; border:1px solid #6c757d !important;font-weight: bold">Discount</th>
@@ -52,6 +53,9 @@
                                 </t>
                             </td>
                             <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
+                                <span t-field="line.product_uom_qty"/>
+                            </td>
+                            <td style="text-align:center; padding:8px; line-height:1.8; border:1px solid #6c757d !important;">
                                 <span t-field="line.price_unit"
                                       t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
@@ -67,44 +71,43 @@
                     </t>
                 </t>
             </tbody>
-        </table>
-        <table class="table"
-               style="width: 100%; float: right; font-size: 15px; border-collapse: collapse; border: 0 !important; border-style: none !important; box-shadow: none !important;border: 0px solid #495057 !important;border-radius: 0 !important;">
-            <t t-set="total_discounted"
-               t-value="sum(o.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal'))"/>
-            <tr>
-                <td style="text-align: right; font-weight: bold;width: 68.4%;">Total</td>
-                <td style="text-align: right; font-weight: bold;">
-                    <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted)"/>
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align: right; font-weight: bold; width: 68.4%;">
-                    <span >VAT 5%</span>
-<!--                    <span t-if="o.vat_selection == 'vat_0'">VAT 0%</span>-->
-                </td>
-                <td style="text-align: right; font-weight: bold;">
-                    <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(o.amount_tax)"/>
-                </td>
-            </tr>
-            <t t-set="expense_total"
-               t-value="sum(o.order_line.filtered(lambda l: l.product_id.is_expences).mapped('price_subtotal'))"/>
-            <t t-foreach="o.order_line.filtered(lambda l: l.product_id.is_expences)" t-as="line">
+            <tfoot>
+                <t t-set="total_discounted"
+                   t-value="sum(o.order_line.filtered(lambda l: not l.product_id.is_expences and l.product_id.name != 'Discount').mapped('price_subtotal'))"/>
                 <tr>
-                    <td style="text-align: right; font-weight: bold;width: 68.4%;">
-                        <t t-esc="line.product_id.name"/>
-                    </td>
-                    <td style="text-align: right; font-weight: bold;">
-                        <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(line.price_subtotal)"/>
+                    <td colspan="6" style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">Total</td>
+                    <td style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important; border-top:3px solid #000 !important;">
+                        <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted)"/>
                     </td>
                 </tr>
-            </t>
-            <tr>
-                <td style="text-align: right; font-weight: bold;width: 68.4%;">Grand Total</td>
-                <td style="text-align: right; font-weight: bold;">
-                    <strong t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted + o.amount_tax + expense_total)"/>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="6" style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">
+                        <span>VAT 5%</span>
+<!--                    <span t-if="o.vat_selection == 'vat_0'">VAT 0%</span>-->
+                    </td>
+                    <td style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">
+                        <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(o.amount_tax)"/>
+                    </td>
+                </tr>
+                <t t-set="expense_total"
+                   t-value="sum(o.order_line.filtered(lambda l: l.product_id.is_expences).mapped('price_subtotal'))"/>
+                <t t-foreach="o.order_line.filtered(lambda l: l.product_id.is_expences)" t-as="line">
+                    <tr>
+                        <td colspan="6" style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">
+                            <t t-esc="line.product_id.name"/>
+                        </td>
+                        <td style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">
+                            <span t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(line.price_subtotal)"/>
+                        </td>
+                    </tr>
+                </t>
+                <tr>
+                    <td colspan="6" style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">Grand Total</td>
+                    <td style="text-align: right; padding:8px; font-weight: bold; border:1px solid #6c757d !important;">
+                        <strong t-esc="o.currency_id.symbol + ' ' + '{:,.2f}'.format(total_discounted + o.amount_tax + expense_total)"/>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
 

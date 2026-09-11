@@ -65,7 +65,7 @@
 
         <record id="action_source_inquiry" model="ir.actions.act_window">
             <field name="name">Source of Inquiry</field>
-            <field name="res_model">sale.reason</field>
+            <field name="res_model">source.inquiry</field>
             <field name="view_mode">list,form</field>
         </record>
 
@@ -415,13 +415,13 @@
         <menuitem id="menu_port_master" name="Port Master" parent="inq_mastern_root" action="action_port_master" sequence="3"/>
         <menuitem id="menu_pack_size_master" name="Pack Sizes" parent="inq_mastern_root" action="action_pack_size_master" sequence="4"/>
         <menuitem id="menu_unit_count_master" name="No of Units" parent="inq_mastern_root" action="action_unit_count_master" sequence="5"/>
-        <menuitem id="menu_sale_reason" name="Reasons" parent="inq_mastern_root" action="action_sale_reason" sequence="6"/>
+        <menuitem id="menu_sale_reason" name="Reason for not quoting" parent="inq_mastern_root" action="action_sale_reason" sequence="6"/>
         <menuitem id="menu_source_inquiry" name="Source of Inquiry" parent="inq_mastern_root" action="action_source_inquiry" sequence="7"/>
         <menuitem id="menu_source_delivery_by" name="Delivery By" parent="inq_mastern_root" action="action_delivery_by" sequence="8"/>
         <menuitem id="menu_source_delivery_type" name="Delivery Type" parent="inq_mastern_root" action="action_delivery_type" sequence="9"/>
         <menuitem id="menu_process_master" name="Process Master" parent="inq_mastern_root" action="action_process_master" sequence="10"/>
         <menuitem id="menu_process_user_master" name="Process User Master" parent="inq_mastern_root" action="action_process_user_master" sequence="11"/>
         <menuitem id="menu_team_team" name="Teams" parent="inq_mastern_root" action="action_team_team" sequence="12"/>
-        <menuitem id="menu_action_vesal_master" name="Vessal Master" parent="inq_mastern_root" action="action_vesal_master" sequence="13"/>
+        <menuitem id="menu_action_vesal_master" name="Vessel Master" parent="inq_mastern_root" action="action_vesal_master" sequence="13"/>
     </data>
 </odoo>

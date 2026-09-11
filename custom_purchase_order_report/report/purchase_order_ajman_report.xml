@@ -303,7 +303,7 @@
                                 <td style="width:60%;"/>
                                 <td style="width:40%; text-align:center; background-color:#d9d9d9; padding:10px;">
                                     <div>for
-                                        <t t-if="o.company_id and o.company_id.business_unit and o.company_id.business_unit == 'pg_marine'">
+                                        <t t-if="o.company_id and o.company_id.business_unit in ('pg_marine', 'pg_aviation', 'pg_auto', 'pg_tblnd')">
                                             Petro Gulf Oil Manufacturing LLC
                                         </t>
                                         <t t-else="">

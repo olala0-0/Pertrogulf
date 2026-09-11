@@ -27,11 +27,33 @@
                     <table style="width:100%; border-collapse:collapse; margin-bottom:15px;">
                         <tr>
                             <td style="width:55%; vertical-align:top; font-size:12px;">
-                                <div><strong t-field="o.company_id.name"/></div>
-                                <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
-                                <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
-                                <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
-                                <div t-if="o.company_id.website"><span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
+                                <t t-if="o.company_id and o.company_id.business_unit == 'pg_marine'">
+                                    <div>
+                                        PetroGulf Oil Manufacturing LLC
+                                        <br/>
+                                        Al Hail Industrial Area, Fujairah
+                                        <br/>
+                                        United Arab Emirates
+                                        <br/>
+                                        www.petrogulfmarine.com
+                                    </div>
+                                </t>
+                                <t t-elif="o.company_id and o.company_id.business_unit in ('pg_aviation', 'pg_auto', 'pg_tblnd')">
+                                    <div style="white-space: nowrap; display: inline-block;">Petro Gulf Oil
+                                        Manufacturing LLC
+                                    </div>
+                                    <div>New Industrial Area 1,</div>
+                                    <div>Ajman, United Arab Emirates</div>
+                                    <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+                                    <div t-if="o.company_id.website"><span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
+                                </t>
+                                <t t-else="">
+                                    <div><strong t-field="o.company_id.name"/></div>
+                                    <div t-if="o.company_id.street"><span t-field="o.company_id.street"/></div>
+                                    <div t-if="o.company_id.phone"><span t-field="o.company_id.phone"/></div>
+                                    <div t-if="o.company_id.email"><span t-field="o.company_id.email"/></div>
+                                    <div t-if="o.company_id.website"><span t-esc="o.company_id.website.replace('http://', '').replace('https://', '')"/></div>
+                                </t>
                             </td>
                             <td style="width:45%; vertical-align:top;">
                                 <table style="width:100%; border-collapse:collapse; font-size:12px;">
@@ -103,7 +125,14 @@
                         <tr>
                             <td style="width:60%;"/>
                             <td style="width:40%; text-align:center; background-color:#d9d9d9; padding:10px;">
-                                <div>for <span t-field="o.company_id.name"/></div>
+                                <div>for
+                                    <t t-if="o.company_id and o.company_id.business_unit in ('pg_marine', 'pg_aviation', 'pg_auto', 'pg_tblnd')">
+                                        Petro Gulf Oil Manufacturing LLC
+                                    </t>
+                                    <t t-else="">
+                                        <span t-field="o.company_id.name"/>
+                                    </t>
+                                </div>
                                 <div style="margin-top:40px;"><strong>Authorised Signatory</strong></div>
                             </td>
                         </tr>

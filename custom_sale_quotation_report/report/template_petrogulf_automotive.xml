@@ -98,6 +98,9 @@
             <strong>Payment terms:</strong>
 
             <span t-field="o.payment_term_id.name"/>
+            <br/>
+            <strong>Delivery Terms:</strong>
+            <span t-field="o.incoterm.name"/>
         </div>
     </template>
 </odoo>

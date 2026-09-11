@@ -1,10 +1,5 @@
 from odoo import models, fields, api
 
-try:
-    from num2words import num2words
-except ImportError:
-    num2words = None
-
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
@@ -25,11 +20,6 @@ class SaleOrder(models.Model):
     def _get_amount_in_words(self):
         """Used by Toll Blending report: 'Total Amount in words'."""
         self.ensure_one()
-        if not num2words:
-            return ""
-        try:
-            words = num2words(self.amount_total, lang='en').replace('-', ' ')
-            return f"{words.title()} {self.currency_id.name} Only"
-        except Exception:
-            return ""
+        text = self.currency_id.amount_to_text(self.amount_total)
+        return f"{text} Only" if text else ""
 
