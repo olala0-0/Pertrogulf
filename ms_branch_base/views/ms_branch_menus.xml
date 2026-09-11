@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_ms_branch"
+                  name="Branches"
+                  parent="base.menu_users"
+                  action="action_ms_branch"
+                  sequence="25"
+                  groups="base.group_system"/>
+    </data>
+</odoo>

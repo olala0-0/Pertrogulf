@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ms_branch_list" model="ir.ui.view">
+            <field name="name">ms.branch.list</field>
+            <field name="model">ms.branch</field>
+            <field name="arch" type="xml">
+                <list string="Branches">
+                    <field name="sequence" widget="handle"/>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="manager_id"/>
+                    <field name="address_id" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_ms_branch_form" model="ir.ui.view">
+            <field name="name">ms.branch.form</field>
+            <field name="model">ms.branch</field>
+            <field name="arch" type="xml">
+                <form string="Branch">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived"
+                                bg_color="text-bg-danger"
+                                invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. North Depot"/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="code" placeholder="e.g. ND"/>
+                                <field name="manager_id"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="company_id"
+                                       groups="base.group_multi_company"/>
+                                <field name="address_id"/>
+                            </group>
+                        </group>
+                        <!-- Di dalam <group>, catatannya masuk kolom nilai
+                             yang cuma seperempat lebar sheet, jadi kalimat
+                             pendek pun pecah jadi empat baris. Di luar group
+                             ia memakai lebar penuh. -->
+                        <separator string="Notes"/>
+                        <field name="note" nolabel="1"
+                               placeholder="What is different about this branch..."/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_ms_branch_search" model="ir.ui.view">
+            <field name="name">ms.branch.search</field>
+            <field name="model">ms.branch</field>
+            <field name="arch" type="xml">
+                <search string="Branches">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="manager_id"/>
+                    <filter name="f_archived" string="Archived"
+                            domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_ms_branch" model="ir.actions.act_window">
+            <field name="name">Branches</field>
+            <field name="res_model">ms.branch</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Set up your first branch
+                </p>
+                <p>
+                    A branch is a place of business inside one legal entity.
+                    One chart of accounts, one company - but every order, bill
+                    and transfer says which branch it belongs to.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

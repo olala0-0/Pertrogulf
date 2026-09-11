@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_users_form_branch" model="ir.ui.view">
+            <field name="name">res.users.form.branch</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Branches" name="ms_branch">
+                        <group>
+                            <field name="ms_branch_ids" widget="many2many_tags"/>
+                            <field name="ms_default_branch_id"
+                                   domain="[('id', 'in', ms_branch_ids)]"/>
+                            <field name="ms_branch_restricted" readonly="1"/>
+                        </group>
+                        <div class="text-muted">
+                            Allowed branches only bite when the user is in the
+                            <em>Branch: own branches only</em> group and not in
+                            <em>Branch: all branches</em>. Until then the list
+                            is just a default.
+                        </div>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,69 @@
+<section class="oe_container">
+    <h2 class="oe_slogan" style="color:#875A7B;">Branch Dimension: Base</h2>
+    <h3 class="oe_slogan">One list of branches for every app that needs one</h3>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h4 class="oe_slogan" style="color:#875A7B;">Overview</h4>
+        <p>A branch is not an app. It is a dimension that several apps have to agree on - sales, purchase, accounting, inventory, helpdesk, subscriptions. The moment each app keeps its own list, the same shop exists three times under three different names, and nothing can be reported across them.</p>
+        <p>This module holds the branch and nothing else: the list, the field the other modules reuse, who may see which branch, and the default a new document picks up. You do not install this one on its own - you install the branch module for the app you actually run, and it brings this along.</p>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h4 class="oe_slogan" style="color:#875A7B;">What is in it</h4>
+        <ul>
+            <li><b>The branch itself</b>: code, name, manager, address, company</li>
+            <li><b>A reusable field</b> (<code>ms.branch.mixin</code>) so every document names it the same way and checks the company the same way</li>
+            <li><b>Access rights per branch</b>: two opt-in groups - own branches only, or all branches</li>
+            <li><b>A default that follows the person</b>, filled in on new documents through <code>default_get</code> - so installing the module never back-fills years of history</li>
+            <li><b>Restriction that takes effect at once</b>: the rule cache is cleared when somebody's branches change, instead of waiting for a restart</li>
+        </ul>
+        <p>It changes nothing on its own: until somebody is put in one of the two
+           groups, everybody keeps seeing everything.</p>
+    </div>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h4 class="oe_slogan" style="color:#875A7B;">The Branch List Every App Reads From</h4>
+        <p>One list, kept in Settings next to Users and Companies. Code, name, the manager who answers for it, the address it trades from, and the company it belongs to.</p>
+        <p>The code is what shows up everywhere else, so a branch stays recognisable in a list column that is forty pixels wide.</p>
+    </div>
+    <div style="display: block; margin: 30px auto;">
+        <img style="max-width: 1400px" class="img-thumbnail" src="images/branch_list.png">
+    </div>
+    <p style="text-align: center;">three branches, one list - and every app that needs a branch reads this one</p>
+    <hr/>
+    <div style="display: block; margin: 30px auto;">
+        <img style="max-width: 1400px" class="img-thumbnail" src="images/branch_form.png">
+    </div>
+    <p style="text-align: center;">the branch itself, and nothing that belongs to any one app</p>
+    <hr/>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h4 class="oe_slogan" style="color:#875A7B;">Who May See Which Branch</h4>
+        <p>Two opt-in groups: <strong>own branches only</strong>, or <strong>all branches</strong>. A person outside both is unrestricted, so installing this module changes nothing until somebody decides it should.</p>
+        <p>The default branch is filled in on new documents through <code>default_get</code>, never as a column default - so switching it on does not quietly back-stamp years of history with a branch nobody chose.</p>
+    </div>
+    <div style="display: block; margin: 30px auto;">
+        <img style="max-width: 1400px" class="img-thumbnail" src="images/user_branches.png">
+    </div>
+    <p style="text-align: center;">allowed branches, the default that follows the person, and the note that says exactly when the restriction bites</p>
+    <hr/>
+</section>
+
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">Contact</h2>
+        <h3 class="oe_slogan" style="color:#FF0000;">miftahussalam08@gmail.com</h3>
+        <h3 class="oe_slogan" style="color:#FF0000;"><a href="https://blog.miftahussalam.com/" target="_blank">https://blog.miftahussalam.com/</a></h3>
+    </div>
+</section>
+
+<section class="oe_container oe_separator">
+</section>
